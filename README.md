@@ -21,6 +21,6 @@
 - [ ] 集成mysql访问框架(https://github.com/ent/ent)
 
 ### 命令
-> make init ```初始化仓库，创建go.mod```
-> make verify ```验证开发环境与构建环境，检查code conduct```
-> make verify-build ```编译目标```
+* make init ```初始化仓库，创建go.mod```
+* make verify ```验证开发环境与构建环境，检查code conduct```
+* make verify-build ```编译目标```
