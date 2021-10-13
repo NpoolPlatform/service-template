@@ -6,18 +6,22 @@ SHELL:=/usr/bin/env bash
 COLOR:=\\033[36m
 NOCOLOR:=\\033[0m
 GITREPO=$(shell git remote -v | grep fetch | awk '{print $$2}' | sed 's/\.git//g' | sed 's/https:\/\///g')
+SUBCMDS=$(wildcard cmd/*)
 
 ##@ init project
 init:
-	$(shell cp -f .githooks/* .git/hooks)
+	cp -f .githooks/* .git/hooks
 
 go.mod:
-	$(shell go mod init ${GITREPO})
-	$(shell go mod tidy)
+	go mod init ${GITREPO}
+	go mod tidy
+
+deps:
+	go get ./...
 
 ##@ Verify
 
-.PHONY: add-verify-hook verify verify-build verify-golangci-lint verify-go-mod verify-shellcheck verify-spelling
+.PHONY: add-verify-hook verify verify-build verify-golangci-lint verify-go-mod verify-shellcheck verify-spelling all
 
 add-verify-hook: ## Adds verify scripts to git pre-commit hooks.
 # Note: The pre-commit hooks can be bypassed by using the flag --no-verify when
@@ -43,11 +47,18 @@ verify-shellcheck: ## Runs shellcheck
 verify-spelling: ## Verifies spelling.
 	${REPO_ROOT}/hack/verify-spelling.sh
 
+all: verify-build
+
+${SUBCMDS}:
+	# TODO: support to compile separated command
+
 ##@ Tests
 
 .PHONY: test test-go-unit test-go-integration
 
 test: test-go-unit ## Runs unit tests
+test-verbose:
+	VERBOSE=1 make test
 
 test-go-unit: ## Runs Golang unit tests
 	${REPO_ROOT}/hack/test-go.sh
