@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: service-example-npool-top-ingress
+  namespace: kube-system
+  annotations:
+    k8s.kuboard.cn/displayName: service-example
+    k8s.kuboard.cn/workload: service-example
+    kubernetes.io/ingress.class: "traefik-internet"
+spec:
+  rules:
+  - host: api.npool.top
+    http:
+      paths:
+      - path: /service-example
+        backend:
+          serviceName: service-example
+          servicePort: http
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+emtadata:
+  name: service-example-xpool-top-ingress
+  namespace: kube-system
+  annotations:
+    k8s.kuboard.cn/displayName: service-example
+    k8s.kuboard.cn/workload: service-example
+    kubernetes.io/ingress.class: "traefik-internet"
+spec:
+  rules:
+  - host: api.xpool.top
+    http:
+      paths:
+      - path: /service-example
+        backend:
+          serviceName: service-example
+          servicePort: http
