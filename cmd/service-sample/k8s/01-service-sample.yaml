@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-sample
+  namespace: kube-system
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - name: service-sample
+        image: entropypool/service-sample:latest
+        imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-sample
+  namespace: kube-system
+spec:
+  ports:
+  - name: api
+    port: http

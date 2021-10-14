@@ -1,0 +1,5 @@
+commonLabels:
+  # app: traefik-ingress
+
+resources:
+- 01-service-sample.yaml
