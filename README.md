@@ -31,6 +31,9 @@
 * make verify ```验证开发环境与构建环境，检查code conduct```
 * make verify-build ```编译目标```
 * make test ```单元测试```
+* make generate-docker-images ```生成docker镜像```
+* make service-sample ```单独编译服务```
+* make service-sample-image ```单独生成服务镜像```
 
 ### 步骤
 * 在github上将模板仓库https://github.com/NpoolPlatform/go-service-app-template.git import为https://github.com/NpoolPlatform/my-service-name.git
