@@ -5,7 +5,13 @@ metadata:
   namespace: kube-system
 spec:
   replicas: 2
+  selector:
+    matchLabels:
+      app: service-sample
   template:
+    metadata:
+      labels:
+        app: service-sample
     spec:
       containers:
       - name: service-sample
@@ -21,4 +27,4 @@ metadata:
 spec:
   ports:
   - name: api
-    port: http
+    port: 8080
