@@ -15,7 +15,6 @@ pipeline {
 
     stage('Prepare') {
       steps {
-        sh 'apt-get update -y; apt-get install gcc -y'
         // Get linter and other build tools.
         sh 'go get -u golang.org/x/lint/golint'
         sh 'go get github.com/tebeka/go2xunit'
@@ -24,6 +23,7 @@ pipeline {
         // Get dependencies
         sh 'go get golang.org/x/image/tiff/lzw'
         sh 'go get github.com/boombuler/barcode'
+        sh 'make deps'
       }
     }
 
