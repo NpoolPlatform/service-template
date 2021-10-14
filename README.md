@@ -25,6 +25,11 @@
 * [x] 集成版本信息
 * [x] 集成rabbitmq访问
 * [ ] 完善rabbitmq API
+* [x] 生成docker镜像
+* [x] 发布docker镜像
+* [x] 将服务部署到k8s集群
+* [x] 将服务api通过traefik-internet ingress代理，供外部应用调用(视服务功能决定是否需要)
+* [ ] ingress中服务相关api的traefik规则定义
 
 ### 命令
 * make init ```初始化仓库，创建go.mod```
@@ -41,8 +46,9 @@
 * cd my-service-name
 * mv cmd/service-sample cmd/my-service
 * 修改cmd/my-service/main.go中的serviceName为My Service
-* 重命名cmd/my-service/ServiceSample.viper.yaml为cmd/my-service/MyService.viper.yaml
-* 将cmd/my-service/MyService.viper.yaml中的内容修改为本服务对应内容
+* mv cmd/my-service/ServiceSample.viper.yaml cmd/my-service/MyService.viper.yaml
+* 将cmd/my-service/MyService.viper.yaml中的内容修改为当前服务对应内容
+* 修改Dockerfile和k8s部署文档为当前服务对应内容
 
 ### 最佳实践
 * 每个服务只提供单一可执行文件，有利于docker镜像打包与k8s部署管理
