@@ -32,11 +32,7 @@ for PLATFORM in "${PLATFORMS[@]}"; do
     compile_date=`date -u +'%Y-%m-%dT%H:%M:%SZ'`
     git_revision=`git rev-parse HEAD 2>/dev/null || echo unknow`
 
-    if [ -z $1 ]; then
-        service_name="..."
-    else
-        service_name=$1
-    fi
+    service_name=$1
 
     echo "Building project for $PLATFORM -- $version $compile_date $git_revision"
     go build -v -ldflags "-s -w \

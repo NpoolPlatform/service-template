@@ -34,7 +34,7 @@ verify: go.mod verify-build verify-golangci-lint verify-go-mod #verify-shellchec
 	${REPO_ROOT}/hack/verify.sh
 
 verify-build: ## Builds the project for a chosen set of platforms
-	${REPO_ROOT}/hack/verify-build.sh
+	${REPO_ROOT}/hack/verify-build.sh ...
 
 verify-go-mod: ## Runs the go module linter
 	${REPO_ROOT}/hack/verify-go-mod.sh
