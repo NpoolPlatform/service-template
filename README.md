@@ -39,6 +39,7 @@
 * make generate-docker-images ```生成docker镜像```
 * make service-sample ```单独编译服务```
 * make service-sample-image ```单独生成服务镜像```
+* make deploy-to-k8s-cluster ```部署到k8s集群```
 
 ### 步骤
 * 在github上将模板仓库https://github.com/NpoolPlatform/go-service-app-template.git import为https://github.com/NpoolPlatform/my-service-name.git
