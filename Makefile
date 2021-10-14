@@ -8,6 +8,7 @@ NOCOLOR:=\\033[0m
 GITREPO=$(shell git remote -v | grep fetch | awk '{print $$2}' | sed 's/\.git//g' | sed 's/https:\/\///g')
 SUBCMDS=$(wildcard cmd/*)
 SERVICES=$(SUBCMDS:cmd/%=%)
+SERVICEIMAGES=$(SERVICES:%=%-image)
 
 ##@ init project
 init:
@@ -52,6 +53,9 @@ all: verify-build
 
 ${SERVICES}:
 	${REPO_ROOT}/hack/verify-build.sh $@
+
+${SERVICEIMAGES}:
+	${REPO_ROOT}/hack/generate-docker-image.sh $(@:%-image=%)
 
 ##@ Tests
 
