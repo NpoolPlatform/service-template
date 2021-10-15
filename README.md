@@ -30,6 +30,8 @@
 * [x] 将服务部署到k8s集群
 * [x] 将服务api通过traefik-internet ingress代理，供外部应用调用(视服务功能决定是否需要)
 * [ ] ingress中服务相关api的traefik规则定义
+* [x] 集成GRPC
+* [ ] 添加GRPC proto编译支持
 
 ### 命令
 * make init ```初始化仓库，创建go.mod```
