@@ -83,8 +83,6 @@ pipeline {
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl add_vhost $vhost
           done
         '''.stripIndent())
-        sh(
-        )
       }
     }
 
