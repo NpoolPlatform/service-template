@@ -79,7 +79,7 @@ pipeline {
       steps {
         sh 'make deploy-to-k8s-cluster'
         sh (returnStdout: true, script: '''
-          for vhost in `cat cmd/*/*.viper.yaml | grep hostname | awk '{print $2}' | sed 's/"//g'`; do
+          for vhost in `cat cmd/*/*.viper.yaml | grep hostname | awk '{print $2}' | sed 's/"//g' | sed 's/\./-/g'`; do
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl add_vhost $vhost
           done
         '''.stripIndent())
