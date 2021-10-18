@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package service.sample.v1;
+
+option go_package = "github.com/NpoolPlatform/go-service-app-template/message/npool";
+
+import "google/api/annotations.proto";
+
+service ServiceExample {
+    rpc Echo (StringMessage) returns (StringMessage){
+        option (google.api.http) = {
+            post: "/v1/echo"
+            body: "*"
+        };
+    }
+}
+
+message StringMessage {
+    string value = 100;
+}

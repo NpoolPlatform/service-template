@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"google.golang.org/grpc"
 
+	"github.com/NpoolPlatform/go-service-app-template/api/handle"
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	http2 "github.com/NpoolPlatform/go-service-framework/pkg/http"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
@@ -35,6 +36,7 @@ func registerRoute(router *chi.Mux) error {
 	return nil
 }
 
-func rpcRegister(server *grpc.Server) error {
+func rpcRegister(server grpc.ServiceRegistrar) error {
+	handle.Register(server)
 	return nil
 }
