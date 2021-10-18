@@ -3,8 +3,7 @@ module github.com/NpoolPlatform/go-service-app-template
 go 1.16
 
 require (
-	github.com/NpoolPlatform/go-service-framework v0.0.0-20211018112736-b7d74bdee76d
-	github.com/go-chi/chi/v5 v5.0.4
+	github.com/NpoolPlatform/go-service-framework v0.0.0-20211019090045-7235f7a363f4
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0
 	github.com/urfave/cli/v2 v2.3.0
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
