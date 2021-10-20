@@ -1,8 +1,9 @@
-package handle
+package echo
 
 import (
+	"context"
+
 	"github.com/NpoolPlatform/go-service-app-template/message/npool"
-	"google.golang.org/grpc"
 )
 
 // https://github.com/grpc/grpc-go/issues/3794
@@ -11,6 +12,6 @@ type Server struct {
 	npool.UnimplementedServiceExampleServer
 }
 
-func Register(server grpc.ServiceRegistrar) {
-	npool.RegisterServiceExampleServer(server, &Server{})
+func (s *Server) Echo(ctx context.Context, in *npool.StringMessage) (*npool.StringMessage, error) {
+	return in, nil
 }

@@ -49,8 +49,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/DATA-DOG/go-sqlmock v1.5.0 h1:Shsta01QNfFxHCfpW6YH2STWB0MudeXXEWMr20OEh60=
 github.com/DATA-DOG/go-sqlmock v1.5.0/go.mod h1:f/Ixk793poVmq4qj/V1dPUg2JEAKC73Q5eFN3EC/SaM=
-github.com/NpoolPlatform/go-service-framework v0.0.0-20211018112736-b7d74bdee76d h1:1IaULqkhnVA4LjrvHXkqJWyaW7TQlK2PzlRWzzQm7sk=
-github.com/NpoolPlatform/go-service-framework v0.0.0-20211018112736-b7d74bdee76d/go.mod h1:+Oy6JE71JvVQxjFd33wy/Ee/F5vGCAp9juAVmjqSMrY=
+github.com/NpoolPlatform/go-service-framework v0.0.0-20211019090045-7235f7a363f4 h1:DEY2l5fGMPdVeFKdgvNlNc2BNVpDft3ClIWssQZPtjE=
+github.com/NpoolPlatform/go-service-framework v0.0.0-20211019090045-7235f7a363f4/go.mod h1:xf6pcfhEuS7AM2yWpiOdvCZedaALpi5UlWt5FIs8A/A=
 github.com/OneOfOne/xxhash v1.2.2 h1:KMrpdQIwFcEqXDklaen+P1axHaj9BSKzvpUUfnHldSE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/Shonminh/apollo-client v0.4.0 h1:AXGp4wOahrEKjheMXehgsG9B8dEfLQHttRLHeEefvus=
@@ -126,7 +126,6 @@ github.com/go-chassis/kie-client v0.1.0/go.mod h1:UTdbtyN5ge/v9DmQzdVRxQP7z51Q4z
 github.com/go-chassis/openlog v1.1.2/go.mod h1:+eYCADVxWyJkwsFMUBrMxyQlNqW+UUsCxvR2LrYZUaA=
 github.com/go-chassis/openlog v1.1.3 h1:XqIOvZ8YPJ9o9lLtLBskQNNWolK5kC6a4Sv7r4s9sZ4=
 github.com/go-chassis/openlog v1.1.3/go.mod h1:+eYCADVxWyJkwsFMUBrMxyQlNqW+UUsCxvR2LrYZUaA=
-github.com/go-chi/chi/v5 v5.0.4 h1:5e494iHzsYBiyXQAHHuI4tyJS9M3V84OuX3ufIIGHFo=
 github.com/go-chi/chi/v5 v5.0.4/go.mod h1:DslCQbL2OYiznFReuXYUmQ2hGd1aDpCnlMNITLSKoi8=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20191125211704-12ad95a8df72/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=

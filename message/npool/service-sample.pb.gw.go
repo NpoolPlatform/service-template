@@ -77,7 +77,7 @@ func RegisterServiceExampleHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/service.sample.v1.ServiceExample/Echo", runtime.WithHTTPPathPattern("/v1/example/echo"))
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/service.sample.v1.ServiceExample/Echo", runtime.WithHTTPPathPattern("/v1/echo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -139,7 +139,7 @@ func RegisterServiceExampleHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/service.sample.v1.ServiceExample/Echo", runtime.WithHTTPPathPattern("/v1/example/echo"))
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/service.sample.v1.ServiceExample/Echo", runtime.WithHTTPPathPattern("/v1/echo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -159,7 +159,7 @@ func RegisterServiceExampleHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_ServiceExample_Echo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"v1", "example", "echo"}, ""))
+	pattern_ServiceExample_Echo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "echo"}, ""))
 )
 
 var (
