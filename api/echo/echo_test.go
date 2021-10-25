@@ -15,7 +15,11 @@ import (
 	"time"
 
 	"github.com/NpoolPlatform/go-service-app-template/message/npool"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
 )
 
@@ -27,10 +31,25 @@ func run(wg *sync.WaitGroup) {
 		log.Println(err)
 	}
 
-	server := grpc.NewServer()
+	server := grpc.NewServer(
+		grpc.StreamInterceptor(grpc_middleware.ChainStreamServer(
+			grpc_opentracing.StreamServerInterceptor(),
+			grpc_prometheus.StreamServerInterceptor,
+		)),
+		grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(
+			grpc_opentracing.UnaryServerInterceptor(),
+			grpc_prometheus.UnaryServerInterceptor,
+		)),
+	)
 
 	go func() {
 		npool.RegisterServiceExampleServer(server, &Server{})
+		grpc_prometheus.EnableHandlingTimeHistogram()
+		grpc_prometheus.Register(server)
+		go func() {
+			http.Handle("/metrics", promhttp.Handler())
+			http.ListenAndServe(":9999", nil) // nolint
+		}()
 		log.Println(server.Serve(l))
 	}()
 
@@ -47,6 +66,11 @@ func run(wg *sync.WaitGroup) {
 		server.GracefulStop()
 	}()
 	if err := npool.RegisterServiceExampleHandlerFromEndpoint(context.Background(), mux, "127.0.0.1:9090", []grpc.DialOption{grpc.WithInsecure()}); err != nil {
+		log.Panic(err)
+	}
+	if err := mux.HandlePath(http.MethodGet, "/healthz", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
+		w.Write([]byte("PONG")) // nolint
+	}); err != nil {
 		log.Panic(err)
 	}
 	if err := svc.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -134,8 +158,29 @@ loop:
 		}
 		resp.Body.Close()
 		fmt.Println("from http: ", string(rest))
+
+		err = healthz()
+		if err != nil {
+			break loop
+		}
 	}
 	log.Println("http done")
+}
+
+func healthz() error {
+	resp, err := http.Get("http://127.0.0.1:9091/healthz")
+	if err != nil {
+		return err
+	}
+
+	rest, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		resp.Body.Close()
+		return err
+	}
+	resp.Body.Close()
+	fmt.Println("from http healthz: ", string(rest))
+	return nil
 }
 
 func TestEcho(t *testing.T) {
