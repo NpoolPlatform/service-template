@@ -3,7 +3,7 @@ module github.com/NpoolPlatform/go-service-app-template
 go 1.16
 
 require (
-	github.com/NpoolPlatform/go-service-framework v0.0.0-20211027110255-6277ee7e4985
+	github.com/NpoolPlatform/go-service-framework v0.0.0-20211027145440-01cd8b2b7eac
 	github.com/grpc-ecosystem/go-grpc-middleware v1.0.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.6.0
