@@ -22,6 +22,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// request body and response
 type VersionResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache

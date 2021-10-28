@@ -16,6 +16,7 @@ proto: $(PROTO_GO_FILE) $(PROTO_GO_GW_FILE)
 		--go-grpc_out=. --go-grpc_opt paths=source_relative \
 		--doc_out=$(dir $*) \
 		--doc_opt=markdown,$(notdir $*).md $<
+	$(PROTOC) $(PROTO_INCLUDE) --swagger_out=logtostderr=true:. $<
 
 %.pb.gw.go: %.proto
 	$(PROTOC) $(PROTO_INCLUDE) $< --plugin=protoc-gen-grpc-gateway=$(PROTOC-GEN-GRPC-GATEWAY) \

@@ -22,7 +22,7 @@
 <a name="service.sample.v1.VersionResponse"></a>
 
 ### VersionResponse
-
+request body and response
 
 
 | Field | Type | Label | Description |
@@ -43,11 +43,11 @@
 <a name="service.sample.v1.ServiceExample"></a>
 
 ### ServiceExample
-
+Service Name
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Version | [.google.protobuf.Empty](#google.protobuf.Empty) | [VersionResponse](#service.sample.v1.VersionResponse) |  |
+| Version | [.google.protobuf.Empty](#google.protobuf.Empty) | [VersionResponse](#service.sample.v1.VersionResponse) | Method Version |
 
  
 
