@@ -6,18 +6,9 @@ import (
 )
 
 func Init() error {
-	err := msgsrv.Init()
-	if err != nil {
-		return err
-	}
-
-	err = msgsrv.DeclareQueue(msg.QueueExample)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return msg.InitQueues()
 }
 
-var Deinit = msgsrv.Deinit                 //nolint
-var PublishToQueue = msgsrv.PublishToQueue //nolint
+func PublishExample(example *msg.Example) error {
+	return msgsrv.PublishToQueue(msg.QueueExample, example)
+}
