@@ -1,6 +1,10 @@
 #/bin/bash
 UNZIP := $(shell which unzip)
 
+ifeq ($(GOBIN),)
+	GOBIN=$(shell dirname $(shell which go))
+endif
+
 install: pre tool
 
 pre:
