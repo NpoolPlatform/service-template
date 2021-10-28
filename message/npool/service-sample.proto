@@ -5,16 +5,17 @@ package service.sample.v1;
 option go_package = "github.com/NpoolPlatform/go-service-app-template/message/npool";
 
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 
 service ServiceExample {
-    rpc Echo (StringMessage) returns (StringMessage){
+    rpc Version (google.protobuf.Empty) returns (VersionResponse){
         option (google.api.http) = {
-            post: "/v1/echo"
+            post: "/version"
             body: "*"
         };
     }
 }
 
-message StringMessage {
-    string value = 100;
+message VersionResponse {
+    string Info = 100;
 }

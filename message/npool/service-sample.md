@@ -4,7 +4,7 @@
 ## Table of Contents
 
 - [npool/service-sample.proto](#npool/service-sample.proto)
-    - [StringMessage](#service.sample.v1.StringMessage)
+    - [VersionResponse](#service.sample.v1.VersionResponse)
   
     - [ServiceExample](#service.sample.v1.ServiceExample)
   
@@ -19,15 +19,15 @@
 
 
 
-<a name="service.sample.v1.StringMessage"></a>
+<a name="service.sample.v1.VersionResponse"></a>
 
-### StringMessage
+### VersionResponse
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| value | [string](#string) |  |  |
+| Info | [string](#string) |  |  |
 
 
 
@@ -47,7 +47,7 @@
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Echo | [StringMessage](#service.sample.v1.StringMessage) | [StringMessage](#service.sample.v1.StringMessage) |  |
+| Version | [.google.protobuf.Empty](#google.protobuf.Empty) | [VersionResponse](#service.sample.v1.VersionResponse) |  |
 
  
 
