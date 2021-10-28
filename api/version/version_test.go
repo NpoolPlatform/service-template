@@ -1,4 +1,4 @@
-package echo
+package version
 
 import (
 	"bytes"
@@ -21,12 +21,13 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func run(wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	l, err := net.Listen("tcp", "0.0.0.0:9090")
+	l, err := net.Listen("tcp", "0.0.0.0:9099")
 	if err != nil {
 		log.Println(err)
 	}
@@ -65,7 +66,7 @@ func run(wg *sync.WaitGroup) {
 		}
 		server.GracefulStop()
 	}()
-	if err := npool.RegisterServiceExampleHandlerFromEndpoint(context.Background(), mux, "127.0.0.1:9090", []grpc.DialOption{grpc.WithInsecure()}); err != nil {
+	if err := npool.RegisterServiceExampleHandlerFromEndpoint(context.Background(), mux, "127.0.0.1:9099", []grpc.DialOption{grpc.WithInsecure()}); err != nil {
 		log.Panic(err)
 	}
 	if err := mux.HandlePath(http.MethodGet, "/healthz", func(w http.ResponseWriter, r *http.Request, pathParams map[string]string) {
@@ -97,7 +98,7 @@ loop:
 			break loop
 		}
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		conn, err := grpc.DialContext(ctx, "127.0.0.1:9090", grpc.WithInsecure(),
+		conn, err := grpc.DialContext(ctx, "127.0.0.1:9099", grpc.WithInsecure(),
 			grpc.WithBlock(),
 		)
 		if err != nil {
@@ -105,13 +106,13 @@ loop:
 			continue
 		}
 		client := npool.NewServiceExampleClient(conn)
-		out, err := client.Echo(ctx, &npool.StringMessage{Value: "hello world"})
+		out, err := client.Version(ctx, &emptypb.Empty{})
 		if err != nil {
 			cancel()
 			continue
 		}
 		cancel()
-		fmt.Println("from grpc: ", out.GetValue())
+		fmt.Println("from grpc: ", out.GetInfo())
 	}
 	log.Println("grpc done")
 }

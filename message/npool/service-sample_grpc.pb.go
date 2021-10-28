@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -18,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceExampleClient interface {
-	Echo(ctx context.Context, in *StringMessage, opts ...grpc.CallOption) (*StringMessage, error)
+	Version(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*VersionResponse, error)
 }
 
 type serviceExampleClient struct {
@@ -29,9 +30,9 @@ func NewServiceExampleClient(cc grpc.ClientConnInterface) ServiceExampleClient {
 	return &serviceExampleClient{cc}
 }
 
-func (c *serviceExampleClient) Echo(ctx context.Context, in *StringMessage, opts ...grpc.CallOption) (*StringMessage, error) {
-	out := new(StringMessage)
-	err := c.cc.Invoke(ctx, "/service.sample.v1.ServiceExample/Echo", in, out, opts...)
+func (c *serviceExampleClient) Version(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*VersionResponse, error) {
+	out := new(VersionResponse)
+	err := c.cc.Invoke(ctx, "/service.sample.v1.ServiceExample/Version", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +43,7 @@ func (c *serviceExampleClient) Echo(ctx context.Context, in *StringMessage, opts
 // All implementations must embed UnimplementedServiceExampleServer
 // for forward compatibility
 type ServiceExampleServer interface {
-	Echo(context.Context, *StringMessage) (*StringMessage, error)
+	Version(context.Context, *emptypb.Empty) (*VersionResponse, error)
 	mustEmbedUnimplementedServiceExampleServer()
 }
 
@@ -50,8 +51,8 @@ type ServiceExampleServer interface {
 type UnimplementedServiceExampleServer struct {
 }
 
-func (UnimplementedServiceExampleServer) Echo(context.Context, *StringMessage) (*StringMessage, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Echo not implemented")
+func (UnimplementedServiceExampleServer) Version(context.Context, *emptypb.Empty) (*VersionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Version not implemented")
 }
 func (UnimplementedServiceExampleServer) mustEmbedUnimplementedServiceExampleServer() {}
 
@@ -66,20 +67,20 @@ func RegisterServiceExampleServer(s grpc.ServiceRegistrar, srv ServiceExampleSer
 	s.RegisterService(&ServiceExample_ServiceDesc, srv)
 }
 
-func _ServiceExample_Echo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StringMessage)
+func _ServiceExample_Version_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceExampleServer).Echo(ctx, in)
+		return srv.(ServiceExampleServer).Version(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/service.sample.v1.ServiceExample/Echo",
+		FullMethod: "/service.sample.v1.ServiceExample/Version",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceExampleServer).Echo(ctx, req.(*StringMessage))
+		return srv.(ServiceExampleServer).Version(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -92,8 +93,8 @@ var ServiceExample_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ServiceExampleServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Echo",
-			Handler:    _ServiceExample_Echo_Handler,
+			MethodName: "Version",
+			Handler:    _ServiceExample_Version_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
