@@ -27,7 +27,7 @@
 - [x] 集成mysql访问框架(https://github.com/ent/ent)
 * [x] 集成版本信息
 * [x] 集成rabbitmq访问
-* [ ] 完善rabbitmq API
+* [x] 完善rabbitmq API
 * [x] 生成docker镜像
 * [x] 发布docker镜像
 * [x] 将服务部署到k8s集群
