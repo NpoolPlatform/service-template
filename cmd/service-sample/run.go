@@ -1,7 +1,6 @@
 package main
 
 import (
-	"google.golang.org/grpc"
 	"time"
 
 	"github.com/NpoolPlatform/go-service-app-template/api"
@@ -16,6 +15,8 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 
 	cli "github.com/urfave/cli/v2"
+
+	"google.golang.org/grpc"
 )
 
 var runCmd = &cli.Command{

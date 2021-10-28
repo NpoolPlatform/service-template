@@ -6,7 +6,7 @@ import (
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 )
 
-func listenTemplateExample() error {
+func listenTemplateExample() {
 	for {
 		logger.Sugar().Infof("consume template example")
 		err := msgcli.ConsumeExample(func(example *msg.Example) error {
@@ -16,7 +16,7 @@ func listenTemplateExample() error {
 		})
 		if err != nil {
 			logger.Sugar().Errorf("fail to consume example: %v", err)
-			return err
+			return
 		}
 	}
 }

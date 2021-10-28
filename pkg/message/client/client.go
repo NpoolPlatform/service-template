@@ -25,7 +25,11 @@ func Init() error {
 		return err
 	}
 
-	_myClient.DeclareQueue(msg.QueueExample)
+	err = _myClient.DeclareQueue(msg.QueueExample)
+	if err != nil {
+		return err
+	}
+
 	sampleClient := &client{
 		Client:    _myClient,
 		consumers: map[string]<-chan amqp.Delivery{},
