@@ -3,11 +3,14 @@
 [![Test](https://github.com/NpoolPlatform/go-service-framework/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NpoolPlatform/go-service-framework/actions/workflows/main.yml)
 
 ## 目录
-* [功能](#功能)
-* [命令](#命令)
-* [步骤](#步骤)
-* [最佳实践](#最佳实践)
-* [关于mysql](#关于mysql)
+- [Npool go service framework](#npool-go-service-framework)
+  - [目录](#目录)
+    - [功能](#功能)
+    - [命令](#命令)
+    - [步骤](#步骤)
+    - [最佳实践](#最佳实践)
+    - [关于mysql](#关于mysql)
+    - [GRPC](#grpc)
 
 -----------
 ### 功能
@@ -24,14 +27,14 @@
 - [x] 集成mysql访问框架(https://github.com/ent/ent)
 * [x] 集成版本信息
 * [x] 集成rabbitmq访问
-* [ ] 完善rabbitmq API
+* [x] 完善rabbitmq API
 * [x] 生成docker镜像
 * [x] 发布docker镜像
 * [x] 将服务部署到k8s集群
 * [x] 将服务api通过traefik-internet ingress代理，供外部应用调用(视服务功能决定是否需要)
 * [ ] ingress中服务相关api的traefik规则定义
 * [x] 集成GRPC
-* [ ] 添加GRPC proto编译支持
+* [x] 添加GRPC proto编译支持
 
 ### 命令
 * make init ```初始化仓库，创建go.mod```
@@ -60,5 +63,8 @@
 * 集群内服务间event call调用通过rabbitmq解耦
 
 ### 关于mysql
-* 参见https://entgo.io/docs/sql-integration
 * 创建app后，从app.Mysql()获取本地mysql client
+* [文档参考](https://entgo.io/docs/sql-integration)
+
+### GRPC
+* [GRPC 环境搭建和简单学习](./grpc.md)
