@@ -26,3 +26,4 @@ proto: $(PROTO_GO_FILE) $(PROTO_GO_GW_FILE)
 clean:
 	find ./ -name "*.go" | xargs rm -rf
 	find ./ -name "*.md" | xargs rm -rf
+	find ./ -name "*.json" | xargs rm -rf
