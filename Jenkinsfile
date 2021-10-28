@@ -2,7 +2,6 @@ pipeline {
   agent any
   environment {
     GOPROXY = 'https://goproxy.cn,direct'
-    REPO = scm.userRemoteConfigs[0].url
   }
   tools {
     go 'go'
@@ -53,7 +52,7 @@ pipeline {
       steps {
         sh (returnStdout: true, script: '''
           devboxpod=`kubectl get pods -A | grep development-box | awk '{print $2}'`
-          servicename=`basename $REPO | awk -F "." '{print $1}'`
+          servicename="sample-service"
           kubectl cp ./ kube-system/$devboxpod:/tmp/$servicename
           kubectl exec --namespace kube-system $devboxpod -- cd /tmp/$servicename; make test
           kubectl exec --namespace kube-system $devboxpod -- rm -rf /tmp/$servicename
