@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceExampleClient interface {
+	// Method Version
 	Version(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*VersionResponse, error)
 }
 
@@ -43,6 +44,7 @@ func (c *serviceExampleClient) Version(ctx context.Context, in *emptypb.Empty, o
 // All implementations must embed UnimplementedServiceExampleServer
 // for forward compatibility
 type ServiceExampleServer interface {
+	// Method Version
 	Version(context.Context, *emptypb.Empty) (*VersionResponse, error)
 	mustEmbedUnimplementedServiceExampleServer()
 }

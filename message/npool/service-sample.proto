@@ -7,7 +7,9 @@ option go_package = "github.com/NpoolPlatform/go-service-app-template/message/np
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 
+// Service Name
 service ServiceExample {
+    // Method Version
     rpc Version (google.protobuf.Empty) returns (VersionResponse){
         option (google.api.http) = {
             post: "/version"
@@ -16,6 +18,7 @@ service ServiceExample {
     }
 }
 
+// request body and response
 message VersionResponse {
     string Info = 100;
 }

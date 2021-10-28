@@ -18,6 +18,7 @@ tool:
 	mv /tmp/protoc/bin/protoc ${GOBIN} && \
 	go mod tidy && \
 	go get -u github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc && \
+	go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger && \
 	go install \
 		github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
 		github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2 \
