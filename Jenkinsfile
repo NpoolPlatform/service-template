@@ -50,6 +50,14 @@ pipeline {
         expression { BUILD_TARGET == 'true' }
       }
       steps {
+        sh (returnStdout: true, script: '''
+          devboxpod=`kubectl get pods -A | grep development-box | awk '{print $2}'`
+          servicename=`basename scm.userRemoteConfigs[0].url | awk -F "." '{print $1}'`
+          kubectl cp ./ kube-system/$devboxpod:/tmp/$servicename
+          kubectl exec --namespace kube-system $devboxpod -- cd /tmp/$servicename; make test
+          kubectl exec --namespace kube-system $devboxpod -- rm -rf /tmp/$servicename
+        '''.stripIndent())
+        sh 'kubectl cp '
         sh 'make test'
       }
     }

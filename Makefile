@@ -73,7 +73,7 @@ deploy-to-k8s-cluster: ${SERVICEK8SDEPLOYS}
 
 .PHONY: test test-go-unit test-go-integration
 
-test: test-go-unit ## Runs unit tests
+test: verify-build test-go-unit ## Runs unit tests
 test-verbose:
 	VERBOSE=1 make test
 
