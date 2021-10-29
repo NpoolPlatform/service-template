@@ -1,6 +1,8 @@
 package version
 
 import (
+	"os"
+	"strconv"
 	"testing"
 
 	"github.com/go-resty/resty/v2"
@@ -10,6 +12,10 @@ import (
 )
 
 func TestVersion(t *testing.T) {
+	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err != nil || runByGithubAction {
+		return
+	}
+
 	cli := resty.New()
 	resp, err := cli.R().
 		Get("http://localhost:32759/version")
