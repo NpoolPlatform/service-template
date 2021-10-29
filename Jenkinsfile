@@ -50,7 +50,7 @@ pipeline {
         expression { BUILD_TARGET == 'true' }
       }
       steps {
-        sh (returnStdout: true, script: '''
+        sh (returnStdout: false, script: '''
           devboxpod=`kubectl get pods -A | grep development-box | awk '{print $2}'`
           servicename="sample-service"
           kubectl cp ./ kube-system/$devboxpod:/tmp/$servicename
@@ -84,7 +84,7 @@ pipeline {
       }
       steps {
         sh 'make deploy-to-k8s-cluster'
-        sh (returnStdout: true, script: '''
+        sh (returnStdout: false, script: '''
           username=`helm status rabbitmq --namespace kube-system | grep Username | awk -F ' : ' '{print $2}' | sed 's/"//g'`
           for vhost in `cat cmd/*/*.viper.yaml | grep hostname | awk '{print $2}' | sed 's/"//g' | sed 's/\\./-/g'`; do
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl add_vhost $vhost
