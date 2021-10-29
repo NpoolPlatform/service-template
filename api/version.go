@@ -1,4 +1,4 @@
-package version
+package api
 
 import (
 	"context"
@@ -10,12 +10,6 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
-
-// https://github.com/grpc/grpc-go/issues/3794
-// require_unimplemented_servers=false
-type Server struct {
-	npool.UnimplementedServiceExampleServer
-}
 
 func (s *Server) Version(ctx context.Context, in *emptypb.Empty) (*npool.VersionResponse, error) {
 	info, err := cv.GetVersion()
