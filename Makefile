@@ -73,9 +73,15 @@ deploy-to-k8s-cluster: ${SERVICEK8SDEPLOYS}
 
 .PHONY: test test-go-unit test-go-integration
 
+before-test: verify-build
+	${REPO_ROOT}/hack/before-test.sh
+
 test: verify-build test-go-unit ## Runs unit tests
 test-verbose:
 	VERBOSE=1 make test
+
+after-test:
+	${REPO_ROOT}/hack/after-test.sh
 
 test-go-unit: ## Runs Golang unit tests
 	${REPO_ROOT}/hack/test-go.sh
