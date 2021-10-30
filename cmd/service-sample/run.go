@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/NpoolPlatform/go-service-app-template/api"
+	db "github.com/NpoolPlatform/go-service-app-template/pkg/db"
 	msgcli "github.com/NpoolPlatform/go-service-app-template/pkg/message/client"
 	msglistener "github.com/NpoolPlatform/go-service-app-template/pkg/message/listener"
 	msg "github.com/NpoolPlatform/go-service-app-template/pkg/message/message"
@@ -24,6 +25,10 @@ var runCmd = &cli.Command{
 	Aliases: []string{"s"},
 	Usage:   "Run the daemon",
 	Action: func(c *cli.Context) error {
+		if err := db.Init(); err != nil {
+			return err
+		}
+
 		go func() {
 			if err := grpc2.RunGRPC(rpcRegister); err != nil {
 				logger.Sugar().Errorf("fail to run grpc server: %v", err)

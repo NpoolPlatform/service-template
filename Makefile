@@ -24,6 +24,7 @@ deps:
 	go get ./...
 	go get github.com/stretchr/testify/assert@v1.7.0
 	go get github.com/go-resty/resty/v2
+	go get entgo.io/ent/cmd/ent
 
 ##@ Verify
 
@@ -52,6 +53,9 @@ verify-shellcheck: ## Runs shellcheck
 
 verify-spelling: ## Verifies spelling.
 	${REPO_ROOT}/hack/verify-spelling.sh
+
+gen-ent:
+	go generate ./pkg/db/ent
 
 all: verify-build
 
