@@ -102,7 +102,7 @@ pipeline {
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl set_permissions -p $vhost $username ".*" ".*" ".*"
             cd .apollo-base-config
             ./apollo-base-config.sh $APP_ID $TARGET_ENV $vhost
-            ./apollo-item-config.sh $APP_ID $TARGET_ENV rabbitmq-npool-top database_name $vhost
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost database_name $vhost
           done
         '''.stripIndent())
       }
