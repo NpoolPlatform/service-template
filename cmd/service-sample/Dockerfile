@@ -1,4 +1,4 @@
-FROM scratch
+FROM jrei/systemd-centos:7
 
 COPY ServiceSample.viper.yaml /etc/ServiceSample/ServiceSample.viper.yaml
 COPY service-sample /usr/local/bin/service-sample
