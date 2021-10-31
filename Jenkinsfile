@@ -100,8 +100,9 @@ pipeline {
           for vhost in `cat cmd/*/*.viper.yaml | grep hostname | awk '{print $2}' | sed 's/"//g' | sed 's/\\./-/g'`; do
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl add_vhost $vhost
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl set_permissions -p $vhost $username ".*" ".*" ".*"
-            sh 'cd .apollo-base-config; ./apollo-base-config.sh $APP_ID $TARGET_ENV $vhost'
-            sh 'cd .apollo-base-config; ./apollo-item-config.sh $APP_ID $TARGET_ENV rabbitmq-npool-top database_name $vhost'
+            cd .apollo-base-config
+            ./apollo-base-config.sh $APP_ID $TARGET_ENV $vhost
+            ./apollo-item-config.sh $APP_ID $TARGET_ENV rabbitmq-npool-top database_name $vhost
           done
         '''.stripIndent())
       }
