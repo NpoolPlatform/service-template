@@ -1,3 +1,5 @@
+// +build !codeanalysis
+
 package api
 
 import (
