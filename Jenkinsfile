@@ -83,6 +83,12 @@ pipeline {
         expression { BUILD_TARGET == 'true' }
       }
       steps {
+        sh(returnStdout: true, script: '''
+          images=`docker images | grep entropypool | grep service-sample | awk '{ print $3 }'`
+          for image in $images; do
+            docker rmi $image
+          done
+        '''.stripIndent())
         sh 'make generate-docker-images'
       }
     }
