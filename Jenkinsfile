@@ -77,9 +77,11 @@ pipeline {
           for vhost in `cat cmd/*/*.viper.yaml | grep hostname | awk '{print $2}' | sed 's/"//g' | sed 's/\\./-/g'`; do
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl add_vhost $vhost
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl set_permissions -p $vhost $username ".*" ".*" ".*"
+
             cd .apollo-base-config
             ./apollo-base-config.sh $APP_ID $TARGET_ENV $vhost
             ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost database_name service_sample
+            cd -
           done
 
           kubectl exec --namespace kube-system $devboxpod -- make -C /tmp/$servicename deps before-test test after-test
