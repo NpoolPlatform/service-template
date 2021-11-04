@@ -45,6 +45,12 @@ pipeline {
       }
     }
 
+    stage('Switch to current cluster') {
+        steps {
+            sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
+        }
+    }
+
     stage('Unit Tests') {
       when {
         expression { BUILD_TARGET == 'true' }
