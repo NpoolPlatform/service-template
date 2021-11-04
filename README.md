@@ -1,16 +1,14 @@
-# Npool go service framework
+# Npool go service app template
 
-[![Test](https://github.com/NpoolPlatform/go-service-framework/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NpoolPlatform/go-service-framework/actions/workflows/main.yml)
+[![Test](https://github.com/NpoolPlatform/go-service-app-template/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NpoolPlatform/go-service-app-template/actions/workflows/main.yml)
 
-## 目录
-- [Npool go service framework](#npool-go-service-framework)
-  - [目录](#目录)
-    - [功能](#功能)
-    - [命令](#命令)
-    - [步骤](#步骤)
-    - [最佳实践](#最佳实践)
-    - [关于mysql](#关于mysql)
-    - [GRPC](#grpc)
+[目录](#目录)
+- [功能](#功能)
+- [命令](#命令)
+- [步骤](#步骤)
+- [最佳实践](#最佳实践)
+- [关于mysql](#关于mysql)
+- [GRPC](#grpc)
 
 -----------
 ### 功能
