@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     GOPROXY = 'https://goproxy.cn,direct'
+    PATH = '${env.HOME}/go/bin:/usr/go/bin:${env.PATH}'
   }
   tools {
     go 'go'
@@ -41,6 +42,8 @@ pipeline {
         expression { BUILD_TARGET == 'true' }
       }
       steps {
+        sh 'cd tools/grpc; make install'
+        sh 'cd message; make proto'
         sh 'make verify-build'
       }
     }
@@ -80,6 +83,9 @@ pipeline {
 
           kubectl exec --namespace kube-system $devboxpod -- make -C /tmp/$servicename deps before-test test after-test
           kubectl exec --namespace kube-system $devboxpod -- rm -rf /tmp/$servicename
+
+          swaggeruipod=`kubectl get pods -A | grep swagger | awk '{print $2}'`
+          kubectl cp message/npool/*.swagger.json kube-system/$swaggeruipod:/usr/share/nginx/html || true
         '''.stripIndent())
       }
     }
