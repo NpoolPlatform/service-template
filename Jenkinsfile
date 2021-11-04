@@ -2,7 +2,6 @@ pipeline {
   agent any
   environment {
     GOPROXY = 'https://goproxy.cn,direct'
-    // PATH = '${env.HOME}/go/bin:/usr/go/bin:${env.PATH}'
   }
   tools {
     go 'go'
@@ -42,9 +41,11 @@ pipeline {
         expression { BUILD_TARGET == 'true' }
       }
       steps {
-        sh 'cd tools/grpc; make install'
-        sh 'cd message; make proto'
-        sh 'make verify-build'
+        sh (returnStdout: false, script: '''
+          make -C tools/grpc install'
+          PATH=$PATH:/usr/go/bin:$HOME/go/bin make -C message proto'
+          make verify-build'
+        '''.stripIndent())
       }
     }
 
