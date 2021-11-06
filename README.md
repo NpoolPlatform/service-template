@@ -54,16 +54,11 @@
 * 将cmd/my-service/MyService.viper.yaml中的内容修改为当前服务对应内容
 * 修改Dockerfile和k8s部署文档为当前服务对应内容
   * grep -rb "service sample" ./*
-  * grep -rb "service-sample" ./*
   * grep -rb "service-example" ./*
-  * grep -rb "service-example" ./*
-  * grep -rb "service example" ./*
   * grep -rb "go-service-app-template" ./*
   * grep -rb "service\.sample" ./*
   * grep -rb "service\*sample" ./*
   * grep -rb "ServiceSample" ./*
-  * grep -rb "ServiceExample" ./*
-  * grep -rb "ServiceExample" ./*
   * grep -rb "ServiceExample" ./*
   * grep -rb "service_sample" ./*
   * grep -rb "service_example" ./*
