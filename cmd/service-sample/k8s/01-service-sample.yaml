@@ -48,3 +48,6 @@ spec:
   ports:
   - name: api
     port: 32759
+    targetPort: 32759
+  selector:
+    app: service-sample

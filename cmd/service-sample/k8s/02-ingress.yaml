@@ -1,58 +1,57 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
 metadata:
-  name: service-example-npool-top-ingress
+  name: service-sample-npool-top-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: service-example
-    k8s.kuboard.cn/workload: service-example
+    k8s.kuboard.cn/displayName: service-sample-npool
+    k8s.kuboard.cn/workload: service-sample-npool
     kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd
+
 spec:
-  entryPoints:
-    - web
-    - websecure
-  routes:
-  - kind: Rule
-    match: Host(`api.npool.top`) && PathPrefix(`/service-example`)
-    middlewares:
-    - name: strip-service-name-prefix
-    services:
-    - kind: Service
-      name: service-example
-      port: api
+  rules:
+    - host: api.npool.top
+      http:
+        paths:
+          - path: /service-sample
+            backend:
+              serviceName: service-sample
+              servicePort: 32759
 
 ---
 
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
 metadata:
-  name: service-example-xpool-top-ingress
+  name: service-sample-xpool-top-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: service-example
-    k8s.kuboard.cn/workload: service-example
+    k8s.kuboard.cn/displayName: service-sample-xpool
+    k8s.kuboard.cn/workload: service-sample-xpool
     kubernetes.io/ingress.class: "traefik-internet"
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd
+
 spec:
-  entryPoints:
-    - web
-    - websecure
-  routes:
-  - kind: Rule
-    match: Host(`api.xpool.top`) && PathPrefix(`/service-example`)
-    middlewares:
-    - name: strip-service-name-prefix
-    services:
-    - kind: Service
-      name: service-example
-      port: api
+  rules:
+    - host: api.xpool.top
+      http:
+        paths:
+          - path: /service-sample
+            backend:
+              serviceName: service-sample
+              servicePort: 32759
 
 ---
 
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: strip-service-example-prefix
+  name: strip-service-sample-prefix
+  namespace: kube-system
 spec:
   stripPrefix:
     prefixes:
-      - /service-example
+      - /service-sample
