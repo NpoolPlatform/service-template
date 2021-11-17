@@ -4,8 +4,10 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
+	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/go-service-app-template/pkg/db/ent/empty"
@@ -16,6 +18,7 @@ type EmptyCreate struct {
 	config
 	mutation *EmptyMutation
 	hooks    []Hook
+	conflict []sql.ConflictOption
 }
 
 // Mutation returns the EmptyMutation object of the builder.
@@ -115,13 +118,135 @@ func (ec *EmptyCreate) createSpec() (*Empty, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	_spec.OnConflict = ec.conflict
 	return _node, _spec
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Empty.Create().
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+//
+func (ec *EmptyCreate) OnConflict(opts ...sql.ConflictOption) *EmptyUpsertOne {
+	ec.conflict = opts
+	return &EmptyUpsertOne{
+		create: ec,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Empty.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+//
+func (ec *EmptyCreate) OnConflictColumns(columns ...string) *EmptyUpsertOne {
+	ec.conflict = append(ec.conflict, sql.ConflictColumns(columns...))
+	return &EmptyUpsertOne{
+		create: ec,
+	}
+}
+
+type (
+	// EmptyUpsertOne is the builder for "upsert"-ing
+	//  one Empty node.
+	EmptyUpsertOne struct {
+		create *EmptyCreate
+	}
+
+	// EmptyUpsert is the "OnConflict" setter.
+	EmptyUpsert struct {
+		*sql.UpdateSet
+	}
+)
+
+// UpdateNewValues updates the fields using the new values that were set on create.
+// Using this option is equivalent to using:
+//
+//	client.Empty.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+//
+func (u *EmptyUpsertOne) UpdateNewValues() *EmptyUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//  client.Empty.Create().
+//      OnConflict(sql.ResolveWithIgnore()).
+//      Exec(ctx)
+//
+func (u *EmptyUpsertOne) Ignore() *EmptyUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *EmptyUpsertOne) DoNothing() *EmptyUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the EmptyCreate.OnConflict
+// documentation for more info.
+func (u *EmptyUpsertOne) Update(set func(*EmptyUpsert)) *EmptyUpsertOne {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&EmptyUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// Exec executes the query.
+func (u *EmptyUpsertOne) Exec(ctx context.Context) error {
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for EmptyCreate.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *EmptyUpsertOne) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// Exec executes the UPSERT query and returns the inserted/updated ID.
+func (u *EmptyUpsertOne) ID(ctx context.Context) (id int, err error) {
+	node, err := u.create.Save(ctx)
+	if err != nil {
+		return id, err
+	}
+	return node.ID, nil
+}
+
+// IDX is like ID, but panics if an error occurs.
+func (u *EmptyUpsertOne) IDX(ctx context.Context) int {
+	id, err := u.ID(ctx)
+	if err != nil {
+		panic(err)
+	}
+	return id
 }
 
 // EmptyCreateBulk is the builder for creating many Empty entities in bulk.
 type EmptyCreateBulk struct {
 	config
 	builders []*EmptyCreate
+	conflict []sql.ConflictOption
 }
 
 // Save creates the Empty entities in the database.
@@ -147,6 +272,7 @@ func (ecb *EmptyCreateBulk) Save(ctx context.Context) ([]*Empty, error) {
 					_, err = mutators[i+1].Mutate(root, ecb.builders[i+1].mutation)
 				} else {
 					spec := &sqlgraph.BatchCreateSpec{Nodes: specs}
+					spec.OnConflict = ecb.conflict
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, ecb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
@@ -197,6 +323,106 @@ func (ecb *EmptyCreateBulk) Exec(ctx context.Context) error {
 // ExecX is like Exec, but panics if an error occurs.
 func (ecb *EmptyCreateBulk) ExecX(ctx context.Context) {
 	if err := ecb.Exec(ctx); err != nil {
+		panic(err)
+	}
+}
+
+// OnConflict allows configuring the `ON CONFLICT` / `ON DUPLICATE KEY` clause
+// of the `INSERT` statement. For example:
+//
+//	client.Empty.CreateBulk(builders...).
+//		OnConflict(
+//			// Update the row with the new values
+//			// the was proposed for insertion.
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+//
+func (ecb *EmptyCreateBulk) OnConflict(opts ...sql.ConflictOption) *EmptyUpsertBulk {
+	ecb.conflict = opts
+	return &EmptyUpsertBulk{
+		create: ecb,
+	}
+}
+
+// OnConflictColumns calls `OnConflict` and configures the columns
+// as conflict target. Using this option is equivalent to using:
+//
+//	client.Empty.Create().
+//		OnConflict(sql.ConflictColumns(columns...)).
+//		Exec(ctx)
+//
+func (ecb *EmptyCreateBulk) OnConflictColumns(columns ...string) *EmptyUpsertBulk {
+	ecb.conflict = append(ecb.conflict, sql.ConflictColumns(columns...))
+	return &EmptyUpsertBulk{
+		create: ecb,
+	}
+}
+
+// EmptyUpsertBulk is the builder for "upsert"-ing
+// a bulk of Empty nodes.
+type EmptyUpsertBulk struct {
+	create *EmptyCreateBulk
+}
+
+// UpdateNewValues updates the fields using the new values that
+// were set on create. Using this option is equivalent to using:
+//
+//	client.Empty.Create().
+//		OnConflict(
+//			sql.ResolveWithNewValues(),
+//		).
+//		Exec(ctx)
+//
+func (u *EmptyUpsertBulk) UpdateNewValues() *EmptyUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
+	return u
+}
+
+// Ignore sets each column to itself in case of conflict.
+// Using this option is equivalent to using:
+//
+//	client.Empty.Create().
+//		OnConflict(sql.ResolveWithIgnore()).
+//		Exec(ctx)
+//
+func (u *EmptyUpsertBulk) Ignore() *EmptyUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
+	return u
+}
+
+// DoNothing configures the conflict_action to `DO NOTHING`.
+// Supported only by SQLite and PostgreSQL.
+func (u *EmptyUpsertBulk) DoNothing() *EmptyUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.DoNothing())
+	return u
+}
+
+// Update allows overriding fields `UPDATE` values. See the EmptyCreateBulk.OnConflict
+// documentation for more info.
+func (u *EmptyUpsertBulk) Update(set func(*EmptyUpsert)) *EmptyUpsertBulk {
+	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(update *sql.UpdateSet) {
+		set(&EmptyUpsert{UpdateSet: update})
+	}))
+	return u
+}
+
+// Exec executes the query.
+func (u *EmptyUpsertBulk) Exec(ctx context.Context) error {
+	for i, b := range u.create.builders {
+		if len(b.conflict) != 0 {
+			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the EmptyCreateBulk instead", i)
+		}
+	}
+	if len(u.create.conflict) == 0 {
+		return errors.New("ent: missing options for EmptyCreateBulk.OnConflict")
+	}
+	return u.create.Exec(ctx)
+}
+
+// ExecX is like Exec, but panics if an error occurs.
+func (u *EmptyUpsertBulk) ExecX(ctx context.Context) {
+	if err := u.create.Exec(ctx); err != nil {
 		panic(err)
 	}
 }

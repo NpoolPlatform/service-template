@@ -1,16 +1,14 @@
-# Npool go service framework
+# Npool go service app template
 
-[![Test](https://github.com/NpoolPlatform/go-service-framework/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NpoolPlatform/go-service-framework/actions/workflows/main.yml)
+[![Test](https://github.com/NpoolPlatform/go-service-app-template/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/NpoolPlatform/go-service-app-template/actions/workflows/main.yml)
 
-## 目录
-- [Npool go service framework](#npool-go-service-framework)
-  - [目录](#目录)
-    - [功能](#功能)
-    - [命令](#命令)
-    - [步骤](#步骤)
-    - [最佳实践](#最佳实践)
-    - [关于mysql](#关于mysql)
-    - [GRPC](#grpc)
+[目录](#目录)
+- [功能](#功能)
+- [命令](#命令)
+- [步骤](#步骤)
+- [最佳实践](#最佳实践)
+- [关于mysql](#关于mysql)
+- [GRPC](#grpc)
 
 -----------
 ### 功能
@@ -55,6 +53,16 @@
 * mv cmd/my-service/ServiceSample.viper.yaml cmd/my-service/MyService.viper.yaml
 * 将cmd/my-service/MyService.viper.yaml中的内容修改为当前服务对应内容
 * 修改Dockerfile和k8s部署文档为当前服务对应内容
+  * grep -rb "service sample" ./*
+  * grep -rb "service-example" ./*
+  * grep -rb "go-service-app-template" ./*
+  * grep -rb "service\.sample" ./*
+  * grep -rb "service\*sample" ./*
+  * grep -rb "ServiceSample" ./*
+  * grep -rb "ServiceExample" ./*
+  * grep -rb "service_sample" ./*
+  * grep -rb "service_example" ./*
+  * grep -rb "sample-service" ./*
 
 ### 最佳实践
 * 每个服务只提供单一可执行文件，有利于docker镜像打包与k8s部署管理

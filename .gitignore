@@ -1,4 +1,5 @@
 /output
 /bin
 tmp
-/message/npool/*.json
+*.json
+.apollo-base-config
