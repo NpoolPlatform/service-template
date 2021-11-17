@@ -1,5 +1,5 @@
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: service-example-npool-top-ingress
   namespace: kube-system
@@ -8,19 +8,23 @@ metadata:
     k8s.kuboard.cn/workload: service-example
     kubernetes.io/ingress.class: "traefik-internet"
 spec:
-  rules:
-  - host: api.npool.top
-    http:
-      paths:
-      - path: /service-example
-        backend:
-          serviceName: service-example
-          servicePort: http
+  entryPoints:
+    - web
+    - websecure
+  routes:
+  - kind: Rule
+    match: Host(`api.npool.top`) && PathPrefix(`/service-example`)
+    middlewares:
+    - name: strip-service-name-prefix
+    services:
+    - kind: Service
+      name: service-example
+      port: api
 
 ---
 
-apiVersion: extensions/v1beta1
-kind: Ingress
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
 metadata:
   name: service-example-xpool-top-ingress
   namespace: kube-system
@@ -29,11 +33,26 @@ metadata:
     k8s.kuboard.cn/workload: service-example
     kubernetes.io/ingress.class: "traefik-internet"
 spec:
-  rules:
-  - host: api.xpool.top
-    http:
-      paths:
-      - path: /service-example
-        backend:
-          serviceName: service-example
-          servicePort: http
+  entryPoints:
+    - web
+    - websecure
+  routes:
+  - kind: Rule
+    match: Host(`api.xpool.top`) && PathPrefix(`/service-example`)
+    middlewares:
+    - name: strip-service-name-prefix
+    services:
+    - kind: Service
+      name: service-example
+      port: api
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-service-example-prefix
+spec:
+  stripPrefix:
+    prefixes:
+      - /service-example

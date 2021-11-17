@@ -47,4 +47,4 @@ metadata:
 spec:
   ports:
   - name: api
-    port: 8080
+    port: 32759
