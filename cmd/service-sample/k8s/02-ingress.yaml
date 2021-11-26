@@ -15,7 +15,7 @@ spec:
     - host: api.npool.top
       http:
         paths:
-          - path: /service-sample
+          - path: /api/service-sample
             backend:
               serviceName: service-sample
               servicePort: 32759
@@ -39,7 +39,7 @@ spec:
     - host: api.xpool.top
       http:
         paths:
-          - path: /service-sample
+          - path: /api/service-sample
             backend:
               serviceName: service-sample
               servicePort: 32759
@@ -54,4 +54,4 @@ metadata:
 spec:
   stripPrefix:
     prefixes:
-      - /service-sample
+      - /api/service-sample
