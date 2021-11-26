@@ -63,6 +63,7 @@
   * grep -rb "service_sample" ./*
   * grep -rb "service_example" ./*
   * grep -rb "sample-service" ./*
+  * 修改cmd/my-service/k8s中的三个yaml文件，包含端口，服务名字
 
 ### 最佳实践
 * 每个服务只提供单一可执行文件，有利于docker镜像打包与k8s部署管理

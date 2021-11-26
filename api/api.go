@@ -8,8 +8,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-// https://github.com/grpc/grpc-go/issues/3794
-// require_unimplemented_servers=false
 type Server struct {
 	npool.UnimplementedServiceExampleServer
 }
