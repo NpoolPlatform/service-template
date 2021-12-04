@@ -93,7 +93,7 @@ pipeline {
       }
     }
 
-    stage('Generate docker image') {
+    stage('Generate docker image for development') {
       when {
         expression { BUILD_TARGET == 'true' }
       }
@@ -103,6 +103,69 @@ pipeline {
           for image in $images; do
             docker rmi $image
           done
+        '''.stripIndent())
+        sh 'make generate-docker-images'
+      }
+    }
+
+    stage('Tag go-service-app-template') {
+      when {
+        expression { TAG_TYPE != null }
+      }
+      steps {
+        sh(returnStdout: true, script: '''
+          tag_version="0.1.0"
+          set +e
+          tag_rev_list=`git rev-list --tags --max-count=1`
+          if [ 0 -eq $? ]; then
+            cur_tag=`git describe --tags $tag_rev_list`
+            major_version=`echo $cur_tag | awk -F '.' '{ print $1 }'`
+            minor_version=`echo $cur_tag | awk -F '.' '{ print $2 }'`
+            mininus_version=`echo $cur_tag | awk -F '.' '{ print $3 }'`
+            if [ "$TAG_TYPE" == "major" ]; then
+              major_version=`expr $major_version + 1`
+              tag_version="$major_version.$minor_version.$mininus_version"
+            elif [ "$TAG_TYPE" == "minor" ]; then
+              minor_version=`expr $minor_version + 1`
+              tag_version="$major_version.$minor_version.$mininus_version"
+            elif [ "$TAG_TYPE" == "mininus" ]; then
+              mininus_version=`expr $mininus_version + 1`
+              flag=`expr $mininus_version % 2`
+              [[ 0 -eq $flag && $RELEASE_ENV =~ testing ]] && mininus_version=`expr $mininus_version + 1`
+              [[ ! 0 -eq $flag && $RELEASE_ENV =~ production ]] && mininus_version=`expr $mininus_version + 1`
+              tag_version="$major_version.$minor_version.$mininus_version"
+            fi
+          fi
+          [[ $RELEASE_ENV =~ production ]] && git checkout refs/tags/$cur_tag
+          git tag -a $tag_version -m "add tag $tag_version for test"
+          set -e
+        '''.stripIndent())
+
+        withCredentials([gitUsernamePassword(credentialsId: 'KK-github-key', gitToolName: 'git-tool')]) {
+          sh 'git push --tag'
+        }
+
+      }
+    }
+
+    stage('Generate docker image for testing or production') {
+      when {
+        expression { BUILD_TARGET == 'true' }
+        expression { TAG_TYPE != null }
+      }
+      steps {
+        sh(returnStdout: true, script: '''
+          set +e
+          images=`docker images | grep entropypool | grep minio | awk '{ print $3 }' | grep -v latest`
+          images=`docker images | grep entropypool | grep service-sample | awk '{ print $3 }' | grep -v latest`
+          for image in $images; do
+            docker rmi $image -f
+          done
+          set -e
+          images=`docker images | grep entropypool | grep minio | awk '{ print $3 }' | grep -v latest`
+          tag_rev_list=`git rev-list --tags --max-count=1`
+          tag_version=`git describe --tags $tag_rev_list`
+          git checkout refs/tags/$tag_version
         '''.stripIndent())
         sh 'make generate-docker-images'
       }
