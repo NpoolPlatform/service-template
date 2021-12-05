@@ -50,9 +50,13 @@ pipeline {
     }
 
     stage('Switch to current cluster') {
-        steps {
-            sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
-        }
+      when {
+        expression { BUILD_TARGET == 'true' }
+        expression { DEPLOY_TARGET == 'true' }
+      }
+      steps {
+        sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
+      }
     }
 
     stage('Unit Tests') {
@@ -99,71 +103,136 @@ pipeline {
       }
       steps {
         sh(returnStdout: true, script: '''
-          images=`docker images | grep entropypool | grep service-sample | awk '{ print $3 }'`
+          images=`docker images | grep entropypool | grep service-sample | grep latest | awk '{ print $3 }'`
           for image in $images; do
             docker rmi $image
           done
         '''.stripIndent())
-        sh 'make generate-docker-images'
+        sh 'DEVELOPMENT=development make generate-docker-images'
       }
     }
 
-    stage('Tag go-service-app-template') {
+    stage('Tag patch') {
       when {
-        expression { TAG_TYPE != null }
+        expression { TAG_PATCH == 'true' }
       }
       steps {
         sh(returnStdout: true, script: '''
-          tag_version="0.1.0"
           set +e
-          tag_rev_list=`git rev-list --tags --max-count=1`
-          if [ 0 -eq $? ]; then
-            cur_tag=`git describe --tags $tag_rev_list`
-            major_version=`echo $cur_tag | awk -F '.' '{ print $1 }'`
-            minor_version=`echo $cur_tag | awk -F '.' '{ print $2 }'`
-            mininus_version=`echo $cur_tag | awk -F '.' '{ print $3 }'`
-            if [ "$TAG_TYPE" == "major" ]; then
-              major_version=`expr $major_version + 1`
-              tag_version="$major_version.$minor_version.$mininus_version"
-            elif [ "$TAG_TYPE" == "minor" ]; then
-              minor_version=`expr $minor_version + 1`
-              tag_version="$major_version.$minor_version.$mininus_version"
-            elif [ "$TAG_TYPE" == "mininus" ]; then
-              mininus_version=`expr $mininus_version + 1`
-              flag=`expr $mininus_version % 2`
-              [[ 0 -eq $flag && $RELEASE_ENV =~ testing ]] && mininus_version=`expr $mininus_version + 1`
-              [[ ! 0 -eq $flag && $RELEASE_ENV =~ production ]] && mininus_version=`expr $mininus_version + 1`
-              tag_version="$major_version.$minor_version.$mininus_version"
-            fi
-          fi
-          [[ $RELEASE_ENV =~ production ]] && git checkout refs/tags/$cur_tag
-          git tag -a $tag_version -m "add tag $tag_version for test"
+          revlist=`git rev-list --tags --max-count=1`
+          rc=$?
           set -e
+          if [ 0 -eq $rc ]; then
+            tag=`git describe --tags $tag_rev_list`
+
+            major=`echo $tag | awk -F '.' '{ print $1 }'`
+            minor=`echo $tag | awk -F '.' '{ print $2 }'`
+            patch=`echo $tag | awk -F '.' '{ print $3 }'`
+
+            case $TAG_FOR in
+              testing)
+                patch=(( $patch + ($patch % 2 + 1) ))
+                ;;
+              production)
+                patch=(( $patch + 1 ))
+                git checkout $tag
+                ;;
+            esac
+
+            tag=$major.$minor.$patch
+          else
+            tag=0.1.1
+          fi
+          git tag -a $tag -m "Bump version to $tag"
         '''.stripIndent())
 
         withCredentials([gitUsernamePassword(credentialsId: 'KK-github-key', gitToolName: 'git-tool')]) {
           sh 'git push --tag'
         }
+      }
+    }
 
+    stage('Tag minor') {
+      when {
+        expression { TAG_MINOR == 'true' }
+      }
+      steps {
+        sh(returnStdout: true, script: '''
+          set +e
+          revlist=`git rev-list --tags --max-count=1`
+          rc=$?
+          set -e
+          if [ 0 -eq $rc ]; then
+            tag=`git describe --tags $tag_rev_list`
+
+            major=`echo $tag | awk -F '.' '{ print $1 }'`
+            minor=`echo $tag | awk -F '.' '{ print $2 }'`
+            patch=`echo $tag | awk -F '.' '{ print $3 }'`
+
+            minor=(( $minor + 1 ))
+            patch=1
+
+            tag=$major.$minor.$patch
+          else
+            tag=0.1.1
+          fi
+          git tag -a $tag -m "Bump version to $tag"
+        '''.stripIndent())
+
+        withCredentials([gitUsernamePassword(credentialsId: 'KK-github-key', gitToolName: 'git-tool')]) {
+          sh 'git push --tag'
+        }
+      }
+    }
+
+    stage('Tag major') {
+      when {
+        expression { TAG_MAJOR == 'true' }
+      }
+      steps {
+        sh(returnStdout: true, script: '''
+          set +e
+          revlist=`git rev-list --tags --max-count=1`
+          rc=$?
+          set -e
+          if [ 0 -eq $rc ]; then
+            tag=`git describe --tags $tag_rev_list`
+
+            major=`echo $tag | awk -F '.' '{ print $1 }'`
+            minor=`echo $tag | awk -F '.' '{ print $2 }'`
+            patch=`echo $tag | awk -F '.' '{ print $3 }'`
+
+            major=(( $major + 1 ))
+            minor=0
+            patch=1
+
+            tag=$major.$minor.$patch
+          else
+            tag=0.1.1
+          fi
+          git tag -a $tag -m "Bump version to $tag"
+        '''.stripIndent())
+
+        withCredentials([gitUsernamePassword(credentialsId: 'KK-github-key', gitToolName: 'git-tool')]) {
+          sh 'git push --tag'
+        }
       }
     }
 
     stage('Generate docker image for testing or production') {
       when {
         expression { BUILD_TARGET == 'true' }
-        expression { TAG_TYPE != null }
       }
       steps {
         sh(returnStdout: true, script: '''
-          set +e
-          images=`docker images | grep entropypool | grep service-sample | awk '{ print $3 }' | grep -v latest`
+          revlist=`git rev-list --tags --max-count=1`
+          tag=`git describe --tags $tag_rev_list`
+          git checkout $tag
+
+          images=`docker images | grep entropypool | grep service-sample | grep $tag | awk '{ print $3 }'`
           for image in $images; do
             docker rmi $image -f
           done
-          set -e
-          tag_rev_list=`git rev-list --tags --max-count=1`
-          tag_version=`git describe --tags $tag_rev_list`
-          git checkout refs/tags/$tag_version
         '''.stripIndent())
         sh 'make generate-docker-images'
       }
@@ -189,13 +258,16 @@ pipeline {
         sh (returnStdout: false, script: '''
           PASSWORD=`kubectl get secret --namespace "kube-system" mysql-password-secret -o jsonpath="{.data.rootpassword}" | base64 --decode`
           kubectl -n kube-system exec mysql-0 -- mysql -h 127.0.0.1 -uroot -p$PASSWORD -P3306 -e "create database if not exists service_sample;"
+
           username=`helm status rabbitmq --namespace kube-system | grep Username | awk -F ' : ' '{print $2}' | sed 's/"//g'`
           for vhost in `cat cmd/*/*.viper.yaml | grep hostname | awk '{print $2}' | sed 's/"//g' | sed 's/\\./-/g'`; do
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl add_vhost $vhost
             kubectl exec -it --namespace kube-system rabbitmq-0 -- rabbitmqctl set_permissions -p $vhost $username ".*" ".*" ".*"
+
             cd .apollo-base-config
             ./apollo-base-config.sh $APP_ID $TARGET_ENV $vhost
             ./apollo-item-config.sh $APP_ID $TARGET_ENV $vhost database_name service_sample
+            cd -
           done
         '''.stripIndent())
       }

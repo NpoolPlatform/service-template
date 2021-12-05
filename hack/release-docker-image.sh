@@ -24,6 +24,10 @@ fi
 set -e
 
 service_name=$1
+## For development environment, pass the second variable
+if [ "xdevelopment" == "x$2" ]; then
+  version=latest
+fi
 
 echo "Release docker image for $PLATFORM -- $version"
 

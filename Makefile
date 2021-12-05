@@ -64,7 +64,7 @@ ${SERVICES}:
 	${REPO_ROOT}/hack/verify-build.sh $@
 
 ${SERVICEIMAGES}:
-	${REPO_ROOT}/hack/generate-docker-image.sh $(@:%-image=%)
+	${REPO_ROOT}/hack/generate-docker-image.sh $(@:%-image=%) $(DEVELOPMENT)
 
 ${SERVICEIMAGERELEASES}:
 	${REPO_ROOT}/hack/release-docker-image.sh $(@:%-release=%)
