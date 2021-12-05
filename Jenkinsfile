@@ -262,7 +262,7 @@ pipeline {
         expression { TARGET_ENV == 'development' }
       }
       steps {
-        sh 'make deploy-to-k8s-cluster'
+        sh 'TAG=latest make deploy-to-k8s-cluster'
       }
     }
 
