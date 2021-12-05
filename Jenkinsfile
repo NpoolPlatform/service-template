@@ -156,13 +156,11 @@ pipeline {
       steps {
         sh(returnStdout: true, script: '''
           set +e
-          images=`docker images | grep entropypool | grep minio | awk '{ print $3 }' | grep -v latest`
           images=`docker images | grep entropypool | grep service-sample | awk '{ print $3 }' | grep -v latest`
           for image in $images; do
             docker rmi $image -f
           done
           set -e
-          images=`docker images | grep entropypool | grep minio | awk '{ print $3 }' | grep -v latest`
           tag_rev_list=`git rev-list --tags --max-count=1`
           tag_version=`git describe --tags $tag_rev_list`
           git checkout refs/tags/$tag_version
