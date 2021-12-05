@@ -256,14 +256,63 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
+    stage('Deploy for development') {
       when {
         expression { DEPLOY_TARGET == 'true' }
+        expression { TARGET_ENV == 'development' }
+      }
+      steps {
+        sh 'make deploy-to-k8s-cluster'
+      }
+    }
+
+    stage('Deploy for testing') {
+      when {
+        expression { DEPLOY_TARGET == 'true' }
+        expression { TARGET_ENV == 'testing' }
+      }
+      steps {
+        sh(returnStdout: true, script: '''
+          revlist=`git rev-list --tags --max-count=1`
+          tag=`git describe --tags $revlist`
+
+          git checkout $tag
+          sed -i "s/service-sample:latest/service-sample:$tag/g" cmd/service-sample/k8s/01-service-sample.yaml
+          TAG=$tag make deploy-to-k8s-cluster
+        '''.stripIndent())
+      }
+    }
+
+    stage('Deploy for production') {
+      when {
+        expression { DEPLOY_TARGET == 'true' }
+        expression { TARGET_ENV contains 'production' }
+      }
+      steps {
+        sh(returnStdout: true, script: '''
+          revlist=`git rev-list --tags --max-count=1`
+          tag=`git describe --tags $revlist`
+
+          major=`echo $tag | awk -F '.' '{ print $1 }'`
+          minor=`echo $tag | awk -F '.' '{ print $2 }'`
+          patch=`echo $tag | awk -F '.' '{ print $3 }'`
+          patch=$(( $patch - $patch % 2 ))
+          tag=$major.$minor.$patch
+
+          git checkout $tag
+          sed -i "s/service-sample:latest/service-sample:$tag/g" cmd/service-sample/k8s/01-service-sample.yaml
+          TAG=$tag make deploy-to-k8s-cluster
+        '''.stripIndent())
+      }
+    }
+
+    stage('Config target') {
+      when {
+        expression { CONFIG_TARGET == 'true' }
       }
       steps {
         sh 'rm .apollo-base-config -rf'
         sh 'git clone https://github.com/NpoolPlatform/apollo-base-config.git .apollo-base-config'
-        sh 'make deploy-to-k8s-cluster'
         sh (returnStdout: false, script: '''
           PASSWORD=`kubectl get secret --namespace "kube-system" mysql-password-secret -o jsonpath="{.data.rootpassword}" | base64 --decode`
           kubectl -n kube-system exec mysql-0 -- mysql -h 127.0.0.1 -uroot -p$PASSWORD -P3306 -e "create database if not exists service_sample;"
