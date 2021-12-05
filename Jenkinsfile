@@ -123,7 +123,7 @@ pipeline {
           rc=$?
           set -e
           if [ 0 -eq $rc ]; then
-            tag=`git describe --tags $tag_rev_list`
+            tag=`git describe --tags $revlist`
 
             major=`echo $tag | awk -F '.' '{ print $1 }'`
             minor=`echo $tag | awk -F '.' '{ print $2 }'`
@@ -163,7 +163,7 @@ pipeline {
           rc=$?
           set -e
           if [ 0 -eq $rc ]; then
-            tag=`git describe --tags $tag_rev_list`
+            tag=`git describe --tags $revlist`
 
             major=`echo $tag | awk -F '.' '{ print $1 }'`
             minor=`echo $tag | awk -F '.' '{ print $2 }'`
@@ -196,7 +196,7 @@ pipeline {
           rc=$?
           set -e
           if [ 0 -eq $rc ]; then
-            tag=`git describe --tags $tag_rev_list`
+            tag=`git describe --tags $revlist`
 
             major=`echo $tag | awk -F '.' '{ print $1 }'`
             minor=`echo $tag | awk -F '.' '{ print $2 }'`
@@ -226,7 +226,7 @@ pipeline {
       steps {
         sh(returnStdout: true, script: '''
           revlist=`git rev-list --tags --max-count=1`
-          tag=`git describe --tags $tag_rev_list`
+          tag=`git describe --tags $revlist`
           git checkout $tag
 
           images=`docker images | grep entropypool | grep service-sample | grep $tag | awk '{ print $3 }'`
