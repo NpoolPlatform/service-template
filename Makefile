@@ -70,7 +70,7 @@ ${SERVICEIMAGERELEASES}:
 	${REPO_ROOT}/hack/release-docker-image.sh $(@:%-release=%) $(DEVELOPMENT)
 
 ${SERVICEK8SDEPLOYS}:
-	${REPO_ROOT}/hack/deploy-to-k8s-cluster.sh $(@:%-k8s-deploy=%)
+	${REPO_ROOT}/hack/deploy-to-k8s-cluster.sh $(@:%-k8s-deploy=%) $(TAG)
 
 generate-docker-images: ${SERVICES} ${SERVICEIMAGES}
 release-docker-images: ${generate-docker-images} ${SERVICEIMAGERELEASES}
