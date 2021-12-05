@@ -286,7 +286,7 @@ pipeline {
     stage('Deploy for production') {
       when {
         expression { DEPLOY_TARGET == 'true' }
-        expression { TARGET_ENV contains(production) }
+        expression { TARGET_ENV ==~ /.*production.*/ }
       }
       steps {
         sh(returnStdout: true, script: '''
