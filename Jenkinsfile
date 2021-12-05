@@ -234,16 +234,25 @@ pipeline {
             docker rmi $image -f
           done
         '''.stripIndent())
-        sh 'make generate-docker-images'
+        sh 'DEVELOPMENT=other make generate-docker-images'
       }
     }
 
-    stage('Release docker image') {
+    stage('Release docker image for development') {
       when {
         expression { RELEASE_TARGET == 'true' }
       }
       steps {
-        sh 'make release-docker-images'
+        sh 'DEVELOPMENT=development make release-docker-images'
+      }
+    }
+
+    stage('Release docker image for testing or production') {
+      when {
+        expression { RELEASE_TARGET == 'true' }
+      }
+      steps {
+        sh 'DEVELOPMENT=other make release-docker-images'
       }
     }
 
