@@ -131,10 +131,10 @@ pipeline {
 
             case $TAG_FOR in
               testing)
-                patch=(( $patch + ($patch % 2 + 1) ))
+                patch=$(( $patch + $patch % 2 + 1 ))
                 ;;
               production)
-                patch=(( $patch + 1 ))
+                patch=$(( $patch + 1 ))
                 git checkout $tag
                 ;;
             esac
@@ -169,7 +169,7 @@ pipeline {
             minor=`echo $tag | awk -F '.' '{ print $2 }'`
             patch=`echo $tag | awk -F '.' '{ print $3 }'`
 
-            minor=(( $minor + 1 ))
+            minor=$(( $minor + 1 ))
             patch=1
 
             tag=$major.$minor.$patch
@@ -202,7 +202,7 @@ pipeline {
             minor=`echo $tag | awk -F '.' '{ print $2 }'`
             patch=`echo $tag | awk -F '.' '{ print $3 }'`
 
-            major=(( $major + 1 ))
+            major=$(( $major + 1 ))
             minor=0
             patch=1
 
