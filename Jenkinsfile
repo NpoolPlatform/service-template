@@ -257,16 +257,54 @@ pipeline {
         expression { RELEASE_TARGET == 'true' }
       }
       steps {
-        sh 'DEVELOPMENT=development make release-docker-images'
+        sh 'TAG=latest make release-docker-images'
       }
     }
 
-    stage('Release docker image for testing or production') {
+    stage('Release docker image for testing') {
       when {
         expression { RELEASE_TARGET == 'true' }
       }
       steps {
-        sh 'DEVELOPMENT=other make release-docker-images'
+        sh(returnStdout: false, script: '''
+          revlist=`git rev-list --tags --max-count=1`
+          tag=`git describe --tags $revlist`
+
+          set +e
+          docker images | grep application-management | grep $tag
+          rc=$?
+          set -e
+          if [ 0 -eq $rc ]; then
+            TAG=$tag make release-docker-images
+          fi
+        '''.stripIndent())
+      }
+    }
+
+    stage('Release docker image for production') {
+      when {
+        expression { RELEASE_TARGET == 'true' }
+      }
+      steps {
+        sh(returnStdout: false, script: '''
+          revlist=`git rev-list --tags --max-count=1`
+          tag=`git describe --tags $revlist`
+
+          major=`echo $tag | awk -F '.' '{ print $1 }'`
+          minor=`echo $tag | awk -F '.' '{ print $2 }'`
+          patch=`echo $tag | awk -F '.' '{ print $3 }'`
+
+          patch=$(( $patch - $patch % 2 ))
+          tag=$major.$minor.$patch
+
+          set +e
+          docker images | grep application-management | grep $tag
+          rc=$?
+          set -e
+          if [ 0 -eq $rc ]; then
+            TAG=$tag make release-docker-images
+          fi
+        '''.stripIndent())
       }
     }
 
