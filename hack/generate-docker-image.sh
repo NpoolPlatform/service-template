@@ -29,6 +29,12 @@ if [ "xdevelopment" == "x$2" ]; then
   version=latest
 fi
 
+registry=uhub.service.ucloud.cn
+
+if [ "x" != $3 ]; then
+  registry=$3
+fi
+
 echo "Generate docker image for $PLATFORM -- $version"
 if [ ! -f $OUTPUT/$PLATFORM/$service_name ]; then
     echo "Run 'make $service_name' before you generate its image"
@@ -43,7 +49,7 @@ cd $OUTPUT/.${service_name}.tmp
 
 user=`whoami`
 if [ "$user" == "root" ]; then
-    docker build -t entropypool/$service_name:$version .
+    docker build -t $registry/entropypool/$service_name:$version .
 else
-    sudo docker build -t entropypool/$service_name:$version .
+    sudo docker build -t $registry/entropypool/$service_name:$version .
 fi

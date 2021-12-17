@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: service-sample
-        image: entropypool/service-sample:latest
+        image: uhub.service.ucloud.cn/entropypool/service-sample:latest
         imagePullPolicy: Always
         env:
         - name: ENV_ENVIRONMENT_TARGET

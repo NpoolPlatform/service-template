@@ -51,8 +51,10 @@ pipeline {
 
     stage('Switch to current cluster') {
       when {
-        expression { BUILD_TARGET == 'true' }
-        expression { DEPLOY_TARGET == 'true' }
+        anyOf {
+          expression { BUILD_TARGET == 'true' }
+          expression { DEPLOY_TARGET == 'true' }
+        }
       }
       steps {
         sh 'cd /etc/kubeasz; ./ezctl checkout $TARGET_ENV'
@@ -94,7 +96,7 @@ pipeline {
       steps {
         sh (returnStdout: false, script: '''
           devboxpod=`kubectl get pods -A | grep development-box | awk '{print $2}'`
-          servicename="sample-service"
+          servicename="service-sample"
 
           kubectl exec --namespace kube-system $devboxpod -- make -C /tmp/$servicename after-test || true
           kubectl exec --namespace kube-system $devboxpod -- rm -rf /tmp/$servicename || true
@@ -114,13 +116,8 @@ pipeline {
         expression { BUILD_TARGET == 'true' }
       }
       steps {
-        sh(returnStdout: true, script: '''
-          images=`docker images | grep entropypool | grep service-sample | grep latest | awk '{ print $3 }'`
-          for image in $images; do
-            docker rmi $image
-          done
-        '''.stripIndent())
-        sh 'DEVELOPMENT=development make generate-docker-images'
+        sh 'make verify-build'
+        sh 'DEVELOPMENT=development DOCKER_REGISTRY=$DOCKER_REGISTRY make generate-docker-images'
       }
     }
 
@@ -242,13 +239,9 @@ pipeline {
           tag=`git describe --tags $revlist`
           git reset --hard
           git checkout $tag
-
-          images=`docker images | grep entropypool | grep service-sample | grep $tag | awk '{ print $3 }'`
-          for image in $images; do
-            docker rmi $image -f
-          done
         '''.stripIndent())
-        sh 'DEVELOPMENT=other make generate-docker-images'
+        sh 'make verify-build'
+        sh 'DEVELOPMENT=other DOCKER_REGISTRY=$DOCKER_REGISTRY make generate-docker-images'
       }
     }
 
@@ -257,7 +250,13 @@ pipeline {
         expression { RELEASE_TARGET == 'true' }
       }
       steps {
-        sh 'TAG=latest make release-docker-images'
+        sh 'TAG=latest DOCKER_REGISTRY=$DOCKER_REGISTRY make release-docker-images'
+        sh(returnStdout: false, script: '''
+          images=`docker images | grep entropypool | grep service-sample | grep none | awk '{ print $3 }'`
+          for image in $images; do
+            docker rmi $image -f
+          done
+        '''.stripIndent())
       }
     }
 
@@ -271,11 +270,11 @@ pipeline {
           tag=`git describe --tags $revlist`
 
           set +e
-          docker images | grep application-management | grep $tag
+          docker images | grep service-sample | grep $tag
           rc=$?
           set -e
           if [ 0 -eq $rc ]; then
-            TAG=$tag make release-docker-images
+            TAG=$tag DOCKER_REGISTRY=$DOCKER_REGISTRY make release-docker-images
           fi
         '''.stripIndent())
       }
@@ -298,11 +297,11 @@ pipeline {
           tag=$major.$minor.$patch
 
           set +e
-          docker images | grep application-management | grep $tag
+          docker images | grep service-sample | grep $tag
           rc=$?
           set -e
           if [ 0 -eq $rc ]; then
-            TAG=$tag make release-docker-images
+            TAG=$tag DOCKER_REGISTRY=$DOCKER_REGISTRY make release-docker-images
           fi
         '''.stripIndent())
       }
@@ -314,6 +313,7 @@ pipeline {
         expression { TARGET_ENV == 'development' }
       }
       steps {
+        sh 'sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/service-sample/k8s/01-service-sample.yaml'
         sh 'TAG=latest make deploy-to-k8s-cluster'
       }
     }
@@ -331,6 +331,7 @@ pipeline {
           git reset --hard
           git checkout $tag
           sed -i "s/service-sample:latest/service-sample:$tag/g" cmd/service-sample/k8s/01-service-sample.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/service-sample/k8s/01-service-sample.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
@@ -355,6 +356,7 @@ pipeline {
           git reset --hard
           git checkout $tag
           sed -i "s/service-sample:latest/service-sample:$tag/g" cmd/service-sample/k8s/01-service-sample.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/service-sample/k8s/01-service-sample.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }

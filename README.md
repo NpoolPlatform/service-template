@@ -62,7 +62,7 @@
   * grep -rb "ServiceExample" ./*
   * grep -rb "service_sample" ./*
   * grep -rb "service_example" ./*
-  * grep -rb "sample-service" ./*
+  * grep -rb "service-sample" ./*
   * 修改cmd/my-service/k8s中的三个yaml文件，包含端口，服务名字
 
 ### 最佳实践
