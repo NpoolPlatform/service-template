@@ -13,4 +13,4 @@ for service_name in `ls $(pwd)/cmd`; do
     cd $OUTPUT/$PLATFORM; ./$service_name run | grep error &
 done
 
-sleep 10
+sleep 60

@@ -4,6 +4,7 @@ import (
 	"github.com/NpoolPlatform/go-service-app-template/message/npool"
 
 	cv "github.com/NpoolPlatform/go-service-framework/pkg/version"
+	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
 	"golang.org/x/xerrors"
 )
@@ -11,6 +12,7 @@ import (
 func Version() (*npool.VersionResponse, error) {
 	info, err := cv.GetVersion()
 	if err != nil {
+		logger.Sugar().Errorf("get service version error: %+w", err)
 		return nil, xerrors.Errorf("get service version error: %w", err)
 	}
 	return &npool.VersionResponse{
