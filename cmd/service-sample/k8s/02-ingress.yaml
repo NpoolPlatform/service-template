@@ -13,36 +13,18 @@ metadata:
 spec:
   rules:
     - host: api.npool.top
-      http:
+      http: &http_rules
         paths:
           - path: /api/service-sample
             backend:
               serviceName: service-sample
               servicePort: 32759
-
----
-
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: service-sample-xpool-top-ingress
-  namespace: kube-system
-  annotations:
-    k8s.kuboard.cn/displayName: service-sample-xpool
-    k8s.kuboard.cn/workload: service-sample-xpool
-    kubernetes.io/ingress.class: "traefik-internet"
-    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd
-
-spec:
-  rules:
     - host: api.xpool.top
-      http:
-        paths:
-          - path: /api/service-sample
-            backend:
-              serviceName: service-sample
-              servicePort: 32759
+      http: *http_rules
+    - host: www.npool.top
+      http: *http_rules
+    - host: www.xpool.top
+      http: *http_rules
 
 ---
 
