@@ -42,8 +42,6 @@ pipeline {
       }
       steps {
         sh (returnStdout: false, script: '''
-          make -C tools/grpc install
-          PATH=$PATH:/usr/go/bin:$HOME/go/bin make -C message clean proto
           make verify-build
         '''.stripIndent())
       }
