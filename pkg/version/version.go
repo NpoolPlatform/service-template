@@ -1,10 +1,10 @@
 package version
 
 import (
-	"github.com/NpoolPlatform/go-service-app-template/message/npool"
+	npool "github.com/NpoolPlatform/message/npool"
 
-	cv "github.com/NpoolPlatform/go-service-framework/pkg/version" //nolint
 	logger "github.com/NpoolPlatform/go-service-framework/pkg/logger" //nolint
+	cv "github.com/NpoolPlatform/go-service-framework/pkg/version"    //nolint
 
 	"golang.org/x/xerrors"
 )
