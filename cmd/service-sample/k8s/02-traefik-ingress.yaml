@@ -1,11 +1,11 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: service-sample-npool-top-ingress
+  name: service-sample-traefik-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: service-sample-npool
-    k8s.kuboard.cn/workload: service-sample-npool
+    k8s.kuboard.cn/displayName: service-sample-traefik
+    k8s.kuboard.cn/workload: service-sample-traefik
     kubernetes.io/ingress.class: "traefik-internet"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd
@@ -24,6 +24,8 @@ spec:
     - host: www.npool.top
       http: *http_rules
     - host: www.xpool.top
+      http: *http_rules
+    - host: dashboard.xpool.top
       http: *http_rules
 
 ---
