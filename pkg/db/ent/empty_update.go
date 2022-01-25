@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
@@ -201,7 +202,7 @@ func (euo *EmptyUpdateOne) sqlSave(ctx context.Context) (_node *Empty, err error
 	}
 	id, ok := euo.mutation.ID()
 	if !ok {
-		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Empty.ID for update")}
+		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Empty.id" for update`)}
 	}
 	_spec.Node.ID.Value = id
 	if fields := euo.fields; len(fields) > 0 {
