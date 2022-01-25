@@ -21,6 +21,7 @@ go.mod:
 	go mod tidy
 
 deps:
+	go get ./...
 	go mod tidy
 
 ##@ Verify
