@@ -8,7 +8,7 @@ metadata:
     k8s.kuboard.cn/workload: service-sample-traefik
     kubernetes.io/ingress.class: "traefik-internet"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd,kube-system-headers-appid-to-body@kubernetescrd
 
 spec:
   rules:
