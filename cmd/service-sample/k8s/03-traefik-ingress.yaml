@@ -1,17 +1,19 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: service-sample-traefik-ingress
+  name: service-sample-traefik-app-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: service-sample-traefik
-    k8s.kuboard.cn/workload: service-sample-traefik
-    kubernetes.io/ingress.class: "traefik-internet"
+    k8s.kuboard.cn/displayName: service-sample-traefik-app
+    k8s.kuboard.cn/workload: service-sample-traefik-app
+    kubernetes.io/ingress.class: "traefik-internet-app"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd,
+                                                      kube-system-common-headers@kubernetescrd,
                                                       kube-system-headers-appid-to-body@kubernetescrd,
                                                       kube-system-headers-userid-to-body@kubernetescrd,
-                                                      kube-system-headers-app-login-token-to-body@kubernetescrd
+                                                      kube-system-headers-app-login-token-to-body@kubernetescrd,
+                                                      kube-system-app-rbac-auth@kubernetescrd
 
 spec:
   rules:
@@ -22,23 +24,7 @@ spec:
             backend:
               serviceName: service-sample
               servicePort: 32759
+    - host: api.procyon.vip
+      http: *http_rules
     - host: api.xpool.top
       http: *http_rules
-    - host: www.npool.top
-      http: *http_rules
-    - host: www.xpool.top
-      http: *http_rules
-    - host: dashboard.xpool.top
-      http: *http_rules
-
----
-
-apiVersion: traefik.containo.us/v1alpha1
-kind: Middleware
-metadata:
-  name: strip-service-sample-prefix
-  namespace: kube-system
-spec:
-  stripPrefix:
-    prefixes:
-      - /api/service-sample
