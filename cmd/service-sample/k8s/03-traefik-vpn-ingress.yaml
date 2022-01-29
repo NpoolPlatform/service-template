@@ -9,8 +9,8 @@ metadata:
     kubernetes.io/ingress.class: "traefik-internet"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd,
-                                                      kube-system-headers-appid-to-body@kubernetescrd
-                                                      kube-system-headers-userid-to-body@kubernetescrd
+                                                      kube-system-headers-appid-to-body@kubernetescrd,
+                                                      kube-system-headers-userid-to-body@kubernetescrd,
                                                       kube-system-headers-app-login-token-to-body@kubernetescrd
 
 spec:
