@@ -6,7 +6,7 @@ metadata:
   annotations:
     k8s.kuboard.cn/displayName: service-sample-traefik-app
     k8s.kuboard.cn/workload: service-sample-traefik-app
-    kubernetes.io/ingress.class: "traefik-internet-app"
+    kubernetes.io/ingress.class: "traefik-internet"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd,
                                                       kube-system-common-headers@kubernetescrd,
