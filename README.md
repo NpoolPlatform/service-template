@@ -58,6 +58,7 @@
   * grep -rb "Service Template" ./*
   * grep -rb "service_template" ./*
   * grep -rb "service-template" ./*
+  * grep -rb "servicetmpl" ./*
   * 修改cmd/my-service/k8s中的三个yaml文件，包含端口，服务名字
 
 ### 最佳实践
