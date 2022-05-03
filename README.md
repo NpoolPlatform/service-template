@@ -12,7 +12,7 @@
 
 -----------
 ### 功能
-- [x] 创建sample service
+- [x] 创建service template
 - [x] 封装日志库
 - [x] 统一service cli框架
 - [x] 集成cli框架(https://github.com/urfave/cli)
@@ -54,8 +54,6 @@
 * 将cmd/my-service/MyService.viper.yaml中的内容修改为当前服务对应内容
 * 修改Dockerfile和k8s部署文档为当前服务对应内容
   * grep -rb "service template" ./*
-  * grep -rb "service\.sample" ./*
-  * grep -rb "service\*sample" ./*
   * grep -rb "ServiceTemplate" ./*
   * grep -rb "Service Template" ./*
   * grep -rb "service_template" ./*
