@@ -25,7 +25,7 @@ func init() {
 }
 
 func TestClient(t *testing.T) {
-	_, _ = GetServiceTemplateInfo(context.Background(), //nolint
+	_, _ = GetServiceTemplateInfoOnly(context.Background(), //nolint
 		cruder.NewFilterConds().
 			WithCond(constant.FieldID, cruder.EQ, structpb.NewStringValue(uuid.UUID{}.String())))
 	// Here won't pass test due to we always test with localhost
