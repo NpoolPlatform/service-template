@@ -10,8 +10,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/NpoolPlatform/go-service-app-template/pkg/db/ent/empty"
-	"github.com/NpoolPlatform/go-service-app-template/pkg/db/ent/predicate"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/empty"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/predicate"
 )
 
 // EmptyUpdate is the builder for updating Empty entities.

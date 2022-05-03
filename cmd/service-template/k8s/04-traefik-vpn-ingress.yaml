@@ -1,14 +1,14 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: service-sample-traefik-vpn-ingress
+  name: service-template-traefik-vpn-ingress
   namespace: kube-system
   annotations:
-    k8s.kuboard.cn/displayName: service-sample-traefik-vpn
-    k8s.kuboard.cn/workload: service-sample-traefik-vpn
+    k8s.kuboard.cn/displayName: service-template-traefik-vpn
+    k8s.kuboard.cn/workload: service-template-traefik-vpn
     kubernetes.io/ingress.class: "traefik-internet-vpn"
     traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
-    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-sample-prefix@kubernetescrd,
+    traefik.ingress.kubernetes.io/router.middlewares: kube-system-strip-service-template-prefix@kubernetescrd,
                                                       kube-system-common-headers@kubernetescrd,
                                                       kube-system-headers-appid-to-body@kubernetescrd,
                                                       kube-system-headers-userid-to-body@kubernetescrd,
@@ -20,9 +20,9 @@ spec:
     - host: api.npool.top
       http: &http_rules
         paths:
-          - path: /api/service-sample
+          - path: /api/service-template
             backend:
-              serviceName: service-sample
+              serviceName: service-template
               servicePort: 32759
     - host: api.procyon.vip
       http: *http_rules

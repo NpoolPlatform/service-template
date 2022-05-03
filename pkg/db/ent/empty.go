@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/NpoolPlatform/go-service-app-template/pkg/db/ent/empty"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/empty"
 )
 
 // Empty is the model entity for the Empty schema.

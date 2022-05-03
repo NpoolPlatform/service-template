@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: service-sample
+  name: service-template
   namespace: kube-system
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: service-sample
+      app: service-template
   template:
     metadata:
       labels:
-        app: service-sample
+        app: service-template
     spec:
       containers:
-      - name: service-sample
-        image: uhub.service.ucloud.cn/entropypool/service-sample:latest
+      - name: service-template
+        image: uhub.service.ucloud.cn/entropypool/service-template:latest
         imagePullPolicy: Always
         env:
         - name: ENV_ENVIRONMENT_TARGET
@@ -42,7 +42,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: service-sample
+  name: service-template
   namespace: kube-system
 spec:
   ports:
@@ -50,4 +50,4 @@ spec:
     port: 32759
     targetPort: 32759
   selector:
-    app: service-sample
+    app: service-template

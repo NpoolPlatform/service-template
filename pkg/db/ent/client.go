@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/NpoolPlatform/go-service-app-template/pkg/db/ent/migrate"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/migrate"
 
-	"github.com/NpoolPlatform/go-service-app-template/pkg/db/ent/empty"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/empty"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"

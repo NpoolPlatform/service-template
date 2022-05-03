@@ -1,3 +1,3 @@
 package servicename
 
-const ServiceName = "Service Sample"
+const ServiceName = "Service Template"

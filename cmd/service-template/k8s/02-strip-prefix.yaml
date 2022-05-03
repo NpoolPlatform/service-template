@@ -1,9 +1,9 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: strip-service-sample-prefix
+  name: strip-service-template-prefix
   namespace: kube-system
 spec:
   stripPrefix:
     prefixes:
-      - /api/service-sample
+      - /api/service-template

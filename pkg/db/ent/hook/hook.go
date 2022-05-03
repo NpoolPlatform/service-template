@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/NpoolPlatform/go-service-app-template/pkg/db/ent"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent"
 )
 
 // The EmptyFunc type is an adapter to allow the use of ordinary
