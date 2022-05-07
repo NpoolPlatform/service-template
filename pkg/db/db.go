@@ -12,7 +12,8 @@ import (
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/go-service-framework/pkg/mysql"
 
-	_ "github.com/NpoolPlatform/service-template/pkg/db/ent/runtime" //nolint
+	// nolint:nolintlint
+	_ "github.com/NpoolPlatform/service-template/pkg/db/ent/runtime"
 )
 
 func client() (*ent.Client, error) {
