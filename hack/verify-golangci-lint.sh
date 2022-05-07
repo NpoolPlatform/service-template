@@ -20,7 +20,6 @@ fi
 if ! command -v golangci-lint; then
     curl -sfL $URL | sh -s $VERSION
     PATH=$PATH:bin
-    cp bin/golangci-lint /usr/bin
 fi
 
 golangci-lint version
