@@ -9,7 +9,7 @@ import (
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	constant "github.com/NpoolPlatform/service-template/pkg/const"
-	"github.com/NpoolPlatform/service-template/pkg/test-init" //nolint
+	testinit "github.com/NpoolPlatform/service-template/pkg/test-init" //nolint
 	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/google/uuid"

@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	"fmt"
-	"time"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
@@ -14,9 +13,6 @@ import (
 )
 
 func do(ctx context.Context, fn func(_ctx context.Context, cli npool.ServiceTemplateClient) (cruder.Any, error)) (cruder.Any, error) {
-	_ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
-	defer cancel()
-
 	conn, err := grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
 	if err != nil {
 		return nil, fmt.Errorf("fail get service template connection: %v", err)
@@ -25,7 +21,7 @@ func do(ctx context.Context, fn func(_ctx context.Context, cli npool.ServiceTemp
 
 	cli := npool.NewServiceTemplateClient(conn)
 
-	return fn(_ctx, cli)
+	return fn(ctx, cli)
 }
 
 func GetServiceTemplateInfoOnly(ctx context.Context, conds cruder.FilterConds) (*npool.ServiceTemplateInfo, error) {
