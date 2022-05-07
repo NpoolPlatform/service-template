@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"sync"
 	"testing"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
@@ -17,20 +18,23 @@ import (
 	"github.com/google/uuid"
 )
 
-// nolint:nolintlint
-func init() {
-	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
-		return
-	}
-	if err := testinit.Init(); err != nil {
-		fmt.Printf("cannot init test stub: %v\n", err)
-	}
-}
+var once sync.Once
 
 func TestClient(t *testing.T) {
-	// nolint:nolintlint
-	_, _ = GetServiceTemplateInfoOnly(context.Background(),
+	once.Do(func() {
+		if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
+			return
+		}
+		if err := testinit.Init(); err != nil {
+			fmt.Printf("cannot init test stub: %v\n", err)
+		}
+	})
+
+	_, err := GetServiceTemplateInfoOnly(context.Background(),
 		cruder.NewFilterConds().
 			WithCond(constant.FieldID, cruder.EQ, structpb.NewStringValue(uuid.UUID{}.String())))
+	if err != nil {
+		t.Fatal(err)
+	}
 	// Here won't pass test due to we always test with localhost
 }
