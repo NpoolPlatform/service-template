@@ -1,6 +1,11 @@
 FROM jrei/systemd-centos:7
 
-COPY ServiceTemplate.viper.yaml /etc/ServiceTemplate/ServiceTemplate.viper.yaml
-COPY service-template /usr/local/bin/service-template
+WORKDIR /app
 
-CMD ["service-template", "run"]
+COPY service-template /app
+
+ENTRYPOINT ["service-template"]
+
+EXPOSE 32700 32701 32702
+
+CMD ["run"]

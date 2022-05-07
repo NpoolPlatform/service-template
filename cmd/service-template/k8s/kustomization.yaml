@@ -1,8 +1,6 @@
-commonLabels:
-  # app: service-template
-
 resources:
-- 01-service-template.yaml
-- 02-strip-prefix.yaml
-- 03-traefik-ingress.yaml
-- 04-traefik-vpn-ingress.yaml
+  - 01-service-template.viper.yaml
+  - 02-service-template.yaml
+  - 03-strip-prefix.yaml
+  - 04-traefik-ingress.yaml
+  - 05-traefik-vpn-ingress.yaml
