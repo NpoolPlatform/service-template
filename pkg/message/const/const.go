@@ -1,5 +1,3 @@
 package constant
 
-const (
-	ServiceName = "service-template.npool.top" //nolint
-)
+const ServiceName = "service-template.npool.top"

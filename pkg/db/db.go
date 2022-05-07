@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
@@ -13,7 +12,8 @@ import (
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/go-service-framework/pkg/mysql"
 
-	_ "github.com/NpoolPlatform/service-template/pkg/db/ent/runtime" //nolint
+	// nolint:nolintlint
+	_ "github.com/NpoolPlatform/service-template/pkg/db/ent/runtime"
 )
 
 func client() (*ent.Client, error) {
@@ -48,9 +48,6 @@ func WithTx(ctx context.Context, tx *ent.Tx, fn func(ctx context.Context) error)
 		}
 	}()
 
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
-
 	if err := fn(ctx); err != nil {
 		if rerr := tx.Rollback(); rerr != nil {
 			err = fmt.Errorf("rolling back transaction: %v (%v)", err, rerr)
@@ -64,9 +61,6 @@ func WithTx(ctx context.Context, tx *ent.Tx, fn func(ctx context.Context) error)
 }
 
 func Do(ctx context.Context, fn func(ctx context.Context, cli *ent.Client) error) error {
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
-
 	cli, err := Client()
 	if err != nil {
 		return fmt.Errorf("fail get db client: %v", err)

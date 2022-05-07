@@ -4,7 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-VERSION=v1.42.1
+VERSION=v1.45.2
 URL_BASE=https://raw.githubusercontent.com/golangci/golangci-lint
 URL=$URL_BASE/$VERSION/install.sh
 
@@ -20,7 +20,6 @@ fi
 if ! command -v golangci-lint; then
     curl -sfL $URL | sh -s $VERSION
     PATH=$PATH:bin
-    cp bin/golangci-lint /usr/bin
 fi
 
 golangci-lint version

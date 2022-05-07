@@ -4,9 +4,7 @@ import (
 	msgsrv "github.com/NpoolPlatform/go-service-framework/pkg/rabbitmq/server"
 )
 
-const (
-	QueueExample = "example" //nolint
-)
+const QueueExample = "example"
 
 type Example struct {
 	ID      int    `json:"id"`

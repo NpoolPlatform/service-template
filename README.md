@@ -8,7 +8,6 @@
 - [步骤](#步骤)
 - [最佳实践](#最佳实践)
 - [关于mysql](#关于mysql)
-- [GRPC](#grpc)
 
 -----------
 ### 功能
@@ -70,6 +69,3 @@
 ### 关于mysql
 * 创建app后，从app.Mysql()获取本地mysql client
 * [文档参考](https://entgo.io/docs/sql-integration)
-
-### GRPC
-* [GRPC 环境搭建和简单学习](./grpc.md)
