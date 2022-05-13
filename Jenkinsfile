@@ -303,7 +303,7 @@ pipeline {
         expression { TARGET_ENV ==~ /.*development.*/ }
       }
       steps {
-        sh 'sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/service-template/k8s/01-service-template.yaml'
+        sh 'sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/service-template/k8s/02-service-template.yaml'
         sh 'TAG=latest make deploy-to-k8s-cluster'
       }
     }
@@ -320,8 +320,8 @@ pipeline {
 
           git reset --hard
           git checkout $tag
-          sed -i "s/service-template:latest/service-template:$tag/g" cmd/service-template/k8s/01-service-template.yaml
-          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/service-template/k8s/01-service-template.yaml
+          sed -i "s/service-template:latest/service-template:$tag/g" cmd/service-template/k8s/02-service-template.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/service-template/k8s/02-service-template.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
@@ -345,8 +345,8 @@ pipeline {
 
           git reset --hard
           git checkout $tag
-          sed -i "s/service-template:latest/service-template:$tag/g" cmd/service-template/k8s/01-service-template.yaml
-          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/service-template/k8s/01-service-template.yaml
+          sed -i "s/service-template:latest/service-template:$tag/g" cmd/service-template/k8s/02-service-template.yaml
+          sed -i "s/uhub.service.ucloud.cn/$DOCKER_REGISTRY/g" cmd/service-template/k8s/02-service-template.yaml
           TAG=$tag make deploy-to-k8s-cluster
         '''.stripIndent())
       }
