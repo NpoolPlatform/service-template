@@ -90,6 +90,7 @@ linters:
   # - asciicheck
   # - scopelint
   # - gochecknoglobals
+  # - gochecknoinits
   # - gocognit
   # - godot
   # - godox
