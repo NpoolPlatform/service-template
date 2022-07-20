@@ -2,7 +2,58 @@
 
 package runtime
 
-// The schema-stitching logic is generated in github.com/NpoolPlatform/service-template/pkg/db/ent/runtime.go
+import (
+	"context"
+
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/schema"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/template"
+	"github.com/google/uuid"
+
+	"entgo.io/ent"
+	"entgo.io/ent/privacy"
+)
+
+// The init function reads all schema descriptors with runtime code
+// (default values, validators, hooks and policies) and stitches it
+// to their package variables.
+func init() {
+	templateMixin := schema.Template{}.Mixin()
+	template.Policy = privacy.NewPolicies(templateMixin[0], schema.Template{})
+	template.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := template.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	templateMixinFields0 := templateMixin[0].Fields()
+	_ = templateMixinFields0
+	templateFields := schema.Template{}.Fields()
+	_ = templateFields
+	// templateDescCreatedAt is the schema descriptor for created_at field.
+	templateDescCreatedAt := templateMixinFields0[0].Descriptor()
+	// template.DefaultCreatedAt holds the default value on creation for the created_at field.
+	template.DefaultCreatedAt = templateDescCreatedAt.Default.(func() uint32)
+	// templateDescUpdatedAt is the schema descriptor for updated_at field.
+	templateDescUpdatedAt := templateMixinFields0[1].Descriptor()
+	// template.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	template.DefaultUpdatedAt = templateDescUpdatedAt.Default.(func() uint32)
+	// template.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	template.UpdateDefaultUpdatedAt = templateDescUpdatedAt.UpdateDefault.(func() uint32)
+	// templateDescDeletedAt is the schema descriptor for deleted_at field.
+	templateDescDeletedAt := templateMixinFields0[2].Descriptor()
+	// template.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	template.DefaultDeletedAt = templateDescDeletedAt.Default.(func() uint32)
+	// templateDescAge is the schema descriptor for age field.
+	templateDescAge := templateFields[2].Descriptor()
+	// template.DefaultAge holds the default value on creation for the age field.
+	template.DefaultAge = templateDescAge.Default.(uint32)
+	// templateDescID is the schema descriptor for id field.
+	templateDescID := templateFields[0].Descriptor()
+	// template.DefaultID holds the default value on creation for the id field.
+	template.DefaultID = templateDescID.Default.(func() uuid.UUID)
+}
 
 const (
 	Version = "v0.10.1"                                         // Version of ent codegen.

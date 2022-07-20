@@ -165,28 +165,28 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
-// The EmptyQueryRuleFunc type is an adapter to allow the use of ordinary
+// The TemplateQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
-type EmptyQueryRuleFunc func(context.Context, *ent.EmptyQuery) error
+type TemplateQueryRuleFunc func(context.Context, *ent.TemplateQuery) error
 
 // EvalQuery return f(ctx, q).
-func (f EmptyQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.EmptyQuery); ok {
+func (f TemplateQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.TemplateQuery); ok {
 		return f(ctx, q)
 	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.EmptyQuery", q)
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.TemplateQuery", q)
 }
 
-// The EmptyMutationRuleFunc type is an adapter to allow the use of ordinary
+// The TemplateMutationRuleFunc type is an adapter to allow the use of ordinary
 // functions as a mutation rule.
-type EmptyMutationRuleFunc func(context.Context, *ent.EmptyMutation) error
+type TemplateMutationRuleFunc func(context.Context, *ent.TemplateMutation) error
 
 // EvalMutation calls f(ctx, m).
-func (f EmptyMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.EmptyMutation); ok {
+func (f TemplateMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.TemplateMutation); ok {
 		return f(ctx, m)
 	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.EmptyMutation", m)
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TemplateMutation", m)
 }
 
 type (
@@ -224,7 +224,7 @@ var _ QueryMutationRule = FilterFunc(nil)
 
 func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
-	case *ent.EmptyQuery:
+	case *ent.TemplateQuery:
 		return q.Filter(), nil
 	default:
 		return nil, Denyf("ent/privacy: unexpected query type %T for query filter", q)
@@ -233,7 +233,7 @@ func queryFilter(q ent.Query) (Filter, error) {
 
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
-	case *ent.EmptyMutation:
+	case *ent.TemplateMutation:
 		return m.Filter(), nil
 	default:
 		return nil, Denyf("ent/privacy: unexpected mutation type %T for mutation filter", m)

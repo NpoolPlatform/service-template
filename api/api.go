@@ -3,19 +3,19 @@ package api
 import (
 	"context"
 
-	npool "github.com/NpoolPlatform/message/npool/servicetmpl"
+	"github.com/NpoolPlatform/message/npool/servicetmpl/template"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
 
-type Server struct {
-	npool.UnimplementedServiceTemplateServer
+type TemplateServer struct {
+	template.UnimplementedServiceTemplateTemplateServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	npool.RegisterServiceTemplateServer(server, &Server{})
+	template.RegisterServiceTemplateTemplateServer(server, &TemplateServer{})
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
-	return npool.RegisterServiceTemplateHandlerFromEndpoint(context.Background(), mux, endpoint, opts)
+	return template.RegisterServiceTemplateTemplateHandlerFromEndpoint(context.Background(), mux, endpoint, opts)
 }

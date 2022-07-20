@@ -8,7 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/NpoolPlatform/service-template/pkg/db/ent/empty"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/template"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -29,7 +29,7 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		empty.Table: empty.ValidColumn,
+		template.Table: template.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

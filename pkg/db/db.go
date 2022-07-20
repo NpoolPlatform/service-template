@@ -12,7 +12,7 @@ import (
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/go-service-framework/pkg/mysql"
 
-	// nolint:nolintlint
+	// ent policy runtime
 	_ "github.com/NpoolPlatform/service-template/pkg/db/ent/runtime"
 )
 
@@ -37,30 +37,41 @@ func Client() (*ent.Client, error) {
 	return client()
 }
 
-func WithTx(ctx context.Context, tx *ent.Tx, fn func(ctx context.Context) error) error {
+func WithTx(ctx context.Context, fn func(ctx context.Context, tx *ent.Tx) error) error {
+	cli, err := Client()
+	if err != nil {
+		return err
+	}
+
+	tx, err := cli.Tx(ctx)
+	if err != nil {
+		return fmt.Errorf("fail get client transaction: %v", err)
+	}
+
+	succ := false
 	defer func() {
-		if v := recover(); v != nil {
+		if !succ {
 			err := tx.Rollback()
 			if err != nil {
-				logger.Sugar().Errorf("fail to rollback: %v", err)
+				logger.Sugar().Errorf("fail rollback: %v", err)
+				return
 			}
-			panic(v)
 		}
 	}()
 
-	if err := fn(ctx); err != nil {
-		if rerr := tx.Rollback(); rerr != nil {
-			err = fmt.Errorf("rolling back transaction: %v (%v)", err, rerr)
-		}
+	if err := fn(ctx, tx); err != nil {
 		return err
 	}
+
 	if err := tx.Commit(); err != nil {
 		return fmt.Errorf("committing transaction: %v", err)
 	}
+
+	succ = true
 	return nil
 }
 
-func Do(ctx context.Context, fn func(ctx context.Context, cli *ent.Client) error) error {
+func WithClient(ctx context.Context, fn func(ctx context.Context, cli *ent.Client) error) error {
 	cli, err := Client()
 	if err != nil {
 		return fmt.Errorf("fail get db client: %v", err)
@@ -70,29 +81,4 @@ func Do(ctx context.Context, fn func(ctx context.Context, cli *ent.Client) error
 		return err
 	}
 	return nil
-}
-
-type Entity struct {
-	Tx *ent.Tx
-}
-
-func NewEntity(ctx context.Context, _tx *ent.Tx) (*Entity, error) {
-	if _tx != nil {
-		return &Entity{
-			Tx: _tx,
-		}, nil
-	}
-
-	cli, err := Client()
-	if err != nil {
-		return nil, fmt.Errorf("fail get db client: %v", err)
-	}
-	_tx, err = cli.Tx(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("fail get client transaction: %v", err)
-	}
-
-	return &Entity{
-		Tx: _tx,
-	}, nil
 }

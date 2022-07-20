@@ -4,3 +4,4 @@ resources:
   - 03-strip-prefix.yaml
   - 04-traefik-ingress.yaml
   - 05-traefik-vpn-ingress.yaml
+  - 06-service-monitor.yaml
