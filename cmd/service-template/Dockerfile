@@ -1,12 +1,11 @@
-FROM jrei/systemd-centos:7
+FROM uhub.service.ucloud.cn/entropypool/alpine:3.16
 
 WORKDIR /app
 
-COPY service-template /app
-COPY ServiceTemplate.viper.yaml /app
+COPY appuser-manager /app
 
-ENTRYPOINT ["./service-template"]
+ENTRYPOINT ["./appuser-manager"]
 
-EXPOSE 32700 32701 32702
+EXPOSE 50280 50281 50282
 
 CMD ["run"]

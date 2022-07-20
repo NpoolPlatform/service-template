@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"github.com/NpoolPlatform/service-template/pkg/db/ent/empty"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/template"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -16,15 +16,21 @@ var schemaGraph = func() *sqlgraph.Schema {
 	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 1)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
-			Table:   empty.Table,
-			Columns: empty.Columns,
+			Table:   template.Table,
+			Columns: template.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: empty.FieldID,
+				Type:   field.TypeUUID,
+				Column: template.FieldID,
 			},
 		},
-		Type:   "Empty",
-		Fields: map[string]*sqlgraph.FieldSpec{},
+		Type: "Template",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			template.FieldCreatedAt: {Type: field.TypeUint32, Column: template.FieldCreatedAt},
+			template.FieldUpdatedAt: {Type: field.TypeUint32, Column: template.FieldUpdatedAt},
+			template.FieldDeletedAt: {Type: field.TypeUint32, Column: template.FieldDeletedAt},
+			template.FieldName:      {Type: field.TypeString, Column: template.FieldName},
+			template.FieldAge:       {Type: field.TypeUint32, Column: template.FieldAge},
+		},
 	}
 	return graph
 }()
@@ -36,32 +42,32 @@ type predicateAdder interface {
 }
 
 // addPredicate implements the predicateAdder interface.
-func (eq *EmptyQuery) addPredicate(pred func(s *sql.Selector)) {
-	eq.predicates = append(eq.predicates, pred)
+func (tq *TemplateQuery) addPredicate(pred func(s *sql.Selector)) {
+	tq.predicates = append(tq.predicates, pred)
 }
 
-// Filter returns a Filter implementation to apply filters on the EmptyQuery builder.
-func (eq *EmptyQuery) Filter() *EmptyFilter {
-	return &EmptyFilter{eq}
+// Filter returns a Filter implementation to apply filters on the TemplateQuery builder.
+func (tq *TemplateQuery) Filter() *TemplateFilter {
+	return &TemplateFilter{tq}
 }
 
 // addPredicate implements the predicateAdder interface.
-func (m *EmptyMutation) addPredicate(pred func(s *sql.Selector)) {
+func (m *TemplateMutation) addPredicate(pred func(s *sql.Selector)) {
 	m.predicates = append(m.predicates, pred)
 }
 
-// Filter returns an entql.Where implementation to apply filters on the EmptyMutation builder.
-func (m *EmptyMutation) Filter() *EmptyFilter {
-	return &EmptyFilter{m}
+// Filter returns an entql.Where implementation to apply filters on the TemplateMutation builder.
+func (m *TemplateMutation) Filter() *TemplateFilter {
+	return &TemplateFilter{m}
 }
 
-// EmptyFilter provides a generic filtering capability at runtime for EmptyQuery.
-type EmptyFilter struct {
+// TemplateFilter provides a generic filtering capability at runtime for TemplateQuery.
+type TemplateFilter struct {
 	predicateAdder
 }
 
 // Where applies the entql predicate on the query filter.
-func (f *EmptyFilter) Where(p entql.P) {
+func (f *TemplateFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
 		if err := schemaGraph.EvalP(schemaGraph.Nodes[0].Type, p, s); err != nil {
 			s.AddError(err)
@@ -69,7 +75,32 @@ func (f *EmptyFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql int predicate on the id field.
-func (f *EmptyFilter) WhereID(p entql.IntP) {
-	f.Where(p.Field(empty.FieldID))
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *TemplateFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(template.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *TemplateFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(template.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *TemplateFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(template.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *TemplateFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(template.FieldDeletedAt))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *TemplateFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(template.FieldName))
+}
+
+// WhereAge applies the entql uint32 predicate on the age field.
+func (f *TemplateFilter) WhereAge(p entql.Uint32P) {
+	f.Where(p.Field(template.FieldAge))
 }

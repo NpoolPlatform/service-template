@@ -2,8 +2,7 @@ package client
 
 import (
 	"encoding/json"
-
-	"golang.org/x/xerrors"
+	"fmt"
 
 	msgcli "github.com/NpoolPlatform/go-service-framework/pkg/rabbitmq/client"
 	constant "github.com/NpoolPlatform/service-template/pkg/message/const"
@@ -36,7 +35,7 @@ func Init() error {
 	}
 	examples, err := _myClient.Consume(msg.QueueExample)
 	if err != nil {
-		return xerrors.Errorf("fail to construct example consume: %v", err)
+		return fmt.Errorf("fail to construct example consume: %v", err)
 	}
 	sampleClient.consumers[msg.QueueExample] = examples
 
@@ -48,14 +47,14 @@ func Init() error {
 func ConsumeExample(h func(*msg.Example) error) error {
 	examples, ok := myClients[constant.ServiceName].consumers[msg.QueueExample]
 	if !ok {
-		return xerrors.Errorf("consumer is not constructed")
+		return fmt.Errorf("consumer is not constructed")
 	}
 
 	for d := range examples {
 		example := msg.Example{}
 		err := json.Unmarshal(d.Body, &example)
 		if err != nil {
-			return xerrors.Errorf("parse message example error: %v", err)
+			return fmt.Errorf("parse message example error: %v", err)
 		}
 
 		if h != nil {
@@ -66,5 +65,5 @@ func ConsumeExample(h func(*msg.Example) error) error {
 		}
 	}
 
-	return xerrors.Errorf("WE SHOULD NOT BE HERE")
+	return fmt.Errorf("WE SHOULD NOT BE HERE")
 }
