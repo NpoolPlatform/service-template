@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/NpoolPlatform/service-template/pkg/testinit" //nolint
+	"github.com/NpoolPlatform/service-template/pkg/testinit"
 )
 
 func init() {
@@ -19,7 +19,7 @@ func init() {
 }
 
 func TestClient(t *testing.T) {
-	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction {
+	if runByGithubAction, err := strconv.ParseBool(os.Getenv("RUN_BY_GITHUB_ACTION")); err == nil && runByGithubAction { //nolint
 		return
 	}
 	// Here won't pass test due to we always test with localhost
