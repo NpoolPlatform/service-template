@@ -14,7 +14,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (s *TemplateServer) Version(ctx context.Context, in *emptypb.Empty) (*npool.VersionResponse, error) {
+func (s *Server) Version(ctx context.Context, in *emptypb.Empty) (*npool.VersionResponse, error) {
 	resp, err := version.Version()
 	if err != nil {
 		logger.Sugar().Errorw("[Version] get service version error: %w", err)

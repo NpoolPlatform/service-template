@@ -6,5 +6,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Template is the predicate function for template builders.
-type Template func(*sql.Selector)
+// Detail is the predicate function for detail builders.
+type Detail func(*sql.Selector)
+
+// General is the predicate function for general builders.
+type General func(*sql.Selector)

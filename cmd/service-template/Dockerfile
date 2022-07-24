@@ -2,10 +2,10 @@ FROM uhub.service.ucloud.cn/entropypool/alpine:3.16
 
 WORKDIR /app
 
-COPY appuser-manager /app
+COPY service-template /app
 
-ENTRYPOINT ["./appuser-manager"]
+ENTRYPOINT ["/app/service-template"]
 
-EXPOSE 50280 50281 50282
+EXPOSE 50330 50331 50332 50333
 
 CMD ["run"]

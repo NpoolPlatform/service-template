@@ -24,7 +24,7 @@ spec:
           - path: /api/service-template
             backend:
               serviceName: service-template
-              servicePort: 32759
+              servicePort: 50330
     - host: api.procyon.vip
       http: *http_rules
     - host: api.xpool.top

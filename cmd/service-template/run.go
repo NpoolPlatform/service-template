@@ -1,14 +1,9 @@
 package main
 
 import (
-	"time"
-
 	"github.com/NpoolPlatform/service-template/api"
-	db "github.com/NpoolPlatform/service-template/pkg/db"
-	msgcli "github.com/NpoolPlatform/service-template/pkg/message/client"
-	msglistener "github.com/NpoolPlatform/service-template/pkg/message/listener"
-	msg "github.com/NpoolPlatform/service-template/pkg/message/message"
-	msgsrv "github.com/NpoolPlatform/service-template/pkg/message/server"
+	"github.com/NpoolPlatform/service-template/pkg/db"
+	"github.com/NpoolPlatform/service-template/pkg/migrator"
 
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
@@ -22,13 +17,17 @@ import (
 	"google.golang.org/grpc"
 )
 
-const MsgInterval = 3 * time.Second
+// const MsgInterval = 3 * time.Second
 
 var runCmd = &cli.Command{
 	Name:    "run",
 	Aliases: []string{"s"},
 	Usage:   "Run the daemon",
 	Action: func(c *cli.Context) error {
+		if err := migrator.Migrate(c.Context); err != nil {
+			return err
+		}
+
 		if err := db.Init(); err != nil {
 			return err
 		}
@@ -38,16 +37,6 @@ var runCmd = &cli.Command{
 				logger.Sugar().Errorf("fail to run grpc server: %v", err)
 			}
 		}()
-
-		if err := msgsrv.Init(); err != nil {
-			return err
-		}
-		if err := msgcli.Init(); err != nil {
-			return err
-		}
-
-		go msglistener.Listen()
-		go msgSender()
 
 		return grpc2.RunGRPCGateWay(rpcGatewayRegister)
 	},
@@ -70,21 +59,4 @@ func rpcGatewayRegister(mux *runtime.ServeMux, endpoint string, opts []grpc.Dial
 	apimgrcli.Register(mux)
 
 	return nil
-}
-
-func msgSender() {
-	id := 0
-	for {
-		logger.Sugar().Infof("send example")
-		err := msgsrv.PublishExample(&msg.Example{
-			ID:      id,
-			Example: "hello world",
-		})
-		if err != nil {
-			logger.Sugar().Errorf("fail to send example: %v", err)
-			return
-		}
-		id++
-		time.Sleep(MsgInterval)
-	}
 }

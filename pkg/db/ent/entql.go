@@ -3,7 +3,8 @@
 package ent
 
 import (
-	"github.com/NpoolPlatform/service-template/pkg/db/ent/template"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/general"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -13,23 +14,54 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 1)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 2)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
-			Table:   template.Table,
-			Columns: template.Columns,
+			Table:   detail.Table,
+			Columns: detail.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeUUID,
-				Column: template.FieldID,
+				Column: detail.FieldID,
 			},
 		},
-		Type: "Template",
+		Type: "Detail",
 		Fields: map[string]*sqlgraph.FieldSpec{
-			template.FieldCreatedAt: {Type: field.TypeUint32, Column: template.FieldCreatedAt},
-			template.FieldUpdatedAt: {Type: field.TypeUint32, Column: template.FieldUpdatedAt},
-			template.FieldDeletedAt: {Type: field.TypeUint32, Column: template.FieldDeletedAt},
-			template.FieldName:      {Type: field.TypeString, Column: template.FieldName},
-			template.FieldAge:       {Type: field.TypeUint32, Column: template.FieldAge},
+			detail.FieldCreatedAt:       {Type: field.TypeUint32, Column: detail.FieldCreatedAt},
+			detail.FieldUpdatedAt:       {Type: field.TypeUint32, Column: detail.FieldUpdatedAt},
+			detail.FieldDeletedAt:       {Type: field.TypeUint32, Column: detail.FieldDeletedAt},
+			detail.FieldAppID:           {Type: field.TypeUUID, Column: detail.FieldAppID},
+			detail.FieldUserID:          {Type: field.TypeUUID, Column: detail.FieldUserID},
+			detail.FieldCoinTypeID:      {Type: field.TypeUUID, Column: detail.FieldCoinTypeID},
+			detail.FieldIoType:          {Type: field.TypeString, Column: detail.FieldIoType},
+			detail.FieldIoSubType:       {Type: field.TypeString, Column: detail.FieldIoSubType},
+			detail.FieldAmount:          {Type: field.TypeFloat64, Column: detail.FieldAmount},
+			detail.FieldFromCoinTypeID:  {Type: field.TypeUUID, Column: detail.FieldFromCoinTypeID},
+			detail.FieldCoinUsdCurrency: {Type: field.TypeFloat64, Column: detail.FieldCoinUsdCurrency},
+			detail.FieldIoExtra:         {Type: field.TypeString, Column: detail.FieldIoExtra},
+			detail.FieldFromOldID:       {Type: field.TypeUUID, Column: detail.FieldFromOldID},
+		},
+	}
+	graph.Nodes[1] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   general.Table,
+			Columns: general.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: general.FieldID,
+			},
+		},
+		Type: "General",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			general.FieldCreatedAt:  {Type: field.TypeUint32, Column: general.FieldCreatedAt},
+			general.FieldUpdatedAt:  {Type: field.TypeUint32, Column: general.FieldUpdatedAt},
+			general.FieldDeletedAt:  {Type: field.TypeUint32, Column: general.FieldDeletedAt},
+			general.FieldAppID:      {Type: field.TypeUUID, Column: general.FieldAppID},
+			general.FieldUserID:     {Type: field.TypeUUID, Column: general.FieldUserID},
+			general.FieldCoinTypeID: {Type: field.TypeUUID, Column: general.FieldCoinTypeID},
+			general.FieldIncoming:   {Type: field.TypeFloat64, Column: general.FieldIncoming},
+			general.FieldLocked:     {Type: field.TypeFloat64, Column: general.FieldLocked},
+			general.FieldOutcoming:  {Type: field.TypeFloat64, Column: general.FieldOutcoming},
+			general.FieldSpendable:  {Type: field.TypeFloat64, Column: general.FieldSpendable},
 		},
 	}
 	return graph
@@ -42,32 +74,32 @@ type predicateAdder interface {
 }
 
 // addPredicate implements the predicateAdder interface.
-func (tq *TemplateQuery) addPredicate(pred func(s *sql.Selector)) {
-	tq.predicates = append(tq.predicates, pred)
+func (dq *DetailQuery) addPredicate(pred func(s *sql.Selector)) {
+	dq.predicates = append(dq.predicates, pred)
 }
 
-// Filter returns a Filter implementation to apply filters on the TemplateQuery builder.
-func (tq *TemplateQuery) Filter() *TemplateFilter {
-	return &TemplateFilter{tq}
+// Filter returns a Filter implementation to apply filters on the DetailQuery builder.
+func (dq *DetailQuery) Filter() *DetailFilter {
+	return &DetailFilter{dq}
 }
 
 // addPredicate implements the predicateAdder interface.
-func (m *TemplateMutation) addPredicate(pred func(s *sql.Selector)) {
+func (m *DetailMutation) addPredicate(pred func(s *sql.Selector)) {
 	m.predicates = append(m.predicates, pred)
 }
 
-// Filter returns an entql.Where implementation to apply filters on the TemplateMutation builder.
-func (m *TemplateMutation) Filter() *TemplateFilter {
-	return &TemplateFilter{m}
+// Filter returns an entql.Where implementation to apply filters on the DetailMutation builder.
+func (m *DetailMutation) Filter() *DetailFilter {
+	return &DetailFilter{m}
 }
 
-// TemplateFilter provides a generic filtering capability at runtime for TemplateQuery.
-type TemplateFilter struct {
+// DetailFilter provides a generic filtering capability at runtime for DetailQuery.
+type DetailFilter struct {
 	predicateAdder
 }
 
 // Where applies the entql predicate on the query filter.
-func (f *TemplateFilter) Where(p entql.P) {
+func (f *DetailFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
 		if err := schemaGraph.EvalP(schemaGraph.Nodes[0].Type, p, s); err != nil {
 			s.AddError(err)
@@ -76,31 +108,160 @@ func (f *TemplateFilter) Where(p entql.P) {
 }
 
 // WhereID applies the entql [16]byte predicate on the id field.
-func (f *TemplateFilter) WhereID(p entql.ValueP) {
-	f.Where(p.Field(template.FieldID))
+func (f *DetailFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(detail.FieldID))
 }
 
 // WhereCreatedAt applies the entql uint32 predicate on the created_at field.
-func (f *TemplateFilter) WhereCreatedAt(p entql.Uint32P) {
-	f.Where(p.Field(template.FieldCreatedAt))
+func (f *DetailFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(detail.FieldCreatedAt))
 }
 
 // WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
-func (f *TemplateFilter) WhereUpdatedAt(p entql.Uint32P) {
-	f.Where(p.Field(template.FieldUpdatedAt))
+func (f *DetailFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(detail.FieldUpdatedAt))
 }
 
 // WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
-func (f *TemplateFilter) WhereDeletedAt(p entql.Uint32P) {
-	f.Where(p.Field(template.FieldDeletedAt))
+func (f *DetailFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(detail.FieldDeletedAt))
 }
 
-// WhereName applies the entql string predicate on the name field.
-func (f *TemplateFilter) WhereName(p entql.StringP) {
-	f.Where(p.Field(template.FieldName))
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *DetailFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(detail.FieldAppID))
 }
 
-// WhereAge applies the entql uint32 predicate on the age field.
-func (f *TemplateFilter) WhereAge(p entql.Uint32P) {
-	f.Where(p.Field(template.FieldAge))
+// WhereUserID applies the entql [16]byte predicate on the user_id field.
+func (f *DetailFilter) WhereUserID(p entql.ValueP) {
+	f.Where(p.Field(detail.FieldUserID))
+}
+
+// WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
+func (f *DetailFilter) WhereCoinTypeID(p entql.ValueP) {
+	f.Where(p.Field(detail.FieldCoinTypeID))
+}
+
+// WhereIoType applies the entql string predicate on the io_type field.
+func (f *DetailFilter) WhereIoType(p entql.StringP) {
+	f.Where(p.Field(detail.FieldIoType))
+}
+
+// WhereIoSubType applies the entql string predicate on the io_sub_type field.
+func (f *DetailFilter) WhereIoSubType(p entql.StringP) {
+	f.Where(p.Field(detail.FieldIoSubType))
+}
+
+// WhereAmount applies the entql float64 predicate on the amount field.
+func (f *DetailFilter) WhereAmount(p entql.Float64P) {
+	f.Where(p.Field(detail.FieldAmount))
+}
+
+// WhereFromCoinTypeID applies the entql [16]byte predicate on the from_coin_type_id field.
+func (f *DetailFilter) WhereFromCoinTypeID(p entql.ValueP) {
+	f.Where(p.Field(detail.FieldFromCoinTypeID))
+}
+
+// WhereCoinUsdCurrency applies the entql float64 predicate on the coin_usd_currency field.
+func (f *DetailFilter) WhereCoinUsdCurrency(p entql.Float64P) {
+	f.Where(p.Field(detail.FieldCoinUsdCurrency))
+}
+
+// WhereIoExtra applies the entql string predicate on the io_extra field.
+func (f *DetailFilter) WhereIoExtra(p entql.StringP) {
+	f.Where(p.Field(detail.FieldIoExtra))
+}
+
+// WhereFromOldID applies the entql [16]byte predicate on the from_old_id field.
+func (f *DetailFilter) WhereFromOldID(p entql.ValueP) {
+	f.Where(p.Field(detail.FieldFromOldID))
+}
+
+// addPredicate implements the predicateAdder interface.
+func (gq *GeneralQuery) addPredicate(pred func(s *sql.Selector)) {
+	gq.predicates = append(gq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the GeneralQuery builder.
+func (gq *GeneralQuery) Filter() *GeneralFilter {
+	return &GeneralFilter{gq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *GeneralMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the GeneralMutation builder.
+func (m *GeneralMutation) Filter() *GeneralFilter {
+	return &GeneralFilter{m}
+}
+
+// GeneralFilter provides a generic filtering capability at runtime for GeneralQuery.
+type GeneralFilter struct {
+	predicateAdder
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *GeneralFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *GeneralFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(general.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *GeneralFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(general.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *GeneralFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(general.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *GeneralFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(general.FieldDeletedAt))
+}
+
+// WhereAppID applies the entql [16]byte predicate on the app_id field.
+func (f *GeneralFilter) WhereAppID(p entql.ValueP) {
+	f.Where(p.Field(general.FieldAppID))
+}
+
+// WhereUserID applies the entql [16]byte predicate on the user_id field.
+func (f *GeneralFilter) WhereUserID(p entql.ValueP) {
+	f.Where(p.Field(general.FieldUserID))
+}
+
+// WhereCoinTypeID applies the entql [16]byte predicate on the coin_type_id field.
+func (f *GeneralFilter) WhereCoinTypeID(p entql.ValueP) {
+	f.Where(p.Field(general.FieldCoinTypeID))
+}
+
+// WhereIncoming applies the entql float64 predicate on the incoming field.
+func (f *GeneralFilter) WhereIncoming(p entql.Float64P) {
+	f.Where(p.Field(general.FieldIncoming))
+}
+
+// WhereLocked applies the entql float64 predicate on the locked field.
+func (f *GeneralFilter) WhereLocked(p entql.Float64P) {
+	f.Where(p.Field(general.FieldLocked))
+}
+
+// WhereOutcoming applies the entql float64 predicate on the outcoming field.
+func (f *GeneralFilter) WhereOutcoming(p entql.Float64P) {
+	f.Where(p.Field(general.FieldOutcoming))
+}
+
+// WhereSpendable applies the entql float64 predicate on the spendable field.
+func (f *GeneralFilter) WhereSpendable(p entql.Float64P) {
+	f.Where(p.Field(general.FieldSpendable))
 }

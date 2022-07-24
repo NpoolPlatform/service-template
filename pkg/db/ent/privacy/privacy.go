@@ -165,28 +165,52 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
-// The TemplateQueryRuleFunc type is an adapter to allow the use of ordinary
+// The DetailQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
-type TemplateQueryRuleFunc func(context.Context, *ent.TemplateQuery) error
+type DetailQueryRuleFunc func(context.Context, *ent.DetailQuery) error
 
 // EvalQuery return f(ctx, q).
-func (f TemplateQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.TemplateQuery); ok {
+func (f DetailQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.DetailQuery); ok {
 		return f(ctx, q)
 	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.TemplateQuery", q)
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.DetailQuery", q)
 }
 
-// The TemplateMutationRuleFunc type is an adapter to allow the use of ordinary
+// The DetailMutationRuleFunc type is an adapter to allow the use of ordinary
 // functions as a mutation rule.
-type TemplateMutationRuleFunc func(context.Context, *ent.TemplateMutation) error
+type DetailMutationRuleFunc func(context.Context, *ent.DetailMutation) error
 
 // EvalMutation calls f(ctx, m).
-func (f TemplateMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.TemplateMutation); ok {
+func (f DetailMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.DetailMutation); ok {
 		return f(ctx, m)
 	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.TemplateMutation", m)
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DetailMutation", m)
+}
+
+// The GeneralQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type GeneralQueryRuleFunc func(context.Context, *ent.GeneralQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f GeneralQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.GeneralQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.GeneralQuery", q)
+}
+
+// The GeneralMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type GeneralMutationRuleFunc func(context.Context, *ent.GeneralMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f GeneralMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.GeneralMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GeneralMutation", m)
 }
 
 type (
@@ -224,7 +248,9 @@ var _ QueryMutationRule = FilterFunc(nil)
 
 func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
-	case *ent.TemplateQuery:
+	case *ent.DetailQuery:
+		return q.Filter(), nil
+	case *ent.GeneralQuery:
 		return q.Filter(), nil
 	default:
 		return nil, Denyf("ent/privacy: unexpected query type %T for query filter", q)
@@ -233,7 +259,9 @@ func queryFilter(q ent.Query) (Filter, error) {
 
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
-	case *ent.TemplateMutation:
+	case *ent.DetailMutation:
+		return m.Filter(), nil
+	case *ent.GeneralMutation:
 		return m.Filter(), nil
 	default:
 		return nil, Denyf("ent/privacy: unexpected mutation type %T for mutation filter", m)

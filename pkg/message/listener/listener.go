@@ -8,9 +8,7 @@ import (
 
 func listenTemplateExample() {
 	for {
-		logger.Sugar().Infof("consume template example")
 		err := msgcli.ConsumeExample(func(example *msg.Example) error {
-			logger.Sugar().Infof("go example: %+w", example)
 			// Call event handler in api module
 			return nil
 		})

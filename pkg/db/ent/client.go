@@ -10,7 +10,8 @@ import (
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/migrate"
 	"github.com/google/uuid"
 
-	"github.com/NpoolPlatform/service-template/pkg/db/ent/template"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/general"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -21,8 +22,10 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
-	// Template is the client for interacting with the Template builders.
-	Template *TemplateClient
+	// Detail is the client for interacting with the Detail builders.
+	Detail *DetailClient
+	// General is the client for interacting with the General builders.
+	General *GeneralClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -36,7 +39,8 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
-	c.Template = NewTemplateClient(c.config)
+	c.Detail = NewDetailClient(c.config)
+	c.General = NewGeneralClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -68,9 +72,10 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:      ctx,
-		config:   cfg,
-		Template: NewTemplateClient(cfg),
+		ctx:     ctx,
+		config:  cfg,
+		Detail:  NewDetailClient(cfg),
+		General: NewGeneralClient(cfg),
 	}, nil
 }
 
@@ -88,16 +93,17 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:      ctx,
-		config:   cfg,
-		Template: NewTemplateClient(cfg),
+		ctx:     ctx,
+		config:  cfg,
+		Detail:  NewDetailClient(cfg),
+		General: NewGeneralClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Template.
+//		Detail.
 //		Query().
 //		Count(ctx)
 //
@@ -120,87 +126,88 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.Template.Use(hooks...)
+	c.Detail.Use(hooks...)
+	c.General.Use(hooks...)
 }
 
-// TemplateClient is a client for the Template schema.
-type TemplateClient struct {
+// DetailClient is a client for the Detail schema.
+type DetailClient struct {
 	config
 }
 
-// NewTemplateClient returns a client for the Template from the given config.
-func NewTemplateClient(c config) *TemplateClient {
-	return &TemplateClient{config: c}
+// NewDetailClient returns a client for the Detail from the given config.
+func NewDetailClient(c config) *DetailClient {
+	return &DetailClient{config: c}
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `template.Hooks(f(g(h())))`.
-func (c *TemplateClient) Use(hooks ...Hook) {
-	c.hooks.Template = append(c.hooks.Template, hooks...)
+// A call to `Use(f, g, h)` equals to `detail.Hooks(f(g(h())))`.
+func (c *DetailClient) Use(hooks ...Hook) {
+	c.hooks.Detail = append(c.hooks.Detail, hooks...)
 }
 
-// Create returns a create builder for Template.
-func (c *TemplateClient) Create() *TemplateCreate {
-	mutation := newTemplateMutation(c.config, OpCreate)
-	return &TemplateCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Create returns a create builder for Detail.
+func (c *DetailClient) Create() *DetailCreate {
+	mutation := newDetailMutation(c.config, OpCreate)
+	return &DetailCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// CreateBulk returns a builder for creating a bulk of Template entities.
-func (c *TemplateClient) CreateBulk(builders ...*TemplateCreate) *TemplateCreateBulk {
-	return &TemplateCreateBulk{config: c.config, builders: builders}
+// CreateBulk returns a builder for creating a bulk of Detail entities.
+func (c *DetailClient) CreateBulk(builders ...*DetailCreate) *DetailCreateBulk {
+	return &DetailCreateBulk{config: c.config, builders: builders}
 }
 
-// Update returns an update builder for Template.
-func (c *TemplateClient) Update() *TemplateUpdate {
-	mutation := newTemplateMutation(c.config, OpUpdate)
-	return &TemplateUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Update returns an update builder for Detail.
+func (c *DetailClient) Update() *DetailUpdate {
+	mutation := newDetailMutation(c.config, OpUpdate)
+	return &DetailUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOne returns an update builder for the given entity.
-func (c *TemplateClient) UpdateOne(t *Template) *TemplateUpdateOne {
-	mutation := newTemplateMutation(c.config, OpUpdateOne, withTemplate(t))
-	return &TemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *DetailClient) UpdateOne(d *Detail) *DetailUpdateOne {
+	mutation := newDetailMutation(c.config, OpUpdateOne, withDetail(d))
+	return &DetailUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *TemplateClient) UpdateOneID(id uuid.UUID) *TemplateUpdateOne {
-	mutation := newTemplateMutation(c.config, OpUpdateOne, withTemplateID(id))
-	return &TemplateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+func (c *DetailClient) UpdateOneID(id uuid.UUID) *DetailUpdateOne {
+	mutation := newDetailMutation(c.config, OpUpdateOne, withDetailID(id))
+	return &DetailUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// Delete returns a delete builder for Template.
-func (c *TemplateClient) Delete() *TemplateDelete {
-	mutation := newTemplateMutation(c.config, OpDelete)
-	return &TemplateDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+// Delete returns a delete builder for Detail.
+func (c *DetailClient) Delete() *DetailDelete {
+	mutation := newDetailMutation(c.config, OpDelete)
+	return &DetailDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
 // DeleteOne returns a delete builder for the given entity.
-func (c *TemplateClient) DeleteOne(t *Template) *TemplateDeleteOne {
-	return c.DeleteOneID(t.ID)
+func (c *DetailClient) DeleteOne(d *Detail) *DetailDeleteOne {
+	return c.DeleteOneID(d.ID)
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *TemplateClient) DeleteOneID(id uuid.UUID) *TemplateDeleteOne {
-	builder := c.Delete().Where(template.ID(id))
+func (c *DetailClient) DeleteOneID(id uuid.UUID) *DetailDeleteOne {
+	builder := c.Delete().Where(detail.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
-	return &TemplateDeleteOne{builder}
+	return &DetailDeleteOne{builder}
 }
 
-// Query returns a query builder for Template.
-func (c *TemplateClient) Query() *TemplateQuery {
-	return &TemplateQuery{
+// Query returns a query builder for Detail.
+func (c *DetailClient) Query() *DetailQuery {
+	return &DetailQuery{
 		config: c.config,
 	}
 }
 
-// Get returns a Template entity by its id.
-func (c *TemplateClient) Get(ctx context.Context, id uuid.UUID) (*Template, error) {
-	return c.Query().Where(template.ID(id)).Only(ctx)
+// Get returns a Detail entity by its id.
+func (c *DetailClient) Get(ctx context.Context, id uuid.UUID) (*Detail, error) {
+	return c.Query().Where(detail.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *TemplateClient) GetX(ctx context.Context, id uuid.UUID) *Template {
+func (c *DetailClient) GetX(ctx context.Context, id uuid.UUID) *Detail {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)
@@ -209,7 +216,98 @@ func (c *TemplateClient) GetX(ctx context.Context, id uuid.UUID) *Template {
 }
 
 // Hooks returns the client hooks.
-func (c *TemplateClient) Hooks() []Hook {
-	hooks := c.hooks.Template
-	return append(hooks[:len(hooks):len(hooks)], template.Hooks[:]...)
+func (c *DetailClient) Hooks() []Hook {
+	hooks := c.hooks.Detail
+	return append(hooks[:len(hooks):len(hooks)], detail.Hooks[:]...)
+}
+
+// GeneralClient is a client for the General schema.
+type GeneralClient struct {
+	config
+}
+
+// NewGeneralClient returns a client for the General from the given config.
+func NewGeneralClient(c config) *GeneralClient {
+	return &GeneralClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `general.Hooks(f(g(h())))`.
+func (c *GeneralClient) Use(hooks ...Hook) {
+	c.hooks.General = append(c.hooks.General, hooks...)
+}
+
+// Create returns a create builder for General.
+func (c *GeneralClient) Create() *GeneralCreate {
+	mutation := newGeneralMutation(c.config, OpCreate)
+	return &GeneralCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of General entities.
+func (c *GeneralClient) CreateBulk(builders ...*GeneralCreate) *GeneralCreateBulk {
+	return &GeneralCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for General.
+func (c *GeneralClient) Update() *GeneralUpdate {
+	mutation := newGeneralMutation(c.config, OpUpdate)
+	return &GeneralUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GeneralClient) UpdateOne(ge *General) *GeneralUpdateOne {
+	mutation := newGeneralMutation(c.config, OpUpdateOne, withGeneral(ge))
+	return &GeneralUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GeneralClient) UpdateOneID(id uuid.UUID) *GeneralUpdateOne {
+	mutation := newGeneralMutation(c.config, OpUpdateOne, withGeneralID(id))
+	return &GeneralUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for General.
+func (c *GeneralClient) Delete() *GeneralDelete {
+	mutation := newGeneralMutation(c.config, OpDelete)
+	return &GeneralDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *GeneralClient) DeleteOne(ge *General) *GeneralDeleteOne {
+	return c.DeleteOneID(ge.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *GeneralClient) DeleteOneID(id uuid.UUID) *GeneralDeleteOne {
+	builder := c.Delete().Where(general.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GeneralDeleteOne{builder}
+}
+
+// Query returns a query builder for General.
+func (c *GeneralClient) Query() *GeneralQuery {
+	return &GeneralQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a General entity by its id.
+func (c *GeneralClient) Get(ctx context.Context, id uuid.UUID) (*General, error) {
+	return c.Query().Where(general.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GeneralClient) GetX(ctx context.Context, id uuid.UUID) *General {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GeneralClient) Hooks() []Hook {
+	hooks := c.hooks.General
+	return append(hooks[:len(hooks):len(hooks)], general.Hooks[:]...)
 }
