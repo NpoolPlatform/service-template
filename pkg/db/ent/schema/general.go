@@ -23,35 +23,51 @@ func (General) Mixin() []ent.Mixin {
 // Fields of the General.
 func (General) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New).Unique(),
-		field.UUID("app_id", uuid.UUID{}).Optional().Default(func() uuid.UUID {
-			return uuid.UUID{}
-		}),
-		field.UUID("user_id", uuid.UUID{}).Optional().Default(func() uuid.UUID {
-			return uuid.UUID{}
-		}),
-		field.UUID("coin_type_id", uuid.UUID{}).Optional().Default(func() uuid.UUID {
-			return uuid.UUID{}
-		}),
-		field.Float("incoming").
+		field.
+			UUID("id", uuid.UUID{}).
+			Default(uuid.New).
+			Unique(),
+		field.
+			UUID("app_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.
+			UUID("user_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.
+			UUID("coin_type_id", uuid.UUID{}).
+			Optional().
+			Default(func() uuid.UUID {
+				return uuid.UUID{}
+			}),
+		field.
+			Float("incoming").
 			GoType(decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37, 18)",
 			}).
 			Optional(),
-		field.Float("locked").
+		field.
+			Float("locked").
 			GoType(decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37, 18)",
 			}).
 			Optional(),
-		field.Float("outcoming").
+		field.
+			Float("outcoming").
 			GoType(decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37, 18)",
 			}).
 			Optional(),
-		field.Float("spendable").
+		field.
+			Float("spendable").
 			GoType(decimal.Decimal{}).
 			SchemaType(map[string]string{
 				dialect.MySQL: "decimal(37, 18)",
