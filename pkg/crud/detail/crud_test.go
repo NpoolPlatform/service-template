@@ -232,14 +232,12 @@ func TestDetail(t *testing.T) {
 		return
 	}
 	t.Run("create", create)
-	if false {
-		t.Run("createBulk", createBulk)
-		t.Run("row", row)
-		t.Run("rows", rows)
-		t.Run("rowOnly", rowOnly)
-		t.Run("exist", exist)
-		t.Run("existConds", existConds)
-		t.Run("count", count)
-		t.Run("delete", deleteA)
-	}
+	t.Run("createBulk", createBulk)
+	t.Run("row", row)
+	t.Run("rows", rows)
+	t.Run("rowOnly", rowOnly)
+	t.Run("exist", exist)
+	t.Run("existConds", existConds)
+	t.Run("count", count)
+	t.Run("delete", deleteA)
 }
