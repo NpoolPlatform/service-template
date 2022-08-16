@@ -13,17 +13,17 @@ import (
 )
 
 type Server struct {
-	servicetmpl.UnimplementedServiceTemplateServer
+	servicetmpl.UnimplementedManagerServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	servicetmpl.RegisterServiceTemplateServer(server, &Server{})
+	servicetmpl.RegisterManagerServer(server, &Server{})
 	general.Register(server)
 	detail.Register(server)
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
-	if err := servicetmpl.RegisterServiceTemplateHandlerFromEndpoint(context.Background(), mux, endpoint, opts); err != nil {
+	if err := servicetmpl.RegisterManagerHandlerFromEndpoint(context.Background(), mux, endpoint, opts); err != nil {
 		return err
 	}
 	if err := general.RegisterGateway(mux, endpoint, opts); err != nil {

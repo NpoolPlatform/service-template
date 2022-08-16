@@ -8,11 +8,11 @@ import (
 )
 
 type Server struct {
-	general.UnimplementedTemplateGeneralServer
+	general.UnimplementedManagerServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	general.RegisterTemplateGeneralServer(server, &Server{})
+	general.RegisterManagerServer(server, &Server{})
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {
