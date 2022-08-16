@@ -46,33 +46,33 @@ func (General) Fields() []ent.Field {
 				return uuid.UUID{}
 			}),
 		field.
-			Float("incoming").
-			GoType(decimal.Decimal{}).
+			Other("incoming", decimal.Decimal{}).
 			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37, 18)",
+				dialect.MySQL: "decimal(37,18)",
 			}).
-			Optional(),
+			Optional().
+			Default(decimal.Decimal{}),
 		field.
-			Float("locked").
-			GoType(decimal.Decimal{}).
+			Other("locked", decimal.Decimal{}).
 			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37, 18)",
+				dialect.MySQL: "decimal(37,18)",
 			}).
-			Optional(),
+			Optional().
+			Default(decimal.Decimal{}),
 		field.
-			Float("outcoming").
-			GoType(decimal.Decimal{}).
+			Other("outcoming", decimal.Decimal{}).
 			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37, 18)",
+				dialect.MySQL: "decimal(37,18)",
 			}).
-			Optional(),
+			Optional().
+			Default(decimal.Decimal{}),
 		field.
-			Float("spendable").
-			GoType(decimal.Decimal{}).
+			Other("spendable", decimal.Decimal{}).
 			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37, 18)",
+				dialect.MySQL: "decimal(37,18)",
 			}).
-			Optional(),
+			Optional().
+			Default(decimal.Decimal{}),
 	}
 }
 

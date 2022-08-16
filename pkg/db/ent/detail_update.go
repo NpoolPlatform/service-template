@@ -186,7 +186,6 @@ func (du *DetailUpdate) ClearIoSubType() *DetailUpdate {
 
 // SetAmount sets the "amount" field.
 func (du *DetailUpdate) SetAmount(d decimal.Decimal) *DetailUpdate {
-	du.mutation.ResetAmount()
 	du.mutation.SetAmount(d)
 	return du
 }
@@ -196,12 +195,6 @@ func (du *DetailUpdate) SetNillableAmount(d *decimal.Decimal) *DetailUpdate {
 	if d != nil {
 		du.SetAmount(*d)
 	}
-	return du
-}
-
-// AddAmount adds d to the "amount" field.
-func (du *DetailUpdate) AddAmount(d decimal.Decimal) *DetailUpdate {
-	du.mutation.AddAmount(d)
 	return du
 }
 
@@ -233,7 +226,6 @@ func (du *DetailUpdate) ClearFromCoinTypeID() *DetailUpdate {
 
 // SetCoinUsdCurrency sets the "coin_usd_currency" field.
 func (du *DetailUpdate) SetCoinUsdCurrency(d decimal.Decimal) *DetailUpdate {
-	du.mutation.ResetCoinUsdCurrency()
 	du.mutation.SetCoinUsdCurrency(d)
 	return du
 }
@@ -243,12 +235,6 @@ func (du *DetailUpdate) SetNillableCoinUsdCurrency(d *decimal.Decimal) *DetailUp
 	if d != nil {
 		du.SetCoinUsdCurrency(*d)
 	}
-	return du
-}
-
-// AddCoinUsdCurrency adds d to the "coin_usd_currency" field.
-func (du *DetailUpdate) AddCoinUsdCurrency(d decimal.Decimal) *DetailUpdate {
-	du.mutation.AddCoinUsdCurrency(d)
 	return du
 }
 
@@ -499,21 +485,14 @@ func (du *DetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := du.mutation.Amount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
-			Value:  value,
-			Column: detail.FieldAmount,
-		})
-	}
-	if value, ok := du.mutation.AddedAmount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: detail.FieldAmount,
 		})
 	}
 	if du.mutation.AmountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Column: detail.FieldAmount,
 		})
 	}
@@ -532,21 +511,14 @@ func (du *DetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := du.mutation.CoinUsdCurrency(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
-			Value:  value,
-			Column: detail.FieldCoinUsdCurrency,
-		})
-	}
-	if value, ok := du.mutation.AddedCoinUsdCurrency(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: detail.FieldCoinUsdCurrency,
 		})
 	}
 	if du.mutation.CoinUsdCurrencyCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Column: detail.FieldCoinUsdCurrency,
 		})
 	}
@@ -752,7 +724,6 @@ func (duo *DetailUpdateOne) ClearIoSubType() *DetailUpdateOne {
 
 // SetAmount sets the "amount" field.
 func (duo *DetailUpdateOne) SetAmount(d decimal.Decimal) *DetailUpdateOne {
-	duo.mutation.ResetAmount()
 	duo.mutation.SetAmount(d)
 	return duo
 }
@@ -762,12 +733,6 @@ func (duo *DetailUpdateOne) SetNillableAmount(d *decimal.Decimal) *DetailUpdateO
 	if d != nil {
 		duo.SetAmount(*d)
 	}
-	return duo
-}
-
-// AddAmount adds d to the "amount" field.
-func (duo *DetailUpdateOne) AddAmount(d decimal.Decimal) *DetailUpdateOne {
-	duo.mutation.AddAmount(d)
 	return duo
 }
 
@@ -799,7 +764,6 @@ func (duo *DetailUpdateOne) ClearFromCoinTypeID() *DetailUpdateOne {
 
 // SetCoinUsdCurrency sets the "coin_usd_currency" field.
 func (duo *DetailUpdateOne) SetCoinUsdCurrency(d decimal.Decimal) *DetailUpdateOne {
-	duo.mutation.ResetCoinUsdCurrency()
 	duo.mutation.SetCoinUsdCurrency(d)
 	return duo
 }
@@ -809,12 +773,6 @@ func (duo *DetailUpdateOne) SetNillableCoinUsdCurrency(d *decimal.Decimal) *Deta
 	if d != nil {
 		duo.SetCoinUsdCurrency(*d)
 	}
-	return duo
-}
-
-// AddCoinUsdCurrency adds d to the "coin_usd_currency" field.
-func (duo *DetailUpdateOne) AddCoinUsdCurrency(d decimal.Decimal) *DetailUpdateOne {
-	duo.mutation.AddCoinUsdCurrency(d)
 	return duo
 }
 
@@ -1089,21 +1047,14 @@ func (duo *DetailUpdateOne) sqlSave(ctx context.Context) (_node *Detail, err err
 	}
 	if value, ok := duo.mutation.Amount(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
-			Value:  value,
-			Column: detail.FieldAmount,
-		})
-	}
-	if value, ok := duo.mutation.AddedAmount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: detail.FieldAmount,
 		})
 	}
 	if duo.mutation.AmountCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Column: detail.FieldAmount,
 		})
 	}
@@ -1122,21 +1073,14 @@ func (duo *DetailUpdateOne) sqlSave(ctx context.Context) (_node *Detail, err err
 	}
 	if value, ok := duo.mutation.CoinUsdCurrency(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
-			Value:  value,
-			Column: detail.FieldCoinUsdCurrency,
-		})
-	}
-	if value, ok := duo.mutation.AddedCoinUsdCurrency(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: detail.FieldCoinUsdCurrency,
 		})
 	}
 	if duo.mutation.CoinUsdCurrencyCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Column: detail.FieldCoinUsdCurrency,
 		})
 	}

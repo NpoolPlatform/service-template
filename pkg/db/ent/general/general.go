@@ -5,6 +5,7 @@ package general
 import (
 	"entgo.io/ent"
 	"github.com/google/uuid"
+	"github.com/shopspring/decimal"
 )
 
 const (
@@ -84,6 +85,14 @@ var (
 	DefaultUserID func() uuid.UUID
 	// DefaultCoinTypeID holds the default value on creation for the "coin_type_id" field.
 	DefaultCoinTypeID func() uuid.UUID
+	// DefaultIncoming holds the default value on creation for the "incoming" field.
+	DefaultIncoming decimal.Decimal
+	// DefaultLocked holds the default value on creation for the "locked" field.
+	DefaultLocked decimal.Decimal
+	// DefaultOutcoming holds the default value on creation for the "outcoming" field.
+	DefaultOutcoming decimal.Decimal
+	// DefaultSpendable holds the default value on creation for the "spendable" field.
+	DefaultSpendable decimal.Decimal
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )

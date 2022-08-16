@@ -200,16 +200,20 @@ func AddFields(ctx context.Context, in *npool.GeneralReq) (*ent.General, error) 
 		stm := info.Update()
 
 		if in.Incoming != nil {
-			stm = stm.AddIncoming(incoming)
+			incoming = incoming.Add(info.Incoming)
+			stm = stm.SetIncoming(incoming)
 		}
 		if in.Outcoming != nil {
-			stm = stm.AddOutcoming(outcoming)
+			outcoming = outcoming.Add(info.Outcoming)
+			stm = stm.SetOutcoming(outcoming)
 		}
 		if in.Locked != nil {
-			stm = stm.AddLocked(locked)
+			locked = locked.Add(info.Locked)
+			stm = stm.SetLocked(locked)
 		}
 		if in.Spendable != nil {
-			stm = stm.AddSpendable(spendable)
+			spendable = spendable.Add(info.Spendable)
+			stm = stm.SetSpendable(spendable)
 		}
 
 		info, err = stm.Save(_ctx)

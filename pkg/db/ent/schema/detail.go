@@ -56,12 +56,12 @@ func (Detail) Fields() []ent.Field {
 			Optional().
 			Default(detail.IOSubType_DefaultSubType.String()),
 		field.
-			Float("amount").
-			GoType(decimal.Decimal{}).
+			Other("amount", decimal.Decimal{}).
 			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37, 18)",
+				dialect.MySQL: "decimal(37,18)",
 			}).
-			Optional(),
+			Optional().
+			Default(decimal.Decimal{}),
 		field.
 			UUID("from_coin_type_id", uuid.UUID{}).
 			Optional().
@@ -69,12 +69,12 @@ func (Detail) Fields() []ent.Field {
 				return uuid.UUID{}
 			}),
 		field.
-			Float("coin_usd_currency").
-			GoType(decimal.Decimal{}).
+			Other("coin_usd_currency", decimal.Decimal{}).
 			SchemaType(map[string]string{
-				dialect.MySQL: "decimal(37, 18)",
+				dialect.MySQL: "decimal(37,18)",
 			}).
-			Optional(),
+			Optional().
+			Default(decimal.Decimal{}),
 		field.
 			String("io_extra").
 			Optional().

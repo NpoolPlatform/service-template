@@ -293,6 +293,22 @@ func (gc *GeneralCreate) defaults() error {
 		v := general.DefaultCoinTypeID()
 		gc.mutation.SetCoinTypeID(v)
 	}
+	if _, ok := gc.mutation.Incoming(); !ok {
+		v := general.DefaultIncoming
+		gc.mutation.SetIncoming(v)
+	}
+	if _, ok := gc.mutation.Locked(); !ok {
+		v := general.DefaultLocked
+		gc.mutation.SetLocked(v)
+	}
+	if _, ok := gc.mutation.Outcoming(); !ok {
+		v := general.DefaultOutcoming
+		gc.mutation.SetOutcoming(v)
+	}
+	if _, ok := gc.mutation.Spendable(); !ok {
+		v := general.DefaultSpendable
+		gc.mutation.SetSpendable(v)
+	}
 	if _, ok := gc.mutation.ID(); !ok {
 		if general.DefaultID == nil {
 			return fmt.Errorf("ent: uninitialized general.DefaultID (forgotten import ent/runtime?)")
@@ -401,7 +417,7 @@ func (gc *GeneralCreate) createSpec() (*General, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := gc.mutation.Incoming(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: general.FieldIncoming,
 		})
@@ -409,7 +425,7 @@ func (gc *GeneralCreate) createSpec() (*General, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := gc.mutation.Locked(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: general.FieldLocked,
 		})
@@ -417,7 +433,7 @@ func (gc *GeneralCreate) createSpec() (*General, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := gc.mutation.Outcoming(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: general.FieldOutcoming,
 		})
@@ -425,7 +441,7 @@ func (gc *GeneralCreate) createSpec() (*General, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := gc.mutation.Spendable(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: general.FieldSpendable,
 		})
@@ -605,12 +621,6 @@ func (u *GeneralUpsert) UpdateIncoming() *GeneralUpsert {
 	return u
 }
 
-// AddIncoming adds v to the "incoming" field.
-func (u *GeneralUpsert) AddIncoming(v decimal.Decimal) *GeneralUpsert {
-	u.Add(general.FieldIncoming, v)
-	return u
-}
-
 // ClearIncoming clears the value of the "incoming" field.
 func (u *GeneralUpsert) ClearIncoming() *GeneralUpsert {
 	u.SetNull(general.FieldIncoming)
@@ -626,12 +636,6 @@ func (u *GeneralUpsert) SetLocked(v decimal.Decimal) *GeneralUpsert {
 // UpdateLocked sets the "locked" field to the value that was provided on create.
 func (u *GeneralUpsert) UpdateLocked() *GeneralUpsert {
 	u.SetExcluded(general.FieldLocked)
-	return u
-}
-
-// AddLocked adds v to the "locked" field.
-func (u *GeneralUpsert) AddLocked(v decimal.Decimal) *GeneralUpsert {
-	u.Add(general.FieldLocked, v)
 	return u
 }
 
@@ -653,12 +657,6 @@ func (u *GeneralUpsert) UpdateOutcoming() *GeneralUpsert {
 	return u
 }
 
-// AddOutcoming adds v to the "outcoming" field.
-func (u *GeneralUpsert) AddOutcoming(v decimal.Decimal) *GeneralUpsert {
-	u.Add(general.FieldOutcoming, v)
-	return u
-}
-
 // ClearOutcoming clears the value of the "outcoming" field.
 func (u *GeneralUpsert) ClearOutcoming() *GeneralUpsert {
 	u.SetNull(general.FieldOutcoming)
@@ -674,12 +672,6 @@ func (u *GeneralUpsert) SetSpendable(v decimal.Decimal) *GeneralUpsert {
 // UpdateSpendable sets the "spendable" field to the value that was provided on create.
 func (u *GeneralUpsert) UpdateSpendable() *GeneralUpsert {
 	u.SetExcluded(general.FieldSpendable)
-	return u
-}
-
-// AddSpendable adds v to the "spendable" field.
-func (u *GeneralUpsert) AddSpendable(v decimal.Decimal) *GeneralUpsert {
-	u.Add(general.FieldSpendable, v)
 	return u
 }
 
@@ -872,13 +864,6 @@ func (u *GeneralUpsertOne) SetIncoming(v decimal.Decimal) *GeneralUpsertOne {
 	})
 }
 
-// AddIncoming adds v to the "incoming" field.
-func (u *GeneralUpsertOne) AddIncoming(v decimal.Decimal) *GeneralUpsertOne {
-	return u.Update(func(s *GeneralUpsert) {
-		s.AddIncoming(v)
-	})
-}
-
 // UpdateIncoming sets the "incoming" field to the value that was provided on create.
 func (u *GeneralUpsertOne) UpdateIncoming() *GeneralUpsertOne {
 	return u.Update(func(s *GeneralUpsert) {
@@ -897,13 +882,6 @@ func (u *GeneralUpsertOne) ClearIncoming() *GeneralUpsertOne {
 func (u *GeneralUpsertOne) SetLocked(v decimal.Decimal) *GeneralUpsertOne {
 	return u.Update(func(s *GeneralUpsert) {
 		s.SetLocked(v)
-	})
-}
-
-// AddLocked adds v to the "locked" field.
-func (u *GeneralUpsertOne) AddLocked(v decimal.Decimal) *GeneralUpsertOne {
-	return u.Update(func(s *GeneralUpsert) {
-		s.AddLocked(v)
 	})
 }
 
@@ -928,13 +906,6 @@ func (u *GeneralUpsertOne) SetOutcoming(v decimal.Decimal) *GeneralUpsertOne {
 	})
 }
 
-// AddOutcoming adds v to the "outcoming" field.
-func (u *GeneralUpsertOne) AddOutcoming(v decimal.Decimal) *GeneralUpsertOne {
-	return u.Update(func(s *GeneralUpsert) {
-		s.AddOutcoming(v)
-	})
-}
-
 // UpdateOutcoming sets the "outcoming" field to the value that was provided on create.
 func (u *GeneralUpsertOne) UpdateOutcoming() *GeneralUpsertOne {
 	return u.Update(func(s *GeneralUpsert) {
@@ -953,13 +924,6 @@ func (u *GeneralUpsertOne) ClearOutcoming() *GeneralUpsertOne {
 func (u *GeneralUpsertOne) SetSpendable(v decimal.Decimal) *GeneralUpsertOne {
 	return u.Update(func(s *GeneralUpsert) {
 		s.SetSpendable(v)
-	})
-}
-
-// AddSpendable adds v to the "spendable" field.
-func (u *GeneralUpsertOne) AddSpendable(v decimal.Decimal) *GeneralUpsertOne {
-	return u.Update(func(s *GeneralUpsert) {
-		s.AddSpendable(v)
 	})
 }
 
@@ -1326,13 +1290,6 @@ func (u *GeneralUpsertBulk) SetIncoming(v decimal.Decimal) *GeneralUpsertBulk {
 	})
 }
 
-// AddIncoming adds v to the "incoming" field.
-func (u *GeneralUpsertBulk) AddIncoming(v decimal.Decimal) *GeneralUpsertBulk {
-	return u.Update(func(s *GeneralUpsert) {
-		s.AddIncoming(v)
-	})
-}
-
 // UpdateIncoming sets the "incoming" field to the value that was provided on create.
 func (u *GeneralUpsertBulk) UpdateIncoming() *GeneralUpsertBulk {
 	return u.Update(func(s *GeneralUpsert) {
@@ -1351,13 +1308,6 @@ func (u *GeneralUpsertBulk) ClearIncoming() *GeneralUpsertBulk {
 func (u *GeneralUpsertBulk) SetLocked(v decimal.Decimal) *GeneralUpsertBulk {
 	return u.Update(func(s *GeneralUpsert) {
 		s.SetLocked(v)
-	})
-}
-
-// AddLocked adds v to the "locked" field.
-func (u *GeneralUpsertBulk) AddLocked(v decimal.Decimal) *GeneralUpsertBulk {
-	return u.Update(func(s *GeneralUpsert) {
-		s.AddLocked(v)
 	})
 }
 
@@ -1382,13 +1332,6 @@ func (u *GeneralUpsertBulk) SetOutcoming(v decimal.Decimal) *GeneralUpsertBulk {
 	})
 }
 
-// AddOutcoming adds v to the "outcoming" field.
-func (u *GeneralUpsertBulk) AddOutcoming(v decimal.Decimal) *GeneralUpsertBulk {
-	return u.Update(func(s *GeneralUpsert) {
-		s.AddOutcoming(v)
-	})
-}
-
 // UpdateOutcoming sets the "outcoming" field to the value that was provided on create.
 func (u *GeneralUpsertBulk) UpdateOutcoming() *GeneralUpsertBulk {
 	return u.Update(func(s *GeneralUpsert) {
@@ -1407,13 +1350,6 @@ func (u *GeneralUpsertBulk) ClearOutcoming() *GeneralUpsertBulk {
 func (u *GeneralUpsertBulk) SetSpendable(v decimal.Decimal) *GeneralUpsertBulk {
 	return u.Update(func(s *GeneralUpsert) {
 		s.SetSpendable(v)
-	})
-}
-
-// AddSpendable adds v to the "spendable" field.
-func (u *GeneralUpsertBulk) AddSpendable(v decimal.Decimal) *GeneralUpsertBulk {
-	return u.Update(func(s *GeneralUpsert) {
-		s.AddSpendable(v)
 	})
 }
 

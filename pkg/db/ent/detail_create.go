@@ -343,12 +343,20 @@ func (dc *DetailCreate) defaults() error {
 		v := detail.DefaultIoSubType
 		dc.mutation.SetIoSubType(v)
 	}
+	if _, ok := dc.mutation.Amount(); !ok {
+		v := detail.DefaultAmount
+		dc.mutation.SetAmount(v)
+	}
 	if _, ok := dc.mutation.FromCoinTypeID(); !ok {
 		if detail.DefaultFromCoinTypeID == nil {
 			return fmt.Errorf("ent: uninitialized detail.DefaultFromCoinTypeID (forgotten import ent/runtime?)")
 		}
 		v := detail.DefaultFromCoinTypeID()
 		dc.mutation.SetFromCoinTypeID(v)
+	}
+	if _, ok := dc.mutation.CoinUsdCurrency(); !ok {
+		v := detail.DefaultCoinUsdCurrency
+		dc.mutation.SetCoinUsdCurrency(v)
 	}
 	if _, ok := dc.mutation.IoExtra(); !ok {
 		v := detail.DefaultIoExtra
@@ -485,7 +493,7 @@ func (dc *DetailCreate) createSpec() (*Detail, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := dc.mutation.Amount(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: detail.FieldAmount,
 		})
@@ -501,7 +509,7 @@ func (dc *DetailCreate) createSpec() (*Detail, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := dc.mutation.CoinUsdCurrency(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeFloat64,
+			Type:   field.TypeOther,
 			Value:  value,
 			Column: detail.FieldCoinUsdCurrency,
 		})
@@ -733,12 +741,6 @@ func (u *DetailUpsert) UpdateAmount() *DetailUpsert {
 	return u
 }
 
-// AddAmount adds v to the "amount" field.
-func (u *DetailUpsert) AddAmount(v decimal.Decimal) *DetailUpsert {
-	u.Add(detail.FieldAmount, v)
-	return u
-}
-
 // ClearAmount clears the value of the "amount" field.
 func (u *DetailUpsert) ClearAmount() *DetailUpsert {
 	u.SetNull(detail.FieldAmount)
@@ -772,12 +774,6 @@ func (u *DetailUpsert) SetCoinUsdCurrency(v decimal.Decimal) *DetailUpsert {
 // UpdateCoinUsdCurrency sets the "coin_usd_currency" field to the value that was provided on create.
 func (u *DetailUpsert) UpdateCoinUsdCurrency() *DetailUpsert {
 	u.SetExcluded(detail.FieldCoinUsdCurrency)
-	return u
-}
-
-// AddCoinUsdCurrency adds v to the "coin_usd_currency" field.
-func (u *DetailUpsert) AddCoinUsdCurrency(v decimal.Decimal) *DetailUpsert {
-	u.Add(detail.FieldCoinUsdCurrency, v)
 	return u
 }
 
@@ -1048,13 +1044,6 @@ func (u *DetailUpsertOne) SetAmount(v decimal.Decimal) *DetailUpsertOne {
 	})
 }
 
-// AddAmount adds v to the "amount" field.
-func (u *DetailUpsertOne) AddAmount(v decimal.Decimal) *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.AddAmount(v)
-	})
-}
-
 // UpdateAmount sets the "amount" field to the value that was provided on create.
 func (u *DetailUpsertOne) UpdateAmount() *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
@@ -1094,13 +1083,6 @@ func (u *DetailUpsertOne) ClearFromCoinTypeID() *DetailUpsertOne {
 func (u *DetailUpsertOne) SetCoinUsdCurrency(v decimal.Decimal) *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
 		s.SetCoinUsdCurrency(v)
-	})
-}
-
-// AddCoinUsdCurrency adds v to the "coin_usd_currency" field.
-func (u *DetailUpsertOne) AddCoinUsdCurrency(v decimal.Decimal) *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.AddCoinUsdCurrency(v)
 	})
 }
 
@@ -1551,13 +1533,6 @@ func (u *DetailUpsertBulk) SetAmount(v decimal.Decimal) *DetailUpsertBulk {
 	})
 }
 
-// AddAmount adds v to the "amount" field.
-func (u *DetailUpsertBulk) AddAmount(v decimal.Decimal) *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.AddAmount(v)
-	})
-}
-
 // UpdateAmount sets the "amount" field to the value that was provided on create.
 func (u *DetailUpsertBulk) UpdateAmount() *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
@@ -1597,13 +1572,6 @@ func (u *DetailUpsertBulk) ClearFromCoinTypeID() *DetailUpsertBulk {
 func (u *DetailUpsertBulk) SetCoinUsdCurrency(v decimal.Decimal) *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
 		s.SetCoinUsdCurrency(v)
-	})
-}
-
-// AddCoinUsdCurrency adds v to the "coin_usd_currency" field.
-func (u *DetailUpsertBulk) AddCoinUsdCurrency(v decimal.Decimal) *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.AddCoinUsdCurrency(v)
 	})
 }
 

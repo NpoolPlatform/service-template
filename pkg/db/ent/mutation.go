@@ -33,31 +33,29 @@ const (
 // DetailMutation represents an operation that mutates the Detail nodes in the graph.
 type DetailMutation struct {
 	config
-	op                   Op
-	typ                  string
-	id                   *uuid.UUID
-	created_at           *uint32
-	addcreated_at        *int32
-	updated_at           *uint32
-	addupdated_at        *int32
-	deleted_at           *uint32
-	adddeleted_at        *int32
-	app_id               *uuid.UUID
-	user_id              *uuid.UUID
-	coin_type_id         *uuid.UUID
-	io_type              *string
-	io_sub_type          *string
-	amount               *decimal.Decimal
-	addamount            *decimal.Decimal
-	from_coin_type_id    *uuid.UUID
-	coin_usd_currency    *decimal.Decimal
-	addcoin_usd_currency *decimal.Decimal
-	io_extra             *string
-	from_old_id          *uuid.UUID
-	clearedFields        map[string]struct{}
-	done                 bool
-	oldValue             func(context.Context) (*Detail, error)
-	predicates           []predicate.Detail
+	op                Op
+	typ               string
+	id                *uuid.UUID
+	created_at        *uint32
+	addcreated_at     *int32
+	updated_at        *uint32
+	addupdated_at     *int32
+	deleted_at        *uint32
+	adddeleted_at     *int32
+	app_id            *uuid.UUID
+	user_id           *uuid.UUID
+	coin_type_id      *uuid.UUID
+	io_type           *string
+	io_sub_type       *string
+	amount            *decimal.Decimal
+	from_coin_type_id *uuid.UUID
+	coin_usd_currency *decimal.Decimal
+	io_extra          *string
+	from_old_id       *uuid.UUID
+	clearedFields     map[string]struct{}
+	done              bool
+	oldValue          func(context.Context) (*Detail, error)
+	predicates        []predicate.Detail
 }
 
 var _ ent.Mutation = (*DetailMutation)(nil)
@@ -580,7 +578,6 @@ func (m *DetailMutation) ResetIoSubType() {
 // SetAmount sets the "amount" field.
 func (m *DetailMutation) SetAmount(d decimal.Decimal) {
 	m.amount = &d
-	m.addamount = nil
 }
 
 // Amount returns the value of the "amount" field in the mutation.
@@ -609,28 +606,9 @@ func (m *DetailMutation) OldAmount(ctx context.Context) (v decimal.Decimal, err 
 	return oldValue.Amount, nil
 }
 
-// AddAmount adds d to the "amount" field.
-func (m *DetailMutation) AddAmount(d decimal.Decimal) {
-	if m.addamount != nil {
-		*m.addamount = m.addamount.Add(d)
-	} else {
-		m.addamount = &d
-	}
-}
-
-// AddedAmount returns the value that was added to the "amount" field in this mutation.
-func (m *DetailMutation) AddedAmount() (r decimal.Decimal, exists bool) {
-	v := m.addamount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ClearAmount clears the value of the "amount" field.
 func (m *DetailMutation) ClearAmount() {
 	m.amount = nil
-	m.addamount = nil
 	m.clearedFields[detail.FieldAmount] = struct{}{}
 }
 
@@ -643,7 +621,6 @@ func (m *DetailMutation) AmountCleared() bool {
 // ResetAmount resets all changes to the "amount" field.
 func (m *DetailMutation) ResetAmount() {
 	m.amount = nil
-	m.addamount = nil
 	delete(m.clearedFields, detail.FieldAmount)
 }
 
@@ -699,7 +676,6 @@ func (m *DetailMutation) ResetFromCoinTypeID() {
 // SetCoinUsdCurrency sets the "coin_usd_currency" field.
 func (m *DetailMutation) SetCoinUsdCurrency(d decimal.Decimal) {
 	m.coin_usd_currency = &d
-	m.addcoin_usd_currency = nil
 }
 
 // CoinUsdCurrency returns the value of the "coin_usd_currency" field in the mutation.
@@ -728,28 +704,9 @@ func (m *DetailMutation) OldCoinUsdCurrency(ctx context.Context) (v decimal.Deci
 	return oldValue.CoinUsdCurrency, nil
 }
 
-// AddCoinUsdCurrency adds d to the "coin_usd_currency" field.
-func (m *DetailMutation) AddCoinUsdCurrency(d decimal.Decimal) {
-	if m.addcoin_usd_currency != nil {
-		*m.addcoin_usd_currency = m.addcoin_usd_currency.Add(d)
-	} else {
-		m.addcoin_usd_currency = &d
-	}
-}
-
-// AddedCoinUsdCurrency returns the value that was added to the "coin_usd_currency" field in this mutation.
-func (m *DetailMutation) AddedCoinUsdCurrency() (r decimal.Decimal, exists bool) {
-	v := m.addcoin_usd_currency
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ClearCoinUsdCurrency clears the value of the "coin_usd_currency" field.
 func (m *DetailMutation) ClearCoinUsdCurrency() {
 	m.coin_usd_currency = nil
-	m.addcoin_usd_currency = nil
 	m.clearedFields[detail.FieldCoinUsdCurrency] = struct{}{}
 }
 
@@ -762,7 +719,6 @@ func (m *DetailMutation) CoinUsdCurrencyCleared() bool {
 // ResetCoinUsdCurrency resets all changes to the "coin_usd_currency" field.
 func (m *DetailMutation) ResetCoinUsdCurrency() {
 	m.coin_usd_currency = nil
-	m.addcoin_usd_currency = nil
 	delete(m.clearedFields, detail.FieldCoinUsdCurrency)
 }
 
@@ -1109,12 +1065,6 @@ func (m *DetailMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, detail.FieldDeletedAt)
 	}
-	if m.addamount != nil {
-		fields = append(fields, detail.FieldAmount)
-	}
-	if m.addcoin_usd_currency != nil {
-		fields = append(fields, detail.FieldCoinUsdCurrency)
-	}
 	return fields
 }
 
@@ -1129,10 +1079,6 @@ func (m *DetailMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case detail.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case detail.FieldAmount:
-		return m.AddedAmount()
-	case detail.FieldCoinUsdCurrency:
-		return m.AddedCoinUsdCurrency()
 	}
 	return nil, false
 }
@@ -1162,20 +1108,6 @@ func (m *DetailMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedAt(v)
-		return nil
-	case detail.FieldAmount:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAmount(v)
-		return nil
-	case detail.FieldCoinUsdCurrency:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCoinUsdCurrency(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Detail numeric field %s", name)
@@ -1374,13 +1306,9 @@ type GeneralMutation struct {
 	user_id       *uuid.UUID
 	coin_type_id  *uuid.UUID
 	incoming      *decimal.Decimal
-	addincoming   *decimal.Decimal
 	locked        *decimal.Decimal
-	addlocked     *decimal.Decimal
 	outcoming     *decimal.Decimal
-	addoutcoming  *decimal.Decimal
 	spendable     *decimal.Decimal
-	addspendable  *decimal.Decimal
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*General, error)
@@ -1809,7 +1737,6 @@ func (m *GeneralMutation) ResetCoinTypeID() {
 // SetIncoming sets the "incoming" field.
 func (m *GeneralMutation) SetIncoming(d decimal.Decimal) {
 	m.incoming = &d
-	m.addincoming = nil
 }
 
 // Incoming returns the value of the "incoming" field in the mutation.
@@ -1838,28 +1765,9 @@ func (m *GeneralMutation) OldIncoming(ctx context.Context) (v decimal.Decimal, e
 	return oldValue.Incoming, nil
 }
 
-// AddIncoming adds d to the "incoming" field.
-func (m *GeneralMutation) AddIncoming(d decimal.Decimal) {
-	if m.addincoming != nil {
-		*m.addincoming = m.addincoming.Add(d)
-	} else {
-		m.addincoming = &d
-	}
-}
-
-// AddedIncoming returns the value that was added to the "incoming" field in this mutation.
-func (m *GeneralMutation) AddedIncoming() (r decimal.Decimal, exists bool) {
-	v := m.addincoming
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ClearIncoming clears the value of the "incoming" field.
 func (m *GeneralMutation) ClearIncoming() {
 	m.incoming = nil
-	m.addincoming = nil
 	m.clearedFields[general.FieldIncoming] = struct{}{}
 }
 
@@ -1872,14 +1780,12 @@ func (m *GeneralMutation) IncomingCleared() bool {
 // ResetIncoming resets all changes to the "incoming" field.
 func (m *GeneralMutation) ResetIncoming() {
 	m.incoming = nil
-	m.addincoming = nil
 	delete(m.clearedFields, general.FieldIncoming)
 }
 
 // SetLocked sets the "locked" field.
 func (m *GeneralMutation) SetLocked(d decimal.Decimal) {
 	m.locked = &d
-	m.addlocked = nil
 }
 
 // Locked returns the value of the "locked" field in the mutation.
@@ -1908,28 +1814,9 @@ func (m *GeneralMutation) OldLocked(ctx context.Context) (v decimal.Decimal, err
 	return oldValue.Locked, nil
 }
 
-// AddLocked adds d to the "locked" field.
-func (m *GeneralMutation) AddLocked(d decimal.Decimal) {
-	if m.addlocked != nil {
-		*m.addlocked = m.addlocked.Add(d)
-	} else {
-		m.addlocked = &d
-	}
-}
-
-// AddedLocked returns the value that was added to the "locked" field in this mutation.
-func (m *GeneralMutation) AddedLocked() (r decimal.Decimal, exists bool) {
-	v := m.addlocked
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ClearLocked clears the value of the "locked" field.
 func (m *GeneralMutation) ClearLocked() {
 	m.locked = nil
-	m.addlocked = nil
 	m.clearedFields[general.FieldLocked] = struct{}{}
 }
 
@@ -1942,14 +1829,12 @@ func (m *GeneralMutation) LockedCleared() bool {
 // ResetLocked resets all changes to the "locked" field.
 func (m *GeneralMutation) ResetLocked() {
 	m.locked = nil
-	m.addlocked = nil
 	delete(m.clearedFields, general.FieldLocked)
 }
 
 // SetOutcoming sets the "outcoming" field.
 func (m *GeneralMutation) SetOutcoming(d decimal.Decimal) {
 	m.outcoming = &d
-	m.addoutcoming = nil
 }
 
 // Outcoming returns the value of the "outcoming" field in the mutation.
@@ -1978,28 +1863,9 @@ func (m *GeneralMutation) OldOutcoming(ctx context.Context) (v decimal.Decimal, 
 	return oldValue.Outcoming, nil
 }
 
-// AddOutcoming adds d to the "outcoming" field.
-func (m *GeneralMutation) AddOutcoming(d decimal.Decimal) {
-	if m.addoutcoming != nil {
-		*m.addoutcoming = m.addoutcoming.Add(d)
-	} else {
-		m.addoutcoming = &d
-	}
-}
-
-// AddedOutcoming returns the value that was added to the "outcoming" field in this mutation.
-func (m *GeneralMutation) AddedOutcoming() (r decimal.Decimal, exists bool) {
-	v := m.addoutcoming
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ClearOutcoming clears the value of the "outcoming" field.
 func (m *GeneralMutation) ClearOutcoming() {
 	m.outcoming = nil
-	m.addoutcoming = nil
 	m.clearedFields[general.FieldOutcoming] = struct{}{}
 }
 
@@ -2012,14 +1878,12 @@ func (m *GeneralMutation) OutcomingCleared() bool {
 // ResetOutcoming resets all changes to the "outcoming" field.
 func (m *GeneralMutation) ResetOutcoming() {
 	m.outcoming = nil
-	m.addoutcoming = nil
 	delete(m.clearedFields, general.FieldOutcoming)
 }
 
 // SetSpendable sets the "spendable" field.
 func (m *GeneralMutation) SetSpendable(d decimal.Decimal) {
 	m.spendable = &d
-	m.addspendable = nil
 }
 
 // Spendable returns the value of the "spendable" field in the mutation.
@@ -2048,28 +1912,9 @@ func (m *GeneralMutation) OldSpendable(ctx context.Context) (v decimal.Decimal, 
 	return oldValue.Spendable, nil
 }
 
-// AddSpendable adds d to the "spendable" field.
-func (m *GeneralMutation) AddSpendable(d decimal.Decimal) {
-	if m.addspendable != nil {
-		*m.addspendable = m.addspendable.Add(d)
-	} else {
-		m.addspendable = &d
-	}
-}
-
-// AddedSpendable returns the value that was added to the "spendable" field in this mutation.
-func (m *GeneralMutation) AddedSpendable() (r decimal.Decimal, exists bool) {
-	v := m.addspendable
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ClearSpendable clears the value of the "spendable" field.
 func (m *GeneralMutation) ClearSpendable() {
 	m.spendable = nil
-	m.addspendable = nil
 	m.clearedFields[general.FieldSpendable] = struct{}{}
 }
 
@@ -2082,7 +1927,6 @@ func (m *GeneralMutation) SpendableCleared() bool {
 // ResetSpendable resets all changes to the "spendable" field.
 func (m *GeneralMutation) ResetSpendable() {
 	m.spendable = nil
-	m.addspendable = nil
 	delete(m.clearedFields, general.FieldSpendable)
 }
 
@@ -2289,18 +2133,6 @@ func (m *GeneralMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, general.FieldDeletedAt)
 	}
-	if m.addincoming != nil {
-		fields = append(fields, general.FieldIncoming)
-	}
-	if m.addlocked != nil {
-		fields = append(fields, general.FieldLocked)
-	}
-	if m.addoutcoming != nil {
-		fields = append(fields, general.FieldOutcoming)
-	}
-	if m.addspendable != nil {
-		fields = append(fields, general.FieldSpendable)
-	}
 	return fields
 }
 
@@ -2315,14 +2147,6 @@ func (m *GeneralMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case general.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case general.FieldIncoming:
-		return m.AddedIncoming()
-	case general.FieldLocked:
-		return m.AddedLocked()
-	case general.FieldOutcoming:
-		return m.AddedOutcoming()
-	case general.FieldSpendable:
-		return m.AddedSpendable()
 	}
 	return nil, false
 }
@@ -2352,34 +2176,6 @@ func (m *GeneralMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedAt(v)
-		return nil
-	case general.FieldIncoming:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddIncoming(v)
-		return nil
-	case general.FieldLocked:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddLocked(v)
-		return nil
-	case general.FieldOutcoming:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddOutcoming(v)
-		return nil
-	case general.FieldSpendable:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddSpendable(v)
 		return nil
 	}
 	return fmt.Errorf("unknown General numeric field %s", name)
