@@ -476,6 +476,12 @@ func (dq *DetailQuery) ForShare(opts ...sql.LockOption) *DetailQuery {
 	return dq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (dq *DetailQuery) Modify(modifiers ...func(s *sql.Selector)) *DetailSelect {
+	dq.modifiers = append(dq.modifiers, modifiers...)
+	return dq.Select()
+}
+
 // DetailGroupBy is the group-by builder for Detail entities.
 type DetailGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (ds *DetailSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (ds *DetailSelect) Modify(modifiers ...func(s *sql.Selector)) *DetailSelect {
+	ds.modifiers = append(ds.modifiers, modifiers...)
+	return ds
 }

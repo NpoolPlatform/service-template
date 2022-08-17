@@ -476,6 +476,12 @@ func (gq *GeneralQuery) ForShare(opts ...sql.LockOption) *GeneralQuery {
 	return gq
 }
 
+// Modify adds a query modifier for attaching custom logic to queries.
+func (gq *GeneralQuery) Modify(modifiers ...func(s *sql.Selector)) *GeneralSelect {
+	gq.modifiers = append(gq.modifiers, modifiers...)
+	return gq.Select()
+}
+
 // GeneralGroupBy is the group-by builder for General entities.
 type GeneralGroupBy struct {
 	config
@@ -962,4 +968,10 @@ func (gs *GeneralSelect) sqlScan(ctx context.Context, v interface{}) error {
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
+}
+
+// Modify adds a query modifier for attaching custom logic to queries.
+func (gs *GeneralSelect) Modify(modifiers ...func(s *sql.Selector)) *GeneralSelect {
+	gs.modifiers = append(gs.modifiers, modifiers...)
+	return gs
 }
