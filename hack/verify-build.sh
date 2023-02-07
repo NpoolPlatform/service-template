@@ -13,6 +13,8 @@ OUTPUT=./output
 
 pkg=github.com/NpoolPlatform/go-service-framework/pkg/version
 
+rm -rf ${OUTPUT}/*
+
 for PLATFORM in "${PLATFORMS[@]}"; do
     OS="${PLATFORM%/*}"
     ARCH=$(basename "$PLATFORM")
