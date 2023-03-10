@@ -1,20 +1,16 @@
 package version
 
 import (
-	"fmt"
-
-	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	"github.com/NpoolPlatform/go-service-framework/pkg/version"
-	npool "github.com/NpoolPlatform/message/npool"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
 )
 
-func Version() (*npool.VersionResponse, error) {
+func Version() (*basetypes.VersionResponse, error) {
 	info, err := version.GetVersion()
 	if err != nil {
-		logger.Sugar().Errorf("get service version error: %+w", err)
-		return nil, fmt.Errorf("get service version error: %w", err)
+		return nil, err
 	}
-	return &npool.VersionResponse{
+	return &basetypes.VersionResponse{
 		Info: info,
 	}, nil
 }

@@ -12,8 +12,8 @@ import (
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 
-	valuedef "github.com/NpoolPlatform/message/npool"
-	npool "github.com/NpoolPlatform/message/npool/servicetmpl/detail"
+	basetypes "github.com/NpoolPlatform/message/npool/basetypes/v1"
+	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mgr/v1/detail"
 	testinit "github.com/NpoolPlatform/service-template/pkg/testinit"
 	"github.com/google/uuid"
 
@@ -149,7 +149,7 @@ func createBulk(t *testing.T) {
 
 func row(t *testing.T) {
 	var err error
-	info, err = Row(context.Background(), entity.ID)
+	info, err = Row(context.Background(), entity.ID.String())
 	if assert.Nil(t, err) {
 		assert.Equal(t, info.String(), entity.String())
 	}
@@ -158,10 +158,7 @@ func row(t *testing.T) {
 func rows(t *testing.T) {
 	infos, total, err := Rows(context.Background(),
 		&npool.Conds{
-			ID: &valuedef.StringVal{
-				Value: id,
-				Op:    cruder.EQ,
-			},
+			ID: &basetypes.StringVal{Value: id, Op: cruder.EQ},
 		}, 0, 0)
 	if assert.Nil(t, err) {
 		if assert.Equal(t, total, 1) {
@@ -174,10 +171,7 @@ func rowOnly(t *testing.T) {
 	var err error
 	info, err = RowOnly(context.Background(),
 		&npool.Conds{
-			ID: &valuedef.StringVal{
-				Value: id,
-				Op:    cruder.EQ,
-			},
+			ID: &basetypes.StringVal{Value: id, Op: cruder.EQ},
 		})
 	if assert.Nil(t, err) {
 		assert.Equal(t, info.String(), entity.String())
@@ -187,10 +181,7 @@ func rowOnly(t *testing.T) {
 func count(t *testing.T) {
 	count, err := Count(context.Background(),
 		&npool.Conds{
-			ID: &valuedef.StringVal{
-				Value: id,
-				Op:    cruder.EQ,
-			},
+			ID: &basetypes.StringVal{Value: id, Op: cruder.EQ},
 		},
 	)
 	if assert.Nil(t, err) {
@@ -199,7 +190,7 @@ func count(t *testing.T) {
 }
 
 func exist(t *testing.T) {
-	exist, err := Exist(context.Background(), entity.ID)
+	exist, err := Exist(context.Background(), entity.ID.String())
 	if assert.Nil(t, err) {
 		assert.Equal(t, exist, true)
 	}
@@ -208,10 +199,7 @@ func exist(t *testing.T) {
 func existConds(t *testing.T) {
 	exist, err := ExistConds(context.Background(),
 		&npool.Conds{
-			ID: &valuedef.StringVal{
-				Value: id,
-				Op:    cruder.EQ,
-			},
+			ID: &basetypes.StringVal{Value: id, Op: cruder.EQ},
 		},
 	)
 	if assert.Nil(t, err) {
@@ -220,7 +208,7 @@ func existConds(t *testing.T) {
 }
 
 func deleteA(t *testing.T) {
-	info, err := Delete(context.Background(), entity.ID)
+	info, err := Delete(context.Background(), entity.ID.String())
 	if assert.Nil(t, err) {
 		entity.DeletedAt = info.DeletedAt
 		assert.Equal(t, info.String(), entity.String())

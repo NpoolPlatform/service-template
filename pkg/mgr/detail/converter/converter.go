@@ -1,7 +1,7 @@
 package detail
 
 import (
-	npool "github.com/NpoolPlatform/message/npool/servicetmpl/detail"
+	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mgr/v1/detail"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent"
 )
 
