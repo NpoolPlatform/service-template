@@ -59,7 +59,7 @@ func CreateSet(c *ent.DetailCreate, in *npool.DetailReq) *ent.DetailCreate {
 	return c
 }
 
-func Create(ctx context.Context, in *npool.DetailReq) (*ent.Detail, error) { //nolint
+func Create(ctx context.Context, in *npool.DetailReq) (*ent.Detail, error) {
 	var info *ent.Detail
 	var err error
 
@@ -87,7 +87,7 @@ func Create(ctx context.Context, in *npool.DetailReq) (*ent.Detail, error) { //n
 	return info, nil
 }
 
-func CreateBulk(ctx context.Context, in []*npool.DetailReq) ([]*ent.Detail, error) { //nolint
+func CreateBulk(ctx context.Context, in []*npool.DetailReq) ([]*ent.Detail, error) {
 	var err error
 
 	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateBulk")
