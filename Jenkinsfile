@@ -226,7 +226,13 @@ pipeline {
       }
       steps {
         sh(returnStdout: true, script: '''
+          set +e
           revlist=`git rev-list --tags --max-count=1`
+          rc=$?
+          set -e
+          if [ 0 -eq $rc ]; then
+            exit 0
+          fi
           tag=`git describe --tags $revlist`
           git reset --hard
           git checkout $tag
@@ -257,7 +263,13 @@ pipeline {
       }
       steps {
         sh(returnStdout: false, script: '''
+          set +e
           revlist=`git rev-list --tags --max-count=1`
+          rc=$?
+          set -e
+          if [ 0 -eq $rc ]; then
+            exit 0
+          fi
           tag=`git describe --tags $revlist`
 
           set +e
@@ -277,7 +289,13 @@ pipeline {
       }
       steps {
         sh(returnStdout: false, script: '''
+          set +e
           revlist=`git rev-list --tags --max-count=1`
+          rc=$?
+          set -e
+          if [ 0 -eq $rc ]; then
+            exit 0
+          fi
           tag=`git describe --tags $revlist`
 
           major=`echo $tag | awk -F '.' '{ print $1 }'`
@@ -316,7 +334,13 @@ pipeline {
       }
       steps {
         sh(returnStdout: true, script: '''
+          set +e
           revlist=`git rev-list --tags --max-count=1`
+          rc=$?
+          set -e
+          if [ 0 -eq $rc ]; then
+            exit 0
+          fi
           tag=`git describe --tags $revlist`
 
           git reset --hard
@@ -335,7 +359,13 @@ pipeline {
       }
       steps {
         sh(returnStdout: true, script: '''
+          set +e
           revlist=`git rev-list --tags --max-count=1`
+          rc=$?
+          set -e
+          if [ 0 -eq $rc ]; then
+            exit 0
+          fi
           tag=`git describe --tags $revlist`
 
           major=`echo $tag | awk -F '.' '{ print $1 }'`
