@@ -7,6 +7,7 @@ import (
 	"github.com/NpoolPlatform/service-template/pkg/db"
 	"github.com/NpoolPlatform/service-template/pkg/migrator"
 
+	"github.com/NpoolPlatform/service-template/pkg/feeder"
 	"github.com/NpoolPlatform/service-template/pkg/watcher"
 
 	action "github.com/NpoolPlatform/go-service-framework/pkg/action"
@@ -40,6 +41,7 @@ var runCmd = &cli.Command{
 			rpcGatewayRegister,
 			func(ctx context.Context) error {
 				go watcher.Watch(ctx)
+				go feeder.Watch(ctx)
 				return nil
 			},
 		)
