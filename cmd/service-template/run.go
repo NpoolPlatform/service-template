@@ -28,10 +28,14 @@ var runCmd = &cli.Command{
 	Action: func(c *cli.Context) error {
 		return action.Run(
 			c.Context,
-			run,
+			func(ctx context.Context) error {
+				return run(ctx)
+			},
 			rpcRegister,
 			rpcGatewayRegister,
-			watch,
+			func(ctx context.Context) error {
+				return watch(ctx)
+			},
 		)
 	},
 }
