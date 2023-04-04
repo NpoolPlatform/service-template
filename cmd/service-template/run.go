@@ -28,24 +28,28 @@ var runCmd = &cli.Command{
 	Action: func(c *cli.Context) error {
 		return action.Run(
 			c.Context,
-			func(ctx context.Context) error {
-				if err := migrator.Migrate(ctx); err != nil {
-					return err
-				}
-				if err := db.Init(); err != nil {
-					return err
-				}
-				return nil
-			},
+			run,
 			rpcRegister,
 			rpcGatewayRegister,
-			func(ctx context.Context) error {
-				go watcher.Watch(ctx)
-				go feeder.Watch(ctx)
-				return nil
-			},
+			watch,
 		)
 	},
+}
+
+func run(ctx context.Context) error {
+	if err := migrator.Migrate(ctx); err != nil {
+		return err
+	}
+	if err := db.Init(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func watch(ctx context.Context) error {
+	go watcher.Watch(ctx)
+	go feeder.Watch(ctx)
+	return nil
 }
 
 func rpcRegister(server grpc.ServiceRegistrar) error {
