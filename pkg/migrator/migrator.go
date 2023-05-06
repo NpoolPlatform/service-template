@@ -22,6 +22,13 @@ func migrateAutoID(ctx context.Context, table string, tx *ent.Tx) error {
 			table,
 			"service_template",
 		)
+	if err != nil {
+		logger.Sugar().Infow(
+			"migrateAutoID",
+			"Query error", err,
+		)
+		return err
+	}
 	if !rows.Next() {
 		logger.Sugar().Infow(
 			"migrateAutoID",

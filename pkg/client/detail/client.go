@@ -11,31 +11,31 @@ import (
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mw/v1/detail"
 
-	constant "github.com/NpoolPlatform/service-template/pkg/const"
+	servicename "github.com/NpoolPlatform/service-template/pkg/servicename"
 )
 
 var timeout = 10 * time.Second
 
-type handler func(context.Context, npool.ManagerClient) (cruder.Any, error)
+type handler func(context.Context, npool.MiddlewareClient) (cruder.Any, error)
 
 func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
-	conn, err := grpc2.GetGRPCConn(constant.ServiceDomain, grpc2.GRPCTAG)
+	conn, err := grpc2.GetGRPCConn(servicename.ServiceDomain, grpc2.GRPCTAG)
 	if err != nil {
 		return nil, fmt.Errorf("fail get detail connection: %v", err)
 	}
 
 	defer conn.Close()
 
-	cli := npool.NewManagerClient(conn)
+	cli := npool.NewMiddlewareClient(conn)
 
 	return handler(_ctx, cli)
 }
 
 func CreateDetail(ctx context.Context, in *npool.DetailReq) (*npool.Detail, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.CreateDetail(ctx, &npool.CreateDetailRequest{
 			Info: in,
 		})
@@ -51,7 +51,7 @@ func CreateDetail(ctx context.Context, in *npool.DetailReq) (*npool.Detail, erro
 }
 
 func CreateDetails(ctx context.Context, in []*npool.DetailReq) ([]*npool.Detail, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.CreateDetails(ctx, &npool.CreateDetailsRequest{
 			Infos: in,
 		})
@@ -67,7 +67,7 @@ func CreateDetails(ctx context.Context, in []*npool.DetailReq) ([]*npool.Detail,
 }
 
 func GetDetail(ctx context.Context, id string) (*npool.Detail, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetDetail(ctx, &npool.GetDetailRequest{
 			ID: id,
 		})
@@ -83,7 +83,7 @@ func GetDetail(ctx context.Context, id string) (*npool.Detail, error) {
 }
 
 func GetDetailOnly(ctx context.Context, conds *npool.Conds) (*npool.Detail, error) {
-	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
+	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetDetailOnly(ctx, &npool.GetDetailOnlyRequest{
 			Conds: conds,
 		})
@@ -100,7 +100,7 @@ func GetDetailOnly(ctx context.Context, conds *npool.Conds) (*npool.Detail, erro
 
 func GetDetails(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.Detail, uint32, error) {
 	var total uint32
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetDetails(ctx, &npool.GetDetailsRequest{
 			Conds:  conds,
 			Limit:  limit,
@@ -119,7 +119,7 @@ func GetDetails(ctx context.Context, conds *npool.Conds, limit, offset int32) ([
 }
 
 func ExistDetail(ctx context.Context, id string) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.ExistDetail(ctx, &npool.ExistDetailRequest{
 			ID: id,
 		})
@@ -135,7 +135,7 @@ func ExistDetail(ctx context.Context, id string) (bool, error) {
 }
 
 func ExistDetailConds(ctx context.Context, conds *npool.Conds) (bool, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.ExistDetailConds(ctx, &npool.ExistDetailCondsRequest{
 			Conds: conds,
 		})
@@ -151,7 +151,7 @@ func ExistDetailConds(ctx context.Context, conds *npool.Conds) (bool, error) {
 }
 
 func CountDetails(ctx context.Context, conds *npool.Conds) (uint32, error) {
-	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.ManagerClient) (cruder.Any, error) {
+	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.CountDetails(ctx, &npool.CountDetailsRequest{
 			Conds: conds,
 		})

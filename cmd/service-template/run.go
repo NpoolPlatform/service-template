@@ -55,7 +55,7 @@ func shutdown(ctx context.Context) {
 		"State", "Done",
 		"Error", ctx.Err(),
 	)
-	_ = pubsub.Shutdown(ctx) //nolint
+	_ = pubsub.Shutdown(ctx)
 }
 
 func _watch(ctx context.Context, cancel context.CancelFunc, w func(ctx context.Context)) {

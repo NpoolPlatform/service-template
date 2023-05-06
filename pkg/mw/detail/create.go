@@ -21,8 +21,7 @@ func (h *Handler) CreateDetail(ctx context.Context) (*npool.Detail, error) {
 		if err != nil {
 			return err
 		}
-		autoID := uint32(info.AutoID)
-		h.AutoID = &autoID
+		h.AutoID = &info.AutoID
 		return nil
 	})
 	if err != nil {
