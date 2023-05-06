@@ -1,14 +1,12 @@
 package detail
 
 import (
-	"context"
+	"fmt"
 
-	"github.com/NpoolPlatform/service-template/pkg/db"
+	cruder "github.com/NpoolPlatform/libent-cruder/pkg/cruder"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent"
 	entdetail "github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
-
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 type Req struct {
@@ -43,7 +41,11 @@ func SetQueryConds(q *ent.DetailQuery, conds *Conds) (*ent.DetailQuery, error) {
 	if conds.AutoID != nil {
 		switch conds.AutoID.Op {
 		case cruder.EQ:
-			q.Where(entdetail.AutoID(conds.AutoID.Val))
+			id, ok := conds.AutoID.Val.(uint32)
+			if !ok {
+				return nil, fmt.Errorf("invalid auto id")
+			}
+			q.Where(entdetail.AutoID(id))
 		default:
 			return nil, fmt.Errorf("invalid sample field")
 		}
@@ -51,7 +53,11 @@ func SetQueryConds(q *ent.DetailQuery, conds *Conds) (*ent.DetailQuery, error) {
 	if conds.ID != nil {
 		switch conds.ID.Op {
 		case cruder.EQ:
-			q.Where(entdetail.ID(conds.ID.Val))
+			id, ok := conds.ID.Val.(uuid.UUID)
+			if !ok {
+				return nil, fmt.Errorf("invalid id")
+			}
+			q.Where(entdetail.ID(id))
 		default:
 			return nil, fmt.Errorf("invalid sample field")
 		}
@@ -59,9 +65,15 @@ func SetQueryConds(q *ent.DetailQuery, conds *Conds) (*ent.DetailQuery, error) {
 	if conds.SampleCol != nil {
 		switch conds.SampleCol.Op {
 		case cruder.LIKE:
-			q.Where(entdetail.SampleCol(conds.SampleCol.Val))
+			sampleCol, ok := conds.ID.Val.(string)
+			if !ok {
+				return nil, fmt.Errorf("invalid sample col")
+			}
+			q.Where(entdetail.SampleCol(sampleCol))
 		default:
 			return nil, fmt.Errorf("invalid sample field")
 		}
 	}
+	q.Where(entdetail.DeletedAt(0))
+	return q, nil
 }
