@@ -84,15 +84,15 @@ func (du *DetailUpdate) AddDeletedAt(u int32) *DetailUpdate {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (du *DetailUpdate) SetAutoID(u uint32) *DetailUpdate {
+func (du *DetailUpdate) SetAutoID(i int) *DetailUpdate {
 	du.mutation.ResetAutoID()
-	du.mutation.SetAutoID(u)
+	du.mutation.SetAutoID(i)
 	return du
 }
 
-// AddAutoID adds u to the "auto_id" field.
-func (du *DetailUpdate) AddAutoID(u int32) *DetailUpdate {
-	du.mutation.AddAutoID(u)
+// AddAutoID adds i to the "auto_id" field.
+func (du *DetailUpdate) AddAutoID(i int) *DetailUpdate {
+	du.mutation.AddAutoID(i)
 	return du
 }
 
@@ -258,14 +258,14 @@ func (du *DetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := du.mutation.AutoID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: detail.FieldAutoID,
 		})
 	}
 	if value, ok := du.mutation.AddedAutoID(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: detail.FieldAutoID,
 		})
@@ -360,15 +360,15 @@ func (duo *DetailUpdateOne) AddDeletedAt(u int32) *DetailUpdateOne {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (duo *DetailUpdateOne) SetAutoID(u uint32) *DetailUpdateOne {
+func (duo *DetailUpdateOne) SetAutoID(i int) *DetailUpdateOne {
 	duo.mutation.ResetAutoID()
-	duo.mutation.SetAutoID(u)
+	duo.mutation.SetAutoID(i)
 	return duo
 }
 
-// AddAutoID adds u to the "auto_id" field.
-func (duo *DetailUpdateOne) AddAutoID(u int32) *DetailUpdateOne {
-	duo.mutation.AddAutoID(u)
+// AddAutoID adds i to the "auto_id" field.
+func (duo *DetailUpdateOne) AddAutoID(i int) *DetailUpdateOne {
+	duo.mutation.AddAutoID(i)
 	return duo
 }
 
@@ -564,14 +564,14 @@ func (duo *DetailUpdateOne) sqlSave(ctx context.Context) (_node *Detail, err err
 	}
 	if value, ok := duo.mutation.AutoID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: detail.FieldAutoID,
 		})
 	}
 	if value, ok := duo.mutation.AddedAutoID(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeInt,
 			Value:  value,
 			Column: detail.FieldAutoID,
 		})

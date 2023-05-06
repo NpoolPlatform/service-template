@@ -45,7 +45,7 @@ func SetQueryConds(q *ent.DetailQuery, conds *Conds) (*ent.DetailQuery, error) {
 			if !ok {
 				return nil, fmt.Errorf("invalid auto id")
 			}
-			q.Where(entdetail.AutoID(id))
+			q.Where(entdetail.AutoID(int(id)))
 		default:
 			return nil, fmt.Errorf("invalid sample field")
 		}

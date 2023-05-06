@@ -14,7 +14,7 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "auto_id", Type: field.TypeUint32, Unique: true},
+		{Name: "auto_id", Type: field.TypeInt, Unique: true},
 		{Name: "sample_col", Type: field.TypeString, Nullable: true, Default: ""},
 	}
 	// DetailsTable holds the schema information for the "details" table.
@@ -29,7 +29,7 @@ var (
 		{Name: "created_at", Type: field.TypeUint32},
 		{Name: "updated_at", Type: field.TypeUint32},
 		{Name: "deleted_at", Type: field.TypeUint32},
-		{Name: "auto_id", Type: field.TypeUint32, Unique: true},
+		{Name: "auto_id", Type: field.TypeInt, Unique: true},
 		{Name: "message_id", Type: field.TypeString, Nullable: true, Default: "DefaultMsgID"},
 		{Name: "state", Type: field.TypeString, Nullable: true, Default: "DefaultMsgState"},
 		{Name: "resp_to_id", Type: field.TypeUUID, Nullable: true},

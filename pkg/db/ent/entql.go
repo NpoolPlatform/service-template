@@ -29,7 +29,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			detail.FieldCreatedAt: {Type: field.TypeUint32, Column: detail.FieldCreatedAt},
 			detail.FieldUpdatedAt: {Type: field.TypeUint32, Column: detail.FieldUpdatedAt},
 			detail.FieldDeletedAt: {Type: field.TypeUint32, Column: detail.FieldDeletedAt},
-			detail.FieldAutoID:    {Type: field.TypeUint32, Column: detail.FieldAutoID},
+			detail.FieldAutoID:    {Type: field.TypeInt, Column: detail.FieldAutoID},
 			detail.FieldSampleCol: {Type: field.TypeString, Column: detail.FieldSampleCol},
 		},
 	}
@@ -47,7 +47,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			pubsubmessage.FieldCreatedAt: {Type: field.TypeUint32, Column: pubsubmessage.FieldCreatedAt},
 			pubsubmessage.FieldUpdatedAt: {Type: field.TypeUint32, Column: pubsubmessage.FieldUpdatedAt},
 			pubsubmessage.FieldDeletedAt: {Type: field.TypeUint32, Column: pubsubmessage.FieldDeletedAt},
-			pubsubmessage.FieldAutoID:    {Type: field.TypeUint32, Column: pubsubmessage.FieldAutoID},
+			pubsubmessage.FieldAutoID:    {Type: field.TypeInt, Column: pubsubmessage.FieldAutoID},
 			pubsubmessage.FieldMessageID: {Type: field.TypeString, Column: pubsubmessage.FieldMessageID},
 			pubsubmessage.FieldState:     {Type: field.TypeString, Column: pubsubmessage.FieldState},
 			pubsubmessage.FieldRespToID:  {Type: field.TypeUUID, Column: pubsubmessage.FieldRespToID},
@@ -119,8 +119,8 @@ func (f *DetailFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(detail.FieldDeletedAt))
 }
 
-// WhereAutoID applies the entql uint32 predicate on the auto_id field.
-func (f *DetailFilter) WhereAutoID(p entql.Uint32P) {
+// WhereAutoID applies the entql int predicate on the auto_id field.
+func (f *DetailFilter) WhereAutoID(p entql.IntP) {
 	f.Where(p.Field(detail.FieldAutoID))
 }
 
@@ -184,8 +184,8 @@ func (f *PubsubMessageFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(pubsubmessage.FieldDeletedAt))
 }
 
-// WhereAutoID applies the entql uint32 predicate on the auto_id field.
-func (f *PubsubMessageFilter) WhereAutoID(p entql.Uint32P) {
+// WhereAutoID applies the entql int predicate on the auto_id field.
+func (f *PubsubMessageFilter) WhereAutoID(p entql.IntP) {
 	f.Where(p.Field(pubsubmessage.FieldAutoID))
 }
 

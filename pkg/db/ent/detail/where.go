@@ -101,7 +101,7 @@ func DeletedAt(v uint32) predicate.Detail {
 }
 
 // AutoID applies equality check predicate on the "auto_id" field. It's identical to AutoIDEQ.
-func AutoID(v uint32) predicate.Detail {
+func AutoID(v int) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAutoID), v))
 	})
@@ -307,21 +307,21 @@ func DeletedAtLTE(v uint32) predicate.Detail {
 }
 
 // AutoIDEQ applies the EQ predicate on the "auto_id" field.
-func AutoIDEQ(v uint32) predicate.Detail {
+func AutoIDEQ(v int) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAutoID), v))
 	})
 }
 
 // AutoIDNEQ applies the NEQ predicate on the "auto_id" field.
-func AutoIDNEQ(v uint32) predicate.Detail {
+func AutoIDNEQ(v int) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldAutoID), v))
 	})
 }
 
 // AutoIDIn applies the In predicate on the "auto_id" field.
-func AutoIDIn(vs ...uint32) predicate.Detail {
+func AutoIDIn(vs ...int) predicate.Detail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -332,7 +332,7 @@ func AutoIDIn(vs ...uint32) predicate.Detail {
 }
 
 // AutoIDNotIn applies the NotIn predicate on the "auto_id" field.
-func AutoIDNotIn(vs ...uint32) predicate.Detail {
+func AutoIDNotIn(vs ...int) predicate.Detail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -343,28 +343,28 @@ func AutoIDNotIn(vs ...uint32) predicate.Detail {
 }
 
 // AutoIDGT applies the GT predicate on the "auto_id" field.
-func AutoIDGT(v uint32) predicate.Detail {
+func AutoIDGT(v int) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldAutoID), v))
 	})
 }
 
 // AutoIDGTE applies the GTE predicate on the "auto_id" field.
-func AutoIDGTE(v uint32) predicate.Detail {
+func AutoIDGTE(v int) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldAutoID), v))
 	})
 }
 
 // AutoIDLT applies the LT predicate on the "auto_id" field.
-func AutoIDLT(v uint32) predicate.Detail {
+func AutoIDLT(v int) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldAutoID), v))
 	})
 }
 
 // AutoIDLTE applies the LTE predicate on the "auto_id" field.
-func AutoIDLTE(v uint32) predicate.Detail {
+func AutoIDLTE(v int) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAutoID), v))
 	})

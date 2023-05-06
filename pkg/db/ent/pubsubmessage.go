@@ -23,7 +23,7 @@ type PubsubMessage struct {
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// AutoID holds the value of the "auto_id" field.
-	AutoID uint32 `json:"auto_id,omitempty"`
+	AutoID int `json:"auto_id,omitempty"`
 	// MessageID holds the value of the "message_id" field.
 	MessageID string `json:"message_id,omitempty"`
 	// State holds the value of the "state" field.
@@ -90,7 +90,7 @@ func (pm *PubsubMessage) assignValues(columns []string, values []interface{}) er
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field auto_id", values[i])
 			} else if value.Valid {
-				pm.AutoID = uint32(value.Int64)
+				pm.AutoID = int(value.Int64)
 			}
 		case pubsubmessage.FieldMessageID:
 			if value, ok := values[i].(*sql.NullString); !ok {
