@@ -1,30 +1,37 @@
 package detail
 
-/*
 import (
 	"context"
 
-	"go.opentelemetry.io/otel"
-	scodes "go.opentelemetry.io/otel/codes"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mw/v1/detail"
+	detail1 "github.com/NpoolPlatform/service-template/pkg/mw/detail"
 
-	"github.com/google/uuid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (s *Server) ExistDetail(ctx context.Context, in *npool.ExistDetailRequest) (*npool.ExistDetailResponse, error) {
-
-	if _, err := uuid.Parse(in.GetID()); err != nil {
-		logger.Sugar().Errorw("ExistDetail", "ID", in.GetID(), "Error", err)
+	handler, err := detail1.NewHandler(
+		ctx,
+		detail1.WithID(ctx, &in.ID),
+	)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"ExistDetail",
+			"In", in,
+			"Error", err,
+		)
 		return &npool.ExistDetailResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	exist, err := crud.Exist(ctx, in.GetID())
+	exist, err := handler.ExistDetail(ctx)
 	if err != nil {
-		logger.Sugar().Errorw("ExistDetail", "ID", in.GetID(), "Error", err)
+		logger.Sugar().Errorw(
+			"ExistDetail",
+			"In", in,
+			"Error", err,
+		)
 		return &npool.ExistDetailResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -33,16 +40,27 @@ func (s *Server) ExistDetail(ctx context.Context, in *npool.ExistDetailRequest) 
 	}, nil
 }
 
-func (s *Server) ExistDetailConds(ctx context.Context,
-	in *npool.ExistDetailCondsRequest) (*npool.ExistDetailCondsResponse, error) {
-	if err := ValidateConds(in.GetConds()); err != nil {
-		logger.Sugar().Errorw("ExistDetailConds", "Conds", in.GetConds(), "Error", err)
+func (s *Server) ExistDetailConds(ctx context.Context, in *npool.ExistDetailCondsRequest) (*npool.ExistDetailCondsResponse, error) {
+	handler, err := detail1.NewHandler(
+		ctx,
+		detail1.WithConds(ctx, in.GetConds()),
+	)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"ExistDetailConds",
+			"In", in,
+			"Error", err,
+		)
 		return &npool.ExistDetailCondsResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	exist, err := crud.ExistConds(ctx, in.GetConds())
+	exist, err := handler.ExistDetailConds(ctx)
 	if err != nil {
-		logger.Sugar().Errorw("ExistDetailConds", "Conds", in.GetConds(), "Error", err)
+		logger.Sugar().Errorw(
+			"ExistDetailConds",
+			"In", in,
+			"Error", err,
+		)
 		return &npool.ExistDetailCondsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
@@ -50,5 +68,3 @@ func (s *Server) ExistDetailConds(ctx context.Context,
 		Info: exist,
 	}, nil
 }
-
-*/

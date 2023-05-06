@@ -14,7 +14,7 @@ import (
 func (s *Server) CountDetails(ctx context.Context, in *npool.CountDetailsRequest) (*npool.CountDetailsResponse, error) {
 	handler, err := detail1.NewHandler(
 		ctx,
-		detail1.WithConds(in.GetConds()),
+		detail1.WithConds(ctx, in.GetConds()),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

@@ -1,72 +1,73 @@
 package detail
 
-/*
 import (
 	"context"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mw/v1/detail"
+	detail1 "github.com/NpoolPlatform/service-template/pkg/mw/detail"
 
-	"github.com/google/uuid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (s *Server) GetDetail(ctx context.Context, in *npool.GetDetailRequest) (*npool.GetDetailResponse, error) {
-	if _, err := uuid.Parse(in.GetID()); err != nil {
-		logger.Sugar().Errorw("GetDetail", "ID", in.GetID(), "Error", err)
+	handler, err := detail1.NewHandler(
+		ctx,
+		detail1.WithID(ctx, &in.ID),
+	)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"GetDetail",
+			"In", in,
+			"Error", err,
+		)
 		return &npool.GetDetailResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	info, err := crud.Row(ctx, in.GetID())
+	info, err := handler.GetDetail(ctx)
 	if err != nil {
-		logger.Sugar().Errorw("GetDetail", "ID", in.GetID(), "Error", err)
+		logger.Sugar().Errorw(
+			"GetDetail",
+			"In", in,
+			"Error", err,
+		)
 		return &npool.GetDetailResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
 	return &npool.GetDetailResponse{
-		Info: converter.Ent2Grpc(info),
-	}, nil
-}
-
-func ValidateConds(in *npool.Conds) error {
-	return nil
-}
-
-func (s *Server) GetDetailOnly(ctx context.Context, in *npool.GetDetailOnlyRequest) (*npool.GetDetailOnlyResponse, error) {
-	if err := ValidateConds(in.GetConds()); err != nil {
-		logger.Sugar().Errorw("GetDetail", "Conds", in.GetConds(), "Error", err)
-		return &npool.GetDetailOnlyResponse{}, status.Error(codes.InvalidArgument, err.Error())
-	}
-
-	info, err := crud.RowOnly(ctx, in.GetConds())
-	if err != nil {
-		logger.Sugar().Errorw("GetDetail", "Conds", in.GetConds(), "Error", err)
-		return &npool.GetDetailOnlyResponse{}, status.Error(codes.Internal, err.Error())
-	}
-
-	return &npool.GetDetailOnlyResponse{
-		Info: converter.Ent2Grpc(info),
+		Info: info,
 	}, nil
 }
 
 func (s *Server) GetDetails(ctx context.Context, in *npool.GetDetailsRequest) (*npool.GetDetailsResponse, error) {
-	if err := ValidateConds(in.GetConds()); err != nil {
-		logger.Sugar().Errorw("GetDetail", "Conds", in.GetConds(), "Error", err)
+	handler, err := detail1.NewHandler(
+		ctx,
+		detail1.WithConds(ctx, in.GetConds()),
+		detail1.WithOffset(ctx, in.GetOffset()),
+		detail1.WithLimit(ctx, in.GetLimit()),
+	)
+	if err != nil {
+		logger.Sugar().Errorw(
+			"GetDetails",
+			"In", in,
+			"Error", err,
+		)
 		return &npool.GetDetailsResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	rows, total, err := crud.Rows(ctx, in.GetConds(), int(in.GetOffset()), int(in.GetLimit()))
+	infos, total, err := handler.GetDetails(ctx)
 	if err != nil {
-		logger.Sugar().Errorw("GetDetail", "Conds", in.GetConds(), "Error", err)
+		logger.Sugar().Errorw(
+			"GetDetails",
+			"In", in,
+			"Error", err,
+		)
 		return &npool.GetDetailsResponse{}, status.Error(codes.Internal, err.Error())
 	}
 
 	return &npool.GetDetailsResponse{
-		Infos: converter.Ent2GrpcMany(rows),
-		Total: uint32(total),
+		Infos: infos,
+		Total: total,
 	}, nil
 }
-
-*/

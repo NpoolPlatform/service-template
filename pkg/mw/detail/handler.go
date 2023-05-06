@@ -73,7 +73,7 @@ func WithReqs(ctx context.Context, reqs []*npool.DetailReq) func(context.Context
 	}
 }
 
-func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
+func WithConds(ctx context.Context, conds *npool.Conds) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Conds = &detailcrud.Conds{}
 		if conds == nil {
@@ -102,14 +102,14 @@ func WithConds(conds *npool.Conds) func(context.Context, *Handler) error {
 	}
 }
 
-func WithOffset(offset int32) func(context.Context, *Handler) error {
+func WithOffset(ctx context.Context, offset int32) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.Offset = offset
 		return nil
 	}
 }
 
-func WithLimit(limit int32) func(context.Context, *Handler) error {
+func WithLimit(ctx context.Context, limit int32) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if limit == 0 {
 			limit = constant.DefaultRowLimit
