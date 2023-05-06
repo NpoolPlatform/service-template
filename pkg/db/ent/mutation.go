@@ -10,8 +10,8 @@ import (
 
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/predicate"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/pubsubmessage"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 
 	"entgo.io/ent"
 )
@@ -25,35 +25,29 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeDetail = "Detail"
+	TypeDetail        = "Detail"
+	TypePubsubMessage = "PubsubMessage"
 )
 
 // DetailMutation represents an operation that mutates the Detail nodes in the graph.
 type DetailMutation struct {
 	config
-	op                Op
-	typ               string
-	id                *uuid.UUID
-	created_at        *uint32
-	addcreated_at     *int32
-	updated_at        *uint32
-	addupdated_at     *int32
-	deleted_at        *uint32
-	adddeleted_at     *int32
-	app_id            *uuid.UUID
-	user_id           *uuid.UUID
-	coin_type_id      *uuid.UUID
-	io_type           *string
-	io_sub_type       *string
-	amount            *decimal.Decimal
-	from_coin_type_id *uuid.UUID
-	coin_usd_currency *decimal.Decimal
-	io_extra          *string
-	from_old_id       *uuid.UUID
-	clearedFields     map[string]struct{}
-	done              bool
-	oldValue          func(context.Context) (*Detail, error)
-	predicates        []predicate.Detail
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	auto_id       *uint32
+	addauto_id    *int32
+	sample_col    *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Detail, error)
+	predicates    []predicate.Detail
 }
 
 var _ ent.Mutation = (*DetailMutation)(nil)
@@ -328,494 +322,109 @@ func (m *DetailMutation) ResetDeletedAt() {
 	m.adddeleted_at = nil
 }
 
-// SetAppID sets the "app_id" field.
-func (m *DetailMutation) SetAppID(u uuid.UUID) {
-	m.app_id = &u
+// SetAutoID sets the "auto_id" field.
+func (m *DetailMutation) SetAutoID(u uint32) {
+	m.auto_id = &u
+	m.addauto_id = nil
 }
 
-// AppID returns the value of the "app_id" field in the mutation.
-func (m *DetailMutation) AppID() (r uuid.UUID, exists bool) {
-	v := m.app_id
+// AutoID returns the value of the "auto_id" field in the mutation.
+func (m *DetailMutation) AutoID() (r uint32, exists bool) {
+	v := m.auto_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAppID returns the old "app_id" field's value of the Detail entity.
+// OldAutoID returns the old "auto_id" field's value of the Detail entity.
 // If the Detail object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldAppID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *DetailMutation) OldAutoID(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAppID is only allowed on UpdateOne operations")
+		return v, errors.New("OldAutoID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAppID requires an ID field in the mutation")
+		return v, errors.New("OldAutoID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAppID: %w", err)
+		return v, fmt.Errorf("querying old value for OldAutoID: %w", err)
 	}
-	return oldValue.AppID, nil
+	return oldValue.AutoID, nil
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (m *DetailMutation) ClearAppID() {
-	m.app_id = nil
-	m.clearedFields[detail.FieldAppID] = struct{}{}
+// AddAutoID adds u to the "auto_id" field.
+func (m *DetailMutation) AddAutoID(u int32) {
+	if m.addauto_id != nil {
+		*m.addauto_id += u
+	} else {
+		m.addauto_id = &u
+	}
 }
 
-// AppIDCleared returns if the "app_id" field was cleared in this mutation.
-func (m *DetailMutation) AppIDCleared() bool {
-	_, ok := m.clearedFields[detail.FieldAppID]
-	return ok
-}
-
-// ResetAppID resets all changes to the "app_id" field.
-func (m *DetailMutation) ResetAppID() {
-	m.app_id = nil
-	delete(m.clearedFields, detail.FieldAppID)
-}
-
-// SetUserID sets the "user_id" field.
-func (m *DetailMutation) SetUserID(u uuid.UUID) {
-	m.user_id = &u
-}
-
-// UserID returns the value of the "user_id" field in the mutation.
-func (m *DetailMutation) UserID() (r uuid.UUID, exists bool) {
-	v := m.user_id
+// AddedAutoID returns the value that was added to the "auto_id" field in this mutation.
+func (m *DetailMutation) AddedAutoID() (r int32, exists bool) {
+	v := m.addauto_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldUserID returns the old "user_id" field's value of the Detail entity.
-// If the Detail object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldUserID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldUserID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
-	}
-	return oldValue.UserID, nil
+// ResetAutoID resets all changes to the "auto_id" field.
+func (m *DetailMutation) ResetAutoID() {
+	m.auto_id = nil
+	m.addauto_id = nil
 }
 
-// ClearUserID clears the value of the "user_id" field.
-func (m *DetailMutation) ClearUserID() {
-	m.user_id = nil
-	m.clearedFields[detail.FieldUserID] = struct{}{}
+// SetSampleCol sets the "sample_col" field.
+func (m *DetailMutation) SetSampleCol(s string) {
+	m.sample_col = &s
 }
 
-// UserIDCleared returns if the "user_id" field was cleared in this mutation.
-func (m *DetailMutation) UserIDCleared() bool {
-	_, ok := m.clearedFields[detail.FieldUserID]
-	return ok
-}
-
-// ResetUserID resets all changes to the "user_id" field.
-func (m *DetailMutation) ResetUserID() {
-	m.user_id = nil
-	delete(m.clearedFields, detail.FieldUserID)
-}
-
-// SetCoinTypeID sets the "coin_type_id" field.
-func (m *DetailMutation) SetCoinTypeID(u uuid.UUID) {
-	m.coin_type_id = &u
-}
-
-// CoinTypeID returns the value of the "coin_type_id" field in the mutation.
-func (m *DetailMutation) CoinTypeID() (r uuid.UUID, exists bool) {
-	v := m.coin_type_id
+// SampleCol returns the value of the "sample_col" field in the mutation.
+func (m *DetailMutation) SampleCol() (r string, exists bool) {
+	v := m.sample_col
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCoinTypeID returns the old "coin_type_id" field's value of the Detail entity.
+// OldSampleCol returns the old "sample_col" field's value of the Detail entity.
 // If the Detail object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldCoinTypeID(ctx context.Context) (v uuid.UUID, err error) {
+func (m *DetailMutation) OldSampleCol(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCoinTypeID is only allowed on UpdateOne operations")
+		return v, errors.New("OldSampleCol is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCoinTypeID requires an ID field in the mutation")
+		return v, errors.New("OldSampleCol requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCoinTypeID: %w", err)
+		return v, fmt.Errorf("querying old value for OldSampleCol: %w", err)
 	}
-	return oldValue.CoinTypeID, nil
+	return oldValue.SampleCol, nil
 }
 
-// ClearCoinTypeID clears the value of the "coin_type_id" field.
-func (m *DetailMutation) ClearCoinTypeID() {
-	m.coin_type_id = nil
-	m.clearedFields[detail.FieldCoinTypeID] = struct{}{}
+// ClearSampleCol clears the value of the "sample_col" field.
+func (m *DetailMutation) ClearSampleCol() {
+	m.sample_col = nil
+	m.clearedFields[detail.FieldSampleCol] = struct{}{}
 }
 
-// CoinTypeIDCleared returns if the "coin_type_id" field was cleared in this mutation.
-func (m *DetailMutation) CoinTypeIDCleared() bool {
-	_, ok := m.clearedFields[detail.FieldCoinTypeID]
+// SampleColCleared returns if the "sample_col" field was cleared in this mutation.
+func (m *DetailMutation) SampleColCleared() bool {
+	_, ok := m.clearedFields[detail.FieldSampleCol]
 	return ok
 }
 
-// ResetCoinTypeID resets all changes to the "coin_type_id" field.
-func (m *DetailMutation) ResetCoinTypeID() {
-	m.coin_type_id = nil
-	delete(m.clearedFields, detail.FieldCoinTypeID)
-}
-
-// SetIoType sets the "io_type" field.
-func (m *DetailMutation) SetIoType(s string) {
-	m.io_type = &s
-}
-
-// IoType returns the value of the "io_type" field in the mutation.
-func (m *DetailMutation) IoType() (r string, exists bool) {
-	v := m.io_type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldIoType returns the old "io_type" field's value of the Detail entity.
-// If the Detail object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldIoType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIoType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIoType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIoType: %w", err)
-	}
-	return oldValue.IoType, nil
-}
-
-// ClearIoType clears the value of the "io_type" field.
-func (m *DetailMutation) ClearIoType() {
-	m.io_type = nil
-	m.clearedFields[detail.FieldIoType] = struct{}{}
-}
-
-// IoTypeCleared returns if the "io_type" field was cleared in this mutation.
-func (m *DetailMutation) IoTypeCleared() bool {
-	_, ok := m.clearedFields[detail.FieldIoType]
-	return ok
-}
-
-// ResetIoType resets all changes to the "io_type" field.
-func (m *DetailMutation) ResetIoType() {
-	m.io_type = nil
-	delete(m.clearedFields, detail.FieldIoType)
-}
-
-// SetIoSubType sets the "io_sub_type" field.
-func (m *DetailMutation) SetIoSubType(s string) {
-	m.io_sub_type = &s
-}
-
-// IoSubType returns the value of the "io_sub_type" field in the mutation.
-func (m *DetailMutation) IoSubType() (r string, exists bool) {
-	v := m.io_sub_type
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldIoSubType returns the old "io_sub_type" field's value of the Detail entity.
-// If the Detail object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldIoSubType(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIoSubType is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIoSubType requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIoSubType: %w", err)
-	}
-	return oldValue.IoSubType, nil
-}
-
-// ClearIoSubType clears the value of the "io_sub_type" field.
-func (m *DetailMutation) ClearIoSubType() {
-	m.io_sub_type = nil
-	m.clearedFields[detail.FieldIoSubType] = struct{}{}
-}
-
-// IoSubTypeCleared returns if the "io_sub_type" field was cleared in this mutation.
-func (m *DetailMutation) IoSubTypeCleared() bool {
-	_, ok := m.clearedFields[detail.FieldIoSubType]
-	return ok
-}
-
-// ResetIoSubType resets all changes to the "io_sub_type" field.
-func (m *DetailMutation) ResetIoSubType() {
-	m.io_sub_type = nil
-	delete(m.clearedFields, detail.FieldIoSubType)
-}
-
-// SetAmount sets the "amount" field.
-func (m *DetailMutation) SetAmount(d decimal.Decimal) {
-	m.amount = &d
-}
-
-// Amount returns the value of the "amount" field in the mutation.
-func (m *DetailMutation) Amount() (r decimal.Decimal, exists bool) {
-	v := m.amount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAmount returns the old "amount" field's value of the Detail entity.
-// If the Detail object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldAmount(ctx context.Context) (v decimal.Decimal, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAmount is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAmount requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAmount: %w", err)
-	}
-	return oldValue.Amount, nil
-}
-
-// ClearAmount clears the value of the "amount" field.
-func (m *DetailMutation) ClearAmount() {
-	m.amount = nil
-	m.clearedFields[detail.FieldAmount] = struct{}{}
-}
-
-// AmountCleared returns if the "amount" field was cleared in this mutation.
-func (m *DetailMutation) AmountCleared() bool {
-	_, ok := m.clearedFields[detail.FieldAmount]
-	return ok
-}
-
-// ResetAmount resets all changes to the "amount" field.
-func (m *DetailMutation) ResetAmount() {
-	m.amount = nil
-	delete(m.clearedFields, detail.FieldAmount)
-}
-
-// SetFromCoinTypeID sets the "from_coin_type_id" field.
-func (m *DetailMutation) SetFromCoinTypeID(u uuid.UUID) {
-	m.from_coin_type_id = &u
-}
-
-// FromCoinTypeID returns the value of the "from_coin_type_id" field in the mutation.
-func (m *DetailMutation) FromCoinTypeID() (r uuid.UUID, exists bool) {
-	v := m.from_coin_type_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldFromCoinTypeID returns the old "from_coin_type_id" field's value of the Detail entity.
-// If the Detail object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldFromCoinTypeID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFromCoinTypeID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFromCoinTypeID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFromCoinTypeID: %w", err)
-	}
-	return oldValue.FromCoinTypeID, nil
-}
-
-// ClearFromCoinTypeID clears the value of the "from_coin_type_id" field.
-func (m *DetailMutation) ClearFromCoinTypeID() {
-	m.from_coin_type_id = nil
-	m.clearedFields[detail.FieldFromCoinTypeID] = struct{}{}
-}
-
-// FromCoinTypeIDCleared returns if the "from_coin_type_id" field was cleared in this mutation.
-func (m *DetailMutation) FromCoinTypeIDCleared() bool {
-	_, ok := m.clearedFields[detail.FieldFromCoinTypeID]
-	return ok
-}
-
-// ResetFromCoinTypeID resets all changes to the "from_coin_type_id" field.
-func (m *DetailMutation) ResetFromCoinTypeID() {
-	m.from_coin_type_id = nil
-	delete(m.clearedFields, detail.FieldFromCoinTypeID)
-}
-
-// SetCoinUsdCurrency sets the "coin_usd_currency" field.
-func (m *DetailMutation) SetCoinUsdCurrency(d decimal.Decimal) {
-	m.coin_usd_currency = &d
-}
-
-// CoinUsdCurrency returns the value of the "coin_usd_currency" field in the mutation.
-func (m *DetailMutation) CoinUsdCurrency() (r decimal.Decimal, exists bool) {
-	v := m.coin_usd_currency
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCoinUsdCurrency returns the old "coin_usd_currency" field's value of the Detail entity.
-// If the Detail object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldCoinUsdCurrency(ctx context.Context) (v decimal.Decimal, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCoinUsdCurrency is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCoinUsdCurrency requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCoinUsdCurrency: %w", err)
-	}
-	return oldValue.CoinUsdCurrency, nil
-}
-
-// ClearCoinUsdCurrency clears the value of the "coin_usd_currency" field.
-func (m *DetailMutation) ClearCoinUsdCurrency() {
-	m.coin_usd_currency = nil
-	m.clearedFields[detail.FieldCoinUsdCurrency] = struct{}{}
-}
-
-// CoinUsdCurrencyCleared returns if the "coin_usd_currency" field was cleared in this mutation.
-func (m *DetailMutation) CoinUsdCurrencyCleared() bool {
-	_, ok := m.clearedFields[detail.FieldCoinUsdCurrency]
-	return ok
-}
-
-// ResetCoinUsdCurrency resets all changes to the "coin_usd_currency" field.
-func (m *DetailMutation) ResetCoinUsdCurrency() {
-	m.coin_usd_currency = nil
-	delete(m.clearedFields, detail.FieldCoinUsdCurrency)
-}
-
-// SetIoExtra sets the "io_extra" field.
-func (m *DetailMutation) SetIoExtra(s string) {
-	m.io_extra = &s
-}
-
-// IoExtra returns the value of the "io_extra" field in the mutation.
-func (m *DetailMutation) IoExtra() (r string, exists bool) {
-	v := m.io_extra
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldIoExtra returns the old "io_extra" field's value of the Detail entity.
-// If the Detail object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldIoExtra(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldIoExtra is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldIoExtra requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldIoExtra: %w", err)
-	}
-	return oldValue.IoExtra, nil
-}
-
-// ClearIoExtra clears the value of the "io_extra" field.
-func (m *DetailMutation) ClearIoExtra() {
-	m.io_extra = nil
-	m.clearedFields[detail.FieldIoExtra] = struct{}{}
-}
-
-// IoExtraCleared returns if the "io_extra" field was cleared in this mutation.
-func (m *DetailMutation) IoExtraCleared() bool {
-	_, ok := m.clearedFields[detail.FieldIoExtra]
-	return ok
-}
-
-// ResetIoExtra resets all changes to the "io_extra" field.
-func (m *DetailMutation) ResetIoExtra() {
-	m.io_extra = nil
-	delete(m.clearedFields, detail.FieldIoExtra)
-}
-
-// SetFromOldID sets the "from_old_id" field.
-func (m *DetailMutation) SetFromOldID(u uuid.UUID) {
-	m.from_old_id = &u
-}
-
-// FromOldID returns the value of the "from_old_id" field in the mutation.
-func (m *DetailMutation) FromOldID() (r uuid.UUID, exists bool) {
-	v := m.from_old_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldFromOldID returns the old "from_old_id" field's value of the Detail entity.
-// If the Detail object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldFromOldID(ctx context.Context) (v uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldFromOldID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldFromOldID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFromOldID: %w", err)
-	}
-	return oldValue.FromOldID, nil
-}
-
-// ClearFromOldID clears the value of the "from_old_id" field.
-func (m *DetailMutation) ClearFromOldID() {
-	m.from_old_id = nil
-	m.clearedFields[detail.FieldFromOldID] = struct{}{}
-}
-
-// FromOldIDCleared returns if the "from_old_id" field was cleared in this mutation.
-func (m *DetailMutation) FromOldIDCleared() bool {
-	_, ok := m.clearedFields[detail.FieldFromOldID]
-	return ok
-}
-
-// ResetFromOldID resets all changes to the "from_old_id" field.
-func (m *DetailMutation) ResetFromOldID() {
-	m.from_old_id = nil
-	delete(m.clearedFields, detail.FieldFromOldID)
+// ResetSampleCol resets all changes to the "sample_col" field.
+func (m *DetailMutation) ResetSampleCol() {
+	m.sample_col = nil
+	delete(m.clearedFields, detail.FieldSampleCol)
 }
 
 // Where appends a list predicates to the DetailMutation builder.
@@ -837,7 +446,7 @@ func (m *DetailMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *DetailMutation) Fields() []string {
-	fields := make([]string, 0, 13)
+	fields := make([]string, 0, 5)
 	if m.created_at != nil {
 		fields = append(fields, detail.FieldCreatedAt)
 	}
@@ -847,35 +456,11 @@ func (m *DetailMutation) Fields() []string {
 	if m.deleted_at != nil {
 		fields = append(fields, detail.FieldDeletedAt)
 	}
-	if m.app_id != nil {
-		fields = append(fields, detail.FieldAppID)
+	if m.auto_id != nil {
+		fields = append(fields, detail.FieldAutoID)
 	}
-	if m.user_id != nil {
-		fields = append(fields, detail.FieldUserID)
-	}
-	if m.coin_type_id != nil {
-		fields = append(fields, detail.FieldCoinTypeID)
-	}
-	if m.io_type != nil {
-		fields = append(fields, detail.FieldIoType)
-	}
-	if m.io_sub_type != nil {
-		fields = append(fields, detail.FieldIoSubType)
-	}
-	if m.amount != nil {
-		fields = append(fields, detail.FieldAmount)
-	}
-	if m.from_coin_type_id != nil {
-		fields = append(fields, detail.FieldFromCoinTypeID)
-	}
-	if m.coin_usd_currency != nil {
-		fields = append(fields, detail.FieldCoinUsdCurrency)
-	}
-	if m.io_extra != nil {
-		fields = append(fields, detail.FieldIoExtra)
-	}
-	if m.from_old_id != nil {
-		fields = append(fields, detail.FieldFromOldID)
+	if m.sample_col != nil {
+		fields = append(fields, detail.FieldSampleCol)
 	}
 	return fields
 }
@@ -891,26 +476,10 @@ func (m *DetailMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case detail.FieldDeletedAt:
 		return m.DeletedAt()
-	case detail.FieldAppID:
-		return m.AppID()
-	case detail.FieldUserID:
-		return m.UserID()
-	case detail.FieldCoinTypeID:
-		return m.CoinTypeID()
-	case detail.FieldIoType:
-		return m.IoType()
-	case detail.FieldIoSubType:
-		return m.IoSubType()
-	case detail.FieldAmount:
-		return m.Amount()
-	case detail.FieldFromCoinTypeID:
-		return m.FromCoinTypeID()
-	case detail.FieldCoinUsdCurrency:
-		return m.CoinUsdCurrency()
-	case detail.FieldIoExtra:
-		return m.IoExtra()
-	case detail.FieldFromOldID:
-		return m.FromOldID()
+	case detail.FieldAutoID:
+		return m.AutoID()
+	case detail.FieldSampleCol:
+		return m.SampleCol()
 	}
 	return nil, false
 }
@@ -926,26 +495,10 @@ func (m *DetailMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldUpdatedAt(ctx)
 	case detail.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
-	case detail.FieldAppID:
-		return m.OldAppID(ctx)
-	case detail.FieldUserID:
-		return m.OldUserID(ctx)
-	case detail.FieldCoinTypeID:
-		return m.OldCoinTypeID(ctx)
-	case detail.FieldIoType:
-		return m.OldIoType(ctx)
-	case detail.FieldIoSubType:
-		return m.OldIoSubType(ctx)
-	case detail.FieldAmount:
-		return m.OldAmount(ctx)
-	case detail.FieldFromCoinTypeID:
-		return m.OldFromCoinTypeID(ctx)
-	case detail.FieldCoinUsdCurrency:
-		return m.OldCoinUsdCurrency(ctx)
-	case detail.FieldIoExtra:
-		return m.OldIoExtra(ctx)
-	case detail.FieldFromOldID:
-		return m.OldFromOldID(ctx)
+	case detail.FieldAutoID:
+		return m.OldAutoID(ctx)
+	case detail.FieldSampleCol:
+		return m.OldSampleCol(ctx)
 	}
 	return nil, fmt.Errorf("unknown Detail field %s", name)
 }
@@ -976,75 +529,19 @@ func (m *DetailMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDeletedAt(v)
 		return nil
-	case detail.FieldAppID:
-		v, ok := value.(uuid.UUID)
+	case detail.FieldAutoID:
+		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAppID(v)
+		m.SetAutoID(v)
 		return nil
-	case detail.FieldUserID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetUserID(v)
-		return nil
-	case detail.FieldCoinTypeID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCoinTypeID(v)
-		return nil
-	case detail.FieldIoType:
+	case detail.FieldSampleCol:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetIoType(v)
-		return nil
-	case detail.FieldIoSubType:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetIoSubType(v)
-		return nil
-	case detail.FieldAmount:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAmount(v)
-		return nil
-	case detail.FieldFromCoinTypeID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetFromCoinTypeID(v)
-		return nil
-	case detail.FieldCoinUsdCurrency:
-		v, ok := value.(decimal.Decimal)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCoinUsdCurrency(v)
-		return nil
-	case detail.FieldIoExtra:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetIoExtra(v)
-		return nil
-	case detail.FieldFromOldID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetFromOldID(v)
+		m.SetSampleCol(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Detail field %s", name)
@@ -1063,6 +560,9 @@ func (m *DetailMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, detail.FieldDeletedAt)
 	}
+	if m.addauto_id != nil {
+		fields = append(fields, detail.FieldAutoID)
+	}
 	return fields
 }
 
@@ -1077,6 +577,8 @@ func (m *DetailMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case detail.FieldDeletedAt:
 		return m.AddedDeletedAt()
+	case detail.FieldAutoID:
+		return m.AddedAutoID()
 	}
 	return nil, false
 }
@@ -1107,6 +609,13 @@ func (m *DetailMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddDeletedAt(v)
 		return nil
+	case detail.FieldAutoID:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAutoID(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Detail numeric field %s", name)
 }
@@ -1115,35 +624,8 @@ func (m *DetailMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *DetailMutation) ClearedFields() []string {
 	var fields []string
-	if m.FieldCleared(detail.FieldAppID) {
-		fields = append(fields, detail.FieldAppID)
-	}
-	if m.FieldCleared(detail.FieldUserID) {
-		fields = append(fields, detail.FieldUserID)
-	}
-	if m.FieldCleared(detail.FieldCoinTypeID) {
-		fields = append(fields, detail.FieldCoinTypeID)
-	}
-	if m.FieldCleared(detail.FieldIoType) {
-		fields = append(fields, detail.FieldIoType)
-	}
-	if m.FieldCleared(detail.FieldIoSubType) {
-		fields = append(fields, detail.FieldIoSubType)
-	}
-	if m.FieldCleared(detail.FieldAmount) {
-		fields = append(fields, detail.FieldAmount)
-	}
-	if m.FieldCleared(detail.FieldFromCoinTypeID) {
-		fields = append(fields, detail.FieldFromCoinTypeID)
-	}
-	if m.FieldCleared(detail.FieldCoinUsdCurrency) {
-		fields = append(fields, detail.FieldCoinUsdCurrency)
-	}
-	if m.FieldCleared(detail.FieldIoExtra) {
-		fields = append(fields, detail.FieldIoExtra)
-	}
-	if m.FieldCleared(detail.FieldFromOldID) {
-		fields = append(fields, detail.FieldFromOldID)
+	if m.FieldCleared(detail.FieldSampleCol) {
+		fields = append(fields, detail.FieldSampleCol)
 	}
 	return fields
 }
@@ -1159,35 +641,8 @@ func (m *DetailMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *DetailMutation) ClearField(name string) error {
 	switch name {
-	case detail.FieldAppID:
-		m.ClearAppID()
-		return nil
-	case detail.FieldUserID:
-		m.ClearUserID()
-		return nil
-	case detail.FieldCoinTypeID:
-		m.ClearCoinTypeID()
-		return nil
-	case detail.FieldIoType:
-		m.ClearIoType()
-		return nil
-	case detail.FieldIoSubType:
-		m.ClearIoSubType()
-		return nil
-	case detail.FieldAmount:
-		m.ClearAmount()
-		return nil
-	case detail.FieldFromCoinTypeID:
-		m.ClearFromCoinTypeID()
-		return nil
-	case detail.FieldCoinUsdCurrency:
-		m.ClearCoinUsdCurrency()
-		return nil
-	case detail.FieldIoExtra:
-		m.ClearIoExtra()
-		return nil
-	case detail.FieldFromOldID:
-		m.ClearFromOldID()
+	case detail.FieldSampleCol:
+		m.ClearSampleCol()
 		return nil
 	}
 	return fmt.Errorf("unknown Detail nullable field %s", name)
@@ -1206,35 +661,11 @@ func (m *DetailMutation) ResetField(name string) error {
 	case detail.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
-	case detail.FieldAppID:
-		m.ResetAppID()
+	case detail.FieldAutoID:
+		m.ResetAutoID()
 		return nil
-	case detail.FieldUserID:
-		m.ResetUserID()
-		return nil
-	case detail.FieldCoinTypeID:
-		m.ResetCoinTypeID()
-		return nil
-	case detail.FieldIoType:
-		m.ResetIoType()
-		return nil
-	case detail.FieldIoSubType:
-		m.ResetIoSubType()
-		return nil
-	case detail.FieldAmount:
-		m.ResetAmount()
-		return nil
-	case detail.FieldFromCoinTypeID:
-		m.ResetFromCoinTypeID()
-		return nil
-	case detail.FieldCoinUsdCurrency:
-		m.ResetCoinUsdCurrency()
-		return nil
-	case detail.FieldIoExtra:
-		m.ResetIoExtra()
-		return nil
-	case detail.FieldFromOldID:
-		m.ResetFromOldID()
+	case detail.FieldSampleCol:
+		m.ResetSampleCol()
 		return nil
 	}
 	return fmt.Errorf("unknown Detail field %s", name)
@@ -1286,4 +717,986 @@ func (m *DetailMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *DetailMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Detail edge %s", name)
+}
+
+// PubsubMessageMutation represents an operation that mutates the PubsubMessage nodes in the graph.
+type PubsubMessageMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	auto_id       *uint32
+	addauto_id    *int32
+	message_id    *string
+	state         *string
+	resp_to_id    *uuid.UUID
+	undo_id       *uuid.UUID
+	arguments     *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*PubsubMessage, error)
+	predicates    []predicate.PubsubMessage
+}
+
+var _ ent.Mutation = (*PubsubMessageMutation)(nil)
+
+// pubsubmessageOption allows management of the mutation configuration using functional options.
+type pubsubmessageOption func(*PubsubMessageMutation)
+
+// newPubsubMessageMutation creates new mutation for the PubsubMessage entity.
+func newPubsubMessageMutation(c config, op Op, opts ...pubsubmessageOption) *PubsubMessageMutation {
+	m := &PubsubMessageMutation{
+		config:        c,
+		op:            op,
+		typ:           TypePubsubMessage,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withPubsubMessageID sets the ID field of the mutation.
+func withPubsubMessageID(id uuid.UUID) pubsubmessageOption {
+	return func(m *PubsubMessageMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *PubsubMessage
+		)
+		m.oldValue = func(ctx context.Context) (*PubsubMessage, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().PubsubMessage.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withPubsubMessage sets the old PubsubMessage of the mutation.
+func withPubsubMessage(node *PubsubMessage) pubsubmessageOption {
+	return func(m *PubsubMessageMutation) {
+		m.oldValue = func(context.Context) (*PubsubMessage, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m PubsubMessageMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m PubsubMessageMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of PubsubMessage entities.
+func (m *PubsubMessageMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *PubsubMessageMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *PubsubMessageMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().PubsubMessage.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *PubsubMessageMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *PubsubMessageMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the PubsubMessage entity.
+// If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PubsubMessageMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *PubsubMessageMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *PubsubMessageMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *PubsubMessageMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *PubsubMessageMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *PubsubMessageMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the PubsubMessage entity.
+// If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PubsubMessageMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *PubsubMessageMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *PubsubMessageMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *PubsubMessageMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *PubsubMessageMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *PubsubMessageMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the PubsubMessage entity.
+// If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PubsubMessageMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *PubsubMessageMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *PubsubMessageMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *PubsubMessageMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetAutoID sets the "auto_id" field.
+func (m *PubsubMessageMutation) SetAutoID(u uint32) {
+	m.auto_id = &u
+	m.addauto_id = nil
+}
+
+// AutoID returns the value of the "auto_id" field in the mutation.
+func (m *PubsubMessageMutation) AutoID() (r uint32, exists bool) {
+	v := m.auto_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAutoID returns the old "auto_id" field's value of the PubsubMessage entity.
+// If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PubsubMessageMutation) OldAutoID(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAutoID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAutoID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAutoID: %w", err)
+	}
+	return oldValue.AutoID, nil
+}
+
+// AddAutoID adds u to the "auto_id" field.
+func (m *PubsubMessageMutation) AddAutoID(u int32) {
+	if m.addauto_id != nil {
+		*m.addauto_id += u
+	} else {
+		m.addauto_id = &u
+	}
+}
+
+// AddedAutoID returns the value that was added to the "auto_id" field in this mutation.
+func (m *PubsubMessageMutation) AddedAutoID() (r int32, exists bool) {
+	v := m.addauto_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAutoID resets all changes to the "auto_id" field.
+func (m *PubsubMessageMutation) ResetAutoID() {
+	m.auto_id = nil
+	m.addauto_id = nil
+}
+
+// SetMessageID sets the "message_id" field.
+func (m *PubsubMessageMutation) SetMessageID(s string) {
+	m.message_id = &s
+}
+
+// MessageID returns the value of the "message_id" field in the mutation.
+func (m *PubsubMessageMutation) MessageID() (r string, exists bool) {
+	v := m.message_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMessageID returns the old "message_id" field's value of the PubsubMessage entity.
+// If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PubsubMessageMutation) OldMessageID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMessageID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMessageID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMessageID: %w", err)
+	}
+	return oldValue.MessageID, nil
+}
+
+// ClearMessageID clears the value of the "message_id" field.
+func (m *PubsubMessageMutation) ClearMessageID() {
+	m.message_id = nil
+	m.clearedFields[pubsubmessage.FieldMessageID] = struct{}{}
+}
+
+// MessageIDCleared returns if the "message_id" field was cleared in this mutation.
+func (m *PubsubMessageMutation) MessageIDCleared() bool {
+	_, ok := m.clearedFields[pubsubmessage.FieldMessageID]
+	return ok
+}
+
+// ResetMessageID resets all changes to the "message_id" field.
+func (m *PubsubMessageMutation) ResetMessageID() {
+	m.message_id = nil
+	delete(m.clearedFields, pubsubmessage.FieldMessageID)
+}
+
+// SetState sets the "state" field.
+func (m *PubsubMessageMutation) SetState(s string) {
+	m.state = &s
+}
+
+// State returns the value of the "state" field in the mutation.
+func (m *PubsubMessageMutation) State() (r string, exists bool) {
+	v := m.state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldState returns the old "state" field's value of the PubsubMessage entity.
+// If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PubsubMessageMutation) OldState(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldState: %w", err)
+	}
+	return oldValue.State, nil
+}
+
+// ClearState clears the value of the "state" field.
+func (m *PubsubMessageMutation) ClearState() {
+	m.state = nil
+	m.clearedFields[pubsubmessage.FieldState] = struct{}{}
+}
+
+// StateCleared returns if the "state" field was cleared in this mutation.
+func (m *PubsubMessageMutation) StateCleared() bool {
+	_, ok := m.clearedFields[pubsubmessage.FieldState]
+	return ok
+}
+
+// ResetState resets all changes to the "state" field.
+func (m *PubsubMessageMutation) ResetState() {
+	m.state = nil
+	delete(m.clearedFields, pubsubmessage.FieldState)
+}
+
+// SetRespToID sets the "resp_to_id" field.
+func (m *PubsubMessageMutation) SetRespToID(u uuid.UUID) {
+	m.resp_to_id = &u
+}
+
+// RespToID returns the value of the "resp_to_id" field in the mutation.
+func (m *PubsubMessageMutation) RespToID() (r uuid.UUID, exists bool) {
+	v := m.resp_to_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRespToID returns the old "resp_to_id" field's value of the PubsubMessage entity.
+// If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PubsubMessageMutation) OldRespToID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRespToID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRespToID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRespToID: %w", err)
+	}
+	return oldValue.RespToID, nil
+}
+
+// ClearRespToID clears the value of the "resp_to_id" field.
+func (m *PubsubMessageMutation) ClearRespToID() {
+	m.resp_to_id = nil
+	m.clearedFields[pubsubmessage.FieldRespToID] = struct{}{}
+}
+
+// RespToIDCleared returns if the "resp_to_id" field was cleared in this mutation.
+func (m *PubsubMessageMutation) RespToIDCleared() bool {
+	_, ok := m.clearedFields[pubsubmessage.FieldRespToID]
+	return ok
+}
+
+// ResetRespToID resets all changes to the "resp_to_id" field.
+func (m *PubsubMessageMutation) ResetRespToID() {
+	m.resp_to_id = nil
+	delete(m.clearedFields, pubsubmessage.FieldRespToID)
+}
+
+// SetUndoID sets the "undo_id" field.
+func (m *PubsubMessageMutation) SetUndoID(u uuid.UUID) {
+	m.undo_id = &u
+}
+
+// UndoID returns the value of the "undo_id" field in the mutation.
+func (m *PubsubMessageMutation) UndoID() (r uuid.UUID, exists bool) {
+	v := m.undo_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUndoID returns the old "undo_id" field's value of the PubsubMessage entity.
+// If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PubsubMessageMutation) OldUndoID(ctx context.Context) (v uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUndoID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUndoID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUndoID: %w", err)
+	}
+	return oldValue.UndoID, nil
+}
+
+// ClearUndoID clears the value of the "undo_id" field.
+func (m *PubsubMessageMutation) ClearUndoID() {
+	m.undo_id = nil
+	m.clearedFields[pubsubmessage.FieldUndoID] = struct{}{}
+}
+
+// UndoIDCleared returns if the "undo_id" field was cleared in this mutation.
+func (m *PubsubMessageMutation) UndoIDCleared() bool {
+	_, ok := m.clearedFields[pubsubmessage.FieldUndoID]
+	return ok
+}
+
+// ResetUndoID resets all changes to the "undo_id" field.
+func (m *PubsubMessageMutation) ResetUndoID() {
+	m.undo_id = nil
+	delete(m.clearedFields, pubsubmessage.FieldUndoID)
+}
+
+// SetArguments sets the "arguments" field.
+func (m *PubsubMessageMutation) SetArguments(s string) {
+	m.arguments = &s
+}
+
+// Arguments returns the value of the "arguments" field in the mutation.
+func (m *PubsubMessageMutation) Arguments() (r string, exists bool) {
+	v := m.arguments
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldArguments returns the old "arguments" field's value of the PubsubMessage entity.
+// If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PubsubMessageMutation) OldArguments(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldArguments is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldArguments requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldArguments: %w", err)
+	}
+	return oldValue.Arguments, nil
+}
+
+// ClearArguments clears the value of the "arguments" field.
+func (m *PubsubMessageMutation) ClearArguments() {
+	m.arguments = nil
+	m.clearedFields[pubsubmessage.FieldArguments] = struct{}{}
+}
+
+// ArgumentsCleared returns if the "arguments" field was cleared in this mutation.
+func (m *PubsubMessageMutation) ArgumentsCleared() bool {
+	_, ok := m.clearedFields[pubsubmessage.FieldArguments]
+	return ok
+}
+
+// ResetArguments resets all changes to the "arguments" field.
+func (m *PubsubMessageMutation) ResetArguments() {
+	m.arguments = nil
+	delete(m.clearedFields, pubsubmessage.FieldArguments)
+}
+
+// Where appends a list predicates to the PubsubMessageMutation builder.
+func (m *PubsubMessageMutation) Where(ps ...predicate.PubsubMessage) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *PubsubMessageMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (PubsubMessage).
+func (m *PubsubMessageMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *PubsubMessageMutation) Fields() []string {
+	fields := make([]string, 0, 9)
+	if m.created_at != nil {
+		fields = append(fields, pubsubmessage.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, pubsubmessage.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, pubsubmessage.FieldDeletedAt)
+	}
+	if m.auto_id != nil {
+		fields = append(fields, pubsubmessage.FieldAutoID)
+	}
+	if m.message_id != nil {
+		fields = append(fields, pubsubmessage.FieldMessageID)
+	}
+	if m.state != nil {
+		fields = append(fields, pubsubmessage.FieldState)
+	}
+	if m.resp_to_id != nil {
+		fields = append(fields, pubsubmessage.FieldRespToID)
+	}
+	if m.undo_id != nil {
+		fields = append(fields, pubsubmessage.FieldUndoID)
+	}
+	if m.arguments != nil {
+		fields = append(fields, pubsubmessage.FieldArguments)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *PubsubMessageMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case pubsubmessage.FieldCreatedAt:
+		return m.CreatedAt()
+	case pubsubmessage.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case pubsubmessage.FieldDeletedAt:
+		return m.DeletedAt()
+	case pubsubmessage.FieldAutoID:
+		return m.AutoID()
+	case pubsubmessage.FieldMessageID:
+		return m.MessageID()
+	case pubsubmessage.FieldState:
+		return m.State()
+	case pubsubmessage.FieldRespToID:
+		return m.RespToID()
+	case pubsubmessage.FieldUndoID:
+		return m.UndoID()
+	case pubsubmessage.FieldArguments:
+		return m.Arguments()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *PubsubMessageMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case pubsubmessage.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case pubsubmessage.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case pubsubmessage.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case pubsubmessage.FieldAutoID:
+		return m.OldAutoID(ctx)
+	case pubsubmessage.FieldMessageID:
+		return m.OldMessageID(ctx)
+	case pubsubmessage.FieldState:
+		return m.OldState(ctx)
+	case pubsubmessage.FieldRespToID:
+		return m.OldRespToID(ctx)
+	case pubsubmessage.FieldUndoID:
+		return m.OldUndoID(ctx)
+	case pubsubmessage.FieldArguments:
+		return m.OldArguments(ctx)
+	}
+	return nil, fmt.Errorf("unknown PubsubMessage field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *PubsubMessageMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case pubsubmessage.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case pubsubmessage.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case pubsubmessage.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case pubsubmessage.FieldAutoID:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAutoID(v)
+		return nil
+	case pubsubmessage.FieldMessageID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMessageID(v)
+		return nil
+	case pubsubmessage.FieldState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetState(v)
+		return nil
+	case pubsubmessage.FieldRespToID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRespToID(v)
+		return nil
+	case pubsubmessage.FieldUndoID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUndoID(v)
+		return nil
+	case pubsubmessage.FieldArguments:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetArguments(v)
+		return nil
+	}
+	return fmt.Errorf("unknown PubsubMessage field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *PubsubMessageMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, pubsubmessage.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, pubsubmessage.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, pubsubmessage.FieldDeletedAt)
+	}
+	if m.addauto_id != nil {
+		fields = append(fields, pubsubmessage.FieldAutoID)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *PubsubMessageMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case pubsubmessage.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case pubsubmessage.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case pubsubmessage.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case pubsubmessage.FieldAutoID:
+		return m.AddedAutoID()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *PubsubMessageMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case pubsubmessage.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case pubsubmessage.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case pubsubmessage.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case pubsubmessage.FieldAutoID:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAutoID(v)
+		return nil
+	}
+	return fmt.Errorf("unknown PubsubMessage numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *PubsubMessageMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(pubsubmessage.FieldMessageID) {
+		fields = append(fields, pubsubmessage.FieldMessageID)
+	}
+	if m.FieldCleared(pubsubmessage.FieldState) {
+		fields = append(fields, pubsubmessage.FieldState)
+	}
+	if m.FieldCleared(pubsubmessage.FieldRespToID) {
+		fields = append(fields, pubsubmessage.FieldRespToID)
+	}
+	if m.FieldCleared(pubsubmessage.FieldUndoID) {
+		fields = append(fields, pubsubmessage.FieldUndoID)
+	}
+	if m.FieldCleared(pubsubmessage.FieldArguments) {
+		fields = append(fields, pubsubmessage.FieldArguments)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *PubsubMessageMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *PubsubMessageMutation) ClearField(name string) error {
+	switch name {
+	case pubsubmessage.FieldMessageID:
+		m.ClearMessageID()
+		return nil
+	case pubsubmessage.FieldState:
+		m.ClearState()
+		return nil
+	case pubsubmessage.FieldRespToID:
+		m.ClearRespToID()
+		return nil
+	case pubsubmessage.FieldUndoID:
+		m.ClearUndoID()
+		return nil
+	case pubsubmessage.FieldArguments:
+		m.ClearArguments()
+		return nil
+	}
+	return fmt.Errorf("unknown PubsubMessage nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *PubsubMessageMutation) ResetField(name string) error {
+	switch name {
+	case pubsubmessage.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case pubsubmessage.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case pubsubmessage.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case pubsubmessage.FieldAutoID:
+		m.ResetAutoID()
+		return nil
+	case pubsubmessage.FieldMessageID:
+		m.ResetMessageID()
+		return nil
+	case pubsubmessage.FieldState:
+		m.ResetState()
+		return nil
+	case pubsubmessage.FieldRespToID:
+		m.ResetRespToID()
+		return nil
+	case pubsubmessage.FieldUndoID:
+		m.ResetUndoID()
+		return nil
+	case pubsubmessage.FieldArguments:
+		m.ResetArguments()
+		return nil
+	}
+	return fmt.Errorf("unknown PubsubMessage field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *PubsubMessageMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *PubsubMessageMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *PubsubMessageMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *PubsubMessageMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *PubsubMessageMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *PubsubMessageMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *PubsubMessageMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown PubsubMessage unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *PubsubMessageMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown PubsubMessage edge %s", name)
 }

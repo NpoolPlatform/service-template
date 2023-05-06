@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/pubsubmessage"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -24,6 +25,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Detail is the client for interacting with the Detail builders.
 	Detail *DetailClient
+	// PubsubMessage is the client for interacting with the PubsubMessage builders.
+	PubsubMessage *PubsubMessageClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -38,6 +41,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Detail = NewDetailClient(c.config)
+	c.PubsubMessage = NewPubsubMessageClient(c.config)
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -69,9 +73,10 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Detail: NewDetailClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		Detail:        NewDetailClient(cfg),
+		PubsubMessage: NewPubsubMessageClient(cfg),
 	}, nil
 }
 
@@ -89,9 +94,10 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Detail: NewDetailClient(cfg),
+		ctx:           ctx,
+		config:        cfg,
+		Detail:        NewDetailClient(cfg),
+		PubsubMessage: NewPubsubMessageClient(cfg),
 	}, nil
 }
 
@@ -122,6 +128,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Detail.Use(hooks...)
+	c.PubsubMessage.Use(hooks...)
 }
 
 // DetailClient is a client for the Detail schema.
@@ -213,4 +220,95 @@ func (c *DetailClient) GetX(ctx context.Context, id uuid.UUID) *Detail {
 func (c *DetailClient) Hooks() []Hook {
 	hooks := c.hooks.Detail
 	return append(hooks[:len(hooks):len(hooks)], detail.Hooks[:]...)
+}
+
+// PubsubMessageClient is a client for the PubsubMessage schema.
+type PubsubMessageClient struct {
+	config
+}
+
+// NewPubsubMessageClient returns a client for the PubsubMessage from the given config.
+func NewPubsubMessageClient(c config) *PubsubMessageClient {
+	return &PubsubMessageClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `pubsubmessage.Hooks(f(g(h())))`.
+func (c *PubsubMessageClient) Use(hooks ...Hook) {
+	c.hooks.PubsubMessage = append(c.hooks.PubsubMessage, hooks...)
+}
+
+// Create returns a builder for creating a PubsubMessage entity.
+func (c *PubsubMessageClient) Create() *PubsubMessageCreate {
+	mutation := newPubsubMessageMutation(c.config, OpCreate)
+	return &PubsubMessageCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PubsubMessage entities.
+func (c *PubsubMessageClient) CreateBulk(builders ...*PubsubMessageCreate) *PubsubMessageCreateBulk {
+	return &PubsubMessageCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PubsubMessage.
+func (c *PubsubMessageClient) Update() *PubsubMessageUpdate {
+	mutation := newPubsubMessageMutation(c.config, OpUpdate)
+	return &PubsubMessageUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PubsubMessageClient) UpdateOne(pm *PubsubMessage) *PubsubMessageUpdateOne {
+	mutation := newPubsubMessageMutation(c.config, OpUpdateOne, withPubsubMessage(pm))
+	return &PubsubMessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PubsubMessageClient) UpdateOneID(id uuid.UUID) *PubsubMessageUpdateOne {
+	mutation := newPubsubMessageMutation(c.config, OpUpdateOne, withPubsubMessageID(id))
+	return &PubsubMessageUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PubsubMessage.
+func (c *PubsubMessageClient) Delete() *PubsubMessageDelete {
+	mutation := newPubsubMessageMutation(c.config, OpDelete)
+	return &PubsubMessageDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PubsubMessageClient) DeleteOne(pm *PubsubMessage) *PubsubMessageDeleteOne {
+	return c.DeleteOneID(pm.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *PubsubMessageClient) DeleteOneID(id uuid.UUID) *PubsubMessageDeleteOne {
+	builder := c.Delete().Where(pubsubmessage.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PubsubMessageDeleteOne{builder}
+}
+
+// Query returns a query builder for PubsubMessage.
+func (c *PubsubMessageClient) Query() *PubsubMessageQuery {
+	return &PubsubMessageQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a PubsubMessage entity by its id.
+func (c *PubsubMessageClient) Get(ctx context.Context, id uuid.UUID) (*PubsubMessage, error) {
+	return c.Query().Where(pubsubmessage.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PubsubMessageClient) GetX(ctx context.Context, id uuid.UUID) *PubsubMessage {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PubsubMessageClient) Hooks() []Hook {
+	hooks := c.hooks.PubsubMessage
+	return append(hooks[:len(hooks):len(hooks)], pubsubmessage.Hooks[:]...)
 }

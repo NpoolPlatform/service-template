@@ -9,7 +9,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // Detail is the model entity for the Detail schema.
@@ -23,26 +22,10 @@ type Detail struct {
 	UpdatedAt uint32 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
-	// AppID holds the value of the "app_id" field.
-	AppID uuid.UUID `json:"app_id,omitempty"`
-	// UserID holds the value of the "user_id" field.
-	UserID uuid.UUID `json:"user_id,omitempty"`
-	// CoinTypeID holds the value of the "coin_type_id" field.
-	CoinTypeID uuid.UUID `json:"coin_type_id,omitempty"`
-	// IoType holds the value of the "io_type" field.
-	IoType string `json:"io_type,omitempty"`
-	// IoSubType holds the value of the "io_sub_type" field.
-	IoSubType string `json:"io_sub_type,omitempty"`
-	// Amount holds the value of the "amount" field.
-	Amount decimal.Decimal `json:"amount,omitempty"`
-	// FromCoinTypeID holds the value of the "from_coin_type_id" field.
-	FromCoinTypeID uuid.UUID `json:"from_coin_type_id,omitempty"`
-	// CoinUsdCurrency holds the value of the "coin_usd_currency" field.
-	CoinUsdCurrency decimal.Decimal `json:"coin_usd_currency,omitempty"`
-	// IoExtra holds the value of the "io_extra" field.
-	IoExtra string `json:"io_extra,omitempty"`
-	// FromOldID holds the value of the "from_old_id" field.
-	FromOldID uuid.UUID `json:"from_old_id,omitempty"`
+	// AutoID holds the value of the "auto_id" field.
+	AutoID uint32 `json:"auto_id,omitempty"`
+	// SampleCol holds the value of the "sample_col" field.
+	SampleCol string `json:"sample_col,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -50,13 +33,11 @@ func (*Detail) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case detail.FieldAmount, detail.FieldCoinUsdCurrency:
-			values[i] = new(decimal.Decimal)
-		case detail.FieldCreatedAt, detail.FieldUpdatedAt, detail.FieldDeletedAt:
+		case detail.FieldCreatedAt, detail.FieldUpdatedAt, detail.FieldDeletedAt, detail.FieldAutoID:
 			values[i] = new(sql.NullInt64)
-		case detail.FieldIoType, detail.FieldIoSubType, detail.FieldIoExtra:
+		case detail.FieldSampleCol:
 			values[i] = new(sql.NullString)
-		case detail.FieldID, detail.FieldAppID, detail.FieldUserID, detail.FieldCoinTypeID, detail.FieldFromCoinTypeID, detail.FieldFromOldID:
+		case detail.FieldID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Detail", columns[i])
@@ -97,65 +78,17 @@ func (d *Detail) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				d.DeletedAt = uint32(value.Int64)
 			}
-		case detail.FieldAppID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field app_id", values[i])
-			} else if value != nil {
-				d.AppID = *value
-			}
-		case detail.FieldUserID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field user_id", values[i])
-			} else if value != nil {
-				d.UserID = *value
-			}
-		case detail.FieldCoinTypeID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field coin_type_id", values[i])
-			} else if value != nil {
-				d.CoinTypeID = *value
-			}
-		case detail.FieldIoType:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field io_type", values[i])
+		case detail.FieldAutoID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field auto_id", values[i])
 			} else if value.Valid {
-				d.IoType = value.String
+				d.AutoID = uint32(value.Int64)
 			}
-		case detail.FieldIoSubType:
+		case detail.FieldSampleCol:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field io_sub_type", values[i])
+				return fmt.Errorf("unexpected type %T for field sample_col", values[i])
 			} else if value.Valid {
-				d.IoSubType = value.String
-			}
-		case detail.FieldAmount:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field amount", values[i])
-			} else if value != nil {
-				d.Amount = *value
-			}
-		case detail.FieldFromCoinTypeID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field from_coin_type_id", values[i])
-			} else if value != nil {
-				d.FromCoinTypeID = *value
-			}
-		case detail.FieldCoinUsdCurrency:
-			if value, ok := values[i].(*decimal.Decimal); !ok {
-				return fmt.Errorf("unexpected type %T for field coin_usd_currency", values[i])
-			} else if value != nil {
-				d.CoinUsdCurrency = *value
-			}
-		case detail.FieldIoExtra:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field io_extra", values[i])
-			} else if value.Valid {
-				d.IoExtra = value.String
-			}
-		case detail.FieldFromOldID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field from_old_id", values[i])
-			} else if value != nil {
-				d.FromOldID = *value
+				d.SampleCol = value.String
 			}
 		}
 	}
@@ -194,35 +127,11 @@ func (d *Detail) String() string {
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", d.DeletedAt))
 	builder.WriteString(", ")
-	builder.WriteString("app_id=")
-	builder.WriteString(fmt.Sprintf("%v", d.AppID))
+	builder.WriteString("auto_id=")
+	builder.WriteString(fmt.Sprintf("%v", d.AutoID))
 	builder.WriteString(", ")
-	builder.WriteString("user_id=")
-	builder.WriteString(fmt.Sprintf("%v", d.UserID))
-	builder.WriteString(", ")
-	builder.WriteString("coin_type_id=")
-	builder.WriteString(fmt.Sprintf("%v", d.CoinTypeID))
-	builder.WriteString(", ")
-	builder.WriteString("io_type=")
-	builder.WriteString(d.IoType)
-	builder.WriteString(", ")
-	builder.WriteString("io_sub_type=")
-	builder.WriteString(d.IoSubType)
-	builder.WriteString(", ")
-	builder.WriteString("amount=")
-	builder.WriteString(fmt.Sprintf("%v", d.Amount))
-	builder.WriteString(", ")
-	builder.WriteString("from_coin_type_id=")
-	builder.WriteString(fmt.Sprintf("%v", d.FromCoinTypeID))
-	builder.WriteString(", ")
-	builder.WriteString("coin_usd_currency=")
-	builder.WriteString(fmt.Sprintf("%v", d.CoinUsdCurrency))
-	builder.WriteString(", ")
-	builder.WriteString("io_extra=")
-	builder.WriteString(d.IoExtra)
-	builder.WriteString(", ")
-	builder.WriteString("from_old_id=")
-	builder.WriteString(fmt.Sprintf("%v", d.FromOldID))
+	builder.WriteString("sample_col=")
+	builder.WriteString(d.SampleCol)
 	builder.WriteByte(')')
 	return builder.String()
 }

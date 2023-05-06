@@ -6,7 +6,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/predicate"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // ID filters vertices based on their ID field.
@@ -101,73 +100,17 @@ func DeletedAt(v uint32) predicate.Detail {
 	})
 }
 
-// AppID applies equality check predicate on the "app_id" field. It's identical to AppIDEQ.
-func AppID(v uuid.UUID) predicate.Detail {
+// AutoID applies equality check predicate on the "auto_id" field. It's identical to AutoIDEQ.
+func AutoID(v uint32) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
+		s.Where(sql.EQ(s.C(FieldAutoID), v))
 	})
 }
 
-// UserID applies equality check predicate on the "user_id" field. It's identical to UserIDEQ.
-func UserID(v uuid.UUID) predicate.Detail {
+// SampleCol applies equality check predicate on the "sample_col" field. It's identical to SampleColEQ.
+func SampleCol(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUserID), v))
-	})
-}
-
-// CoinTypeID applies equality check predicate on the "coin_type_id" field. It's identical to CoinTypeIDEQ.
-func CoinTypeID(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCoinTypeID), v))
-	})
-}
-
-// IoType applies equality check predicate on the "io_type" field. It's identical to IoTypeEQ.
-func IoType(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldIoType), v))
-	})
-}
-
-// IoSubType applies equality check predicate on the "io_sub_type" field. It's identical to IoSubTypeEQ.
-func IoSubType(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldIoSubType), v))
-	})
-}
-
-// Amount applies equality check predicate on the "amount" field. It's identical to AmountEQ.
-func Amount(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAmount), v))
-	})
-}
-
-// FromCoinTypeID applies equality check predicate on the "from_coin_type_id" field. It's identical to FromCoinTypeIDEQ.
-func FromCoinTypeID(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFromCoinTypeID), v))
-	})
-}
-
-// CoinUsdCurrency applies equality check predicate on the "coin_usd_currency" field. It's identical to CoinUsdCurrencyEQ.
-func CoinUsdCurrency(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCoinUsdCurrency), v))
-	})
-}
-
-// IoExtra applies equality check predicate on the "io_extra" field. It's identical to IoExtraEQ.
-func IoExtra(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldIoExtra), v))
-	})
-}
-
-// FromOldID applies equality check predicate on the "from_old_id" field. It's identical to FromOldIDEQ.
-func FromOldID(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFromOldID), v))
+		s.Where(sql.EQ(s.C(FieldSampleCol), v))
 	})
 }
 
@@ -363,888 +306,180 @@ func DeletedAtLTE(v uint32) predicate.Detail {
 	})
 }
 
-// AppIDEQ applies the EQ predicate on the "app_id" field.
-func AppIDEQ(v uuid.UUID) predicate.Detail {
+// AutoIDEQ applies the EQ predicate on the "auto_id" field.
+func AutoIDEQ(v uint32) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAppID), v))
+		s.Where(sql.EQ(s.C(FieldAutoID), v))
 	})
 }
 
-// AppIDNEQ applies the NEQ predicate on the "app_id" field.
-func AppIDNEQ(v uuid.UUID) predicate.Detail {
+// AutoIDNEQ applies the NEQ predicate on the "auto_id" field.
+func AutoIDNEQ(v uint32) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAppID), v))
+		s.Where(sql.NEQ(s.C(FieldAutoID), v))
 	})
 }
 
-// AppIDIn applies the In predicate on the "app_id" field.
-func AppIDIn(vs ...uuid.UUID) predicate.Detail {
+// AutoIDIn applies the In predicate on the "auto_id" field.
+func AutoIDIn(vs ...uint32) predicate.Detail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldAppID), v...))
+		s.Where(sql.In(s.C(FieldAutoID), v...))
 	})
 }
 
-// AppIDNotIn applies the NotIn predicate on the "app_id" field.
-func AppIDNotIn(vs ...uuid.UUID) predicate.Detail {
+// AutoIDNotIn applies the NotIn predicate on the "auto_id" field.
+func AutoIDNotIn(vs ...uint32) predicate.Detail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldAppID), v...))
+		s.Where(sql.NotIn(s.C(FieldAutoID), v...))
 	})
 }
 
-// AppIDGT applies the GT predicate on the "app_id" field.
-func AppIDGT(v uuid.UUID) predicate.Detail {
+// AutoIDGT applies the GT predicate on the "auto_id" field.
+func AutoIDGT(v uint32) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAppID), v))
+		s.Where(sql.GT(s.C(FieldAutoID), v))
 	})
 }
 
-// AppIDGTE applies the GTE predicate on the "app_id" field.
-func AppIDGTE(v uuid.UUID) predicate.Detail {
+// AutoIDGTE applies the GTE predicate on the "auto_id" field.
+func AutoIDGTE(v uint32) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAppID), v))
+		s.Where(sql.GTE(s.C(FieldAutoID), v))
 	})
 }
 
-// AppIDLT applies the LT predicate on the "app_id" field.
-func AppIDLT(v uuid.UUID) predicate.Detail {
+// AutoIDLT applies the LT predicate on the "auto_id" field.
+func AutoIDLT(v uint32) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAppID), v))
+		s.Where(sql.LT(s.C(FieldAutoID), v))
 	})
 }
 
-// AppIDLTE applies the LTE predicate on the "app_id" field.
-func AppIDLTE(v uuid.UUID) predicate.Detail {
+// AutoIDLTE applies the LTE predicate on the "auto_id" field.
+func AutoIDLTE(v uint32) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAppID), v))
+		s.Where(sql.LTE(s.C(FieldAutoID), v))
 	})
 }
 
-// AppIDIsNil applies the IsNil predicate on the "app_id" field.
-func AppIDIsNil() predicate.Detail {
+// SampleColEQ applies the EQ predicate on the "sample_col" field.
+func SampleColEQ(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldAppID)))
+		s.Where(sql.EQ(s.C(FieldSampleCol), v))
 	})
 }
 
-// AppIDNotNil applies the NotNil predicate on the "app_id" field.
-func AppIDNotNil() predicate.Detail {
+// SampleColNEQ applies the NEQ predicate on the "sample_col" field.
+func SampleColNEQ(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldAppID)))
+		s.Where(sql.NEQ(s.C(FieldSampleCol), v))
 	})
 }
 
-// UserIDEQ applies the EQ predicate on the "user_id" field.
-func UserIDEQ(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldUserID), v))
-	})
-}
-
-// UserIDNEQ applies the NEQ predicate on the "user_id" field.
-func UserIDNEQ(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldUserID), v))
-	})
-}
-
-// UserIDIn applies the In predicate on the "user_id" field.
-func UserIDIn(vs ...uuid.UUID) predicate.Detail {
+// SampleColIn applies the In predicate on the "sample_col" field.
+func SampleColIn(vs ...string) predicate.Detail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldUserID), v...))
+		s.Where(sql.In(s.C(FieldSampleCol), v...))
 	})
 }
 
-// UserIDNotIn applies the NotIn predicate on the "user_id" field.
-func UserIDNotIn(vs ...uuid.UUID) predicate.Detail {
+// SampleColNotIn applies the NotIn predicate on the "sample_col" field.
+func SampleColNotIn(vs ...string) predicate.Detail {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldUserID), v...))
+		s.Where(sql.NotIn(s.C(FieldSampleCol), v...))
 	})
 }
 
-// UserIDGT applies the GT predicate on the "user_id" field.
-func UserIDGT(v uuid.UUID) predicate.Detail {
+// SampleColGT applies the GT predicate on the "sample_col" field.
+func SampleColGT(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldUserID), v))
+		s.Where(sql.GT(s.C(FieldSampleCol), v))
 	})
 }
 
-// UserIDGTE applies the GTE predicate on the "user_id" field.
-func UserIDGTE(v uuid.UUID) predicate.Detail {
+// SampleColGTE applies the GTE predicate on the "sample_col" field.
+func SampleColGTE(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldUserID), v))
+		s.Where(sql.GTE(s.C(FieldSampleCol), v))
 	})
 }
 
-// UserIDLT applies the LT predicate on the "user_id" field.
-func UserIDLT(v uuid.UUID) predicate.Detail {
+// SampleColLT applies the LT predicate on the "sample_col" field.
+func SampleColLT(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldUserID), v))
+		s.Where(sql.LT(s.C(FieldSampleCol), v))
 	})
 }
 
-// UserIDLTE applies the LTE predicate on the "user_id" field.
-func UserIDLTE(v uuid.UUID) predicate.Detail {
+// SampleColLTE applies the LTE predicate on the "sample_col" field.
+func SampleColLTE(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldUserID), v))
+		s.Where(sql.LTE(s.C(FieldSampleCol), v))
 	})
 }
 
-// UserIDIsNil applies the IsNil predicate on the "user_id" field.
-func UserIDIsNil() predicate.Detail {
+// SampleColContains applies the Contains predicate on the "sample_col" field.
+func SampleColContains(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldUserID)))
+		s.Where(sql.Contains(s.C(FieldSampleCol), v))
 	})
 }
 
-// UserIDNotNil applies the NotNil predicate on the "user_id" field.
-func UserIDNotNil() predicate.Detail {
+// SampleColHasPrefix applies the HasPrefix predicate on the "sample_col" field.
+func SampleColHasPrefix(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldUserID)))
+		s.Where(sql.HasPrefix(s.C(FieldSampleCol), v))
 	})
 }
 
-// CoinTypeIDEQ applies the EQ predicate on the "coin_type_id" field.
-func CoinTypeIDEQ(v uuid.UUID) predicate.Detail {
+// SampleColHasSuffix applies the HasSuffix predicate on the "sample_col" field.
+func SampleColHasSuffix(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCoinTypeID), v))
+		s.Where(sql.HasSuffix(s.C(FieldSampleCol), v))
 	})
 }
 
-// CoinTypeIDNEQ applies the NEQ predicate on the "coin_type_id" field.
-func CoinTypeIDNEQ(v uuid.UUID) predicate.Detail {
+// SampleColIsNil applies the IsNil predicate on the "sample_col" field.
+func SampleColIsNil() predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCoinTypeID), v))
+		s.Where(sql.IsNull(s.C(FieldSampleCol)))
 	})
 }
 
-// CoinTypeIDIn applies the In predicate on the "coin_type_id" field.
-func CoinTypeIDIn(vs ...uuid.UUID) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
+// SampleColNotNil applies the NotNil predicate on the "sample_col" field.
+func SampleColNotNil() predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldCoinTypeID), v...))
+		s.Where(sql.NotNull(s.C(FieldSampleCol)))
 	})
 }
 
-// CoinTypeIDNotIn applies the NotIn predicate on the "coin_type_id" field.
-func CoinTypeIDNotIn(vs ...uuid.UUID) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
+// SampleColEqualFold applies the EqualFold predicate on the "sample_col" field.
+func SampleColEqualFold(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldCoinTypeID), v...))
+		s.Where(sql.EqualFold(s.C(FieldSampleCol), v))
 	})
 }
 
-// CoinTypeIDGT applies the GT predicate on the "coin_type_id" field.
-func CoinTypeIDGT(v uuid.UUID) predicate.Detail {
+// SampleColContainsFold applies the ContainsFold predicate on the "sample_col" field.
+func SampleColContainsFold(v string) predicate.Detail {
 	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCoinTypeID), v))
-	})
-}
-
-// CoinTypeIDGTE applies the GTE predicate on the "coin_type_id" field.
-func CoinTypeIDGTE(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCoinTypeID), v))
-	})
-}
-
-// CoinTypeIDLT applies the LT predicate on the "coin_type_id" field.
-func CoinTypeIDLT(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCoinTypeID), v))
-	})
-}
-
-// CoinTypeIDLTE applies the LTE predicate on the "coin_type_id" field.
-func CoinTypeIDLTE(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCoinTypeID), v))
-	})
-}
-
-// CoinTypeIDIsNil applies the IsNil predicate on the "coin_type_id" field.
-func CoinTypeIDIsNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldCoinTypeID)))
-	})
-}
-
-// CoinTypeIDNotNil applies the NotNil predicate on the "coin_type_id" field.
-func CoinTypeIDNotNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldCoinTypeID)))
-	})
-}
-
-// IoTypeEQ applies the EQ predicate on the "io_type" field.
-func IoTypeEQ(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldIoType), v))
-	})
-}
-
-// IoTypeNEQ applies the NEQ predicate on the "io_type" field.
-func IoTypeNEQ(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldIoType), v))
-	})
-}
-
-// IoTypeIn applies the In predicate on the "io_type" field.
-func IoTypeIn(vs ...string) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldIoType), v...))
-	})
-}
-
-// IoTypeNotIn applies the NotIn predicate on the "io_type" field.
-func IoTypeNotIn(vs ...string) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldIoType), v...))
-	})
-}
-
-// IoTypeGT applies the GT predicate on the "io_type" field.
-func IoTypeGT(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldIoType), v))
-	})
-}
-
-// IoTypeGTE applies the GTE predicate on the "io_type" field.
-func IoTypeGTE(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldIoType), v))
-	})
-}
-
-// IoTypeLT applies the LT predicate on the "io_type" field.
-func IoTypeLT(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldIoType), v))
-	})
-}
-
-// IoTypeLTE applies the LTE predicate on the "io_type" field.
-func IoTypeLTE(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldIoType), v))
-	})
-}
-
-// IoTypeContains applies the Contains predicate on the "io_type" field.
-func IoTypeContains(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldIoType), v))
-	})
-}
-
-// IoTypeHasPrefix applies the HasPrefix predicate on the "io_type" field.
-func IoTypeHasPrefix(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldIoType), v))
-	})
-}
-
-// IoTypeHasSuffix applies the HasSuffix predicate on the "io_type" field.
-func IoTypeHasSuffix(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldIoType), v))
-	})
-}
-
-// IoTypeIsNil applies the IsNil predicate on the "io_type" field.
-func IoTypeIsNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldIoType)))
-	})
-}
-
-// IoTypeNotNil applies the NotNil predicate on the "io_type" field.
-func IoTypeNotNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldIoType)))
-	})
-}
-
-// IoTypeEqualFold applies the EqualFold predicate on the "io_type" field.
-func IoTypeEqualFold(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldIoType), v))
-	})
-}
-
-// IoTypeContainsFold applies the ContainsFold predicate on the "io_type" field.
-func IoTypeContainsFold(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldIoType), v))
-	})
-}
-
-// IoSubTypeEQ applies the EQ predicate on the "io_sub_type" field.
-func IoSubTypeEQ(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldIoSubType), v))
-	})
-}
-
-// IoSubTypeNEQ applies the NEQ predicate on the "io_sub_type" field.
-func IoSubTypeNEQ(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldIoSubType), v))
-	})
-}
-
-// IoSubTypeIn applies the In predicate on the "io_sub_type" field.
-func IoSubTypeIn(vs ...string) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldIoSubType), v...))
-	})
-}
-
-// IoSubTypeNotIn applies the NotIn predicate on the "io_sub_type" field.
-func IoSubTypeNotIn(vs ...string) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldIoSubType), v...))
-	})
-}
-
-// IoSubTypeGT applies the GT predicate on the "io_sub_type" field.
-func IoSubTypeGT(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldIoSubType), v))
-	})
-}
-
-// IoSubTypeGTE applies the GTE predicate on the "io_sub_type" field.
-func IoSubTypeGTE(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldIoSubType), v))
-	})
-}
-
-// IoSubTypeLT applies the LT predicate on the "io_sub_type" field.
-func IoSubTypeLT(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldIoSubType), v))
-	})
-}
-
-// IoSubTypeLTE applies the LTE predicate on the "io_sub_type" field.
-func IoSubTypeLTE(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldIoSubType), v))
-	})
-}
-
-// IoSubTypeContains applies the Contains predicate on the "io_sub_type" field.
-func IoSubTypeContains(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldIoSubType), v))
-	})
-}
-
-// IoSubTypeHasPrefix applies the HasPrefix predicate on the "io_sub_type" field.
-func IoSubTypeHasPrefix(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldIoSubType), v))
-	})
-}
-
-// IoSubTypeHasSuffix applies the HasSuffix predicate on the "io_sub_type" field.
-func IoSubTypeHasSuffix(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldIoSubType), v))
-	})
-}
-
-// IoSubTypeIsNil applies the IsNil predicate on the "io_sub_type" field.
-func IoSubTypeIsNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldIoSubType)))
-	})
-}
-
-// IoSubTypeNotNil applies the NotNil predicate on the "io_sub_type" field.
-func IoSubTypeNotNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldIoSubType)))
-	})
-}
-
-// IoSubTypeEqualFold applies the EqualFold predicate on the "io_sub_type" field.
-func IoSubTypeEqualFold(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldIoSubType), v))
-	})
-}
-
-// IoSubTypeContainsFold applies the ContainsFold predicate on the "io_sub_type" field.
-func IoSubTypeContainsFold(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldIoSubType), v))
-	})
-}
-
-// AmountEQ applies the EQ predicate on the "amount" field.
-func AmountEQ(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAmount), v))
-	})
-}
-
-// AmountNEQ applies the NEQ predicate on the "amount" field.
-func AmountNEQ(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAmount), v))
-	})
-}
-
-// AmountIn applies the In predicate on the "amount" field.
-func AmountIn(vs ...decimal.Decimal) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldAmount), v...))
-	})
-}
-
-// AmountNotIn applies the NotIn predicate on the "amount" field.
-func AmountNotIn(vs ...decimal.Decimal) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldAmount), v...))
-	})
-}
-
-// AmountGT applies the GT predicate on the "amount" field.
-func AmountGT(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAmount), v))
-	})
-}
-
-// AmountGTE applies the GTE predicate on the "amount" field.
-func AmountGTE(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAmount), v))
-	})
-}
-
-// AmountLT applies the LT predicate on the "amount" field.
-func AmountLT(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAmount), v))
-	})
-}
-
-// AmountLTE applies the LTE predicate on the "amount" field.
-func AmountLTE(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAmount), v))
-	})
-}
-
-// AmountIsNil applies the IsNil predicate on the "amount" field.
-func AmountIsNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldAmount)))
-	})
-}
-
-// AmountNotNil applies the NotNil predicate on the "amount" field.
-func AmountNotNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldAmount)))
-	})
-}
-
-// FromCoinTypeIDEQ applies the EQ predicate on the "from_coin_type_id" field.
-func FromCoinTypeIDEQ(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFromCoinTypeID), v))
-	})
-}
-
-// FromCoinTypeIDNEQ applies the NEQ predicate on the "from_coin_type_id" field.
-func FromCoinTypeIDNEQ(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFromCoinTypeID), v))
-	})
-}
-
-// FromCoinTypeIDIn applies the In predicate on the "from_coin_type_id" field.
-func FromCoinTypeIDIn(vs ...uuid.UUID) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldFromCoinTypeID), v...))
-	})
-}
-
-// FromCoinTypeIDNotIn applies the NotIn predicate on the "from_coin_type_id" field.
-func FromCoinTypeIDNotIn(vs ...uuid.UUID) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldFromCoinTypeID), v...))
-	})
-}
-
-// FromCoinTypeIDGT applies the GT predicate on the "from_coin_type_id" field.
-func FromCoinTypeIDGT(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldFromCoinTypeID), v))
-	})
-}
-
-// FromCoinTypeIDGTE applies the GTE predicate on the "from_coin_type_id" field.
-func FromCoinTypeIDGTE(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldFromCoinTypeID), v))
-	})
-}
-
-// FromCoinTypeIDLT applies the LT predicate on the "from_coin_type_id" field.
-func FromCoinTypeIDLT(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldFromCoinTypeID), v))
-	})
-}
-
-// FromCoinTypeIDLTE applies the LTE predicate on the "from_coin_type_id" field.
-func FromCoinTypeIDLTE(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldFromCoinTypeID), v))
-	})
-}
-
-// FromCoinTypeIDIsNil applies the IsNil predicate on the "from_coin_type_id" field.
-func FromCoinTypeIDIsNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldFromCoinTypeID)))
-	})
-}
-
-// FromCoinTypeIDNotNil applies the NotNil predicate on the "from_coin_type_id" field.
-func FromCoinTypeIDNotNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldFromCoinTypeID)))
-	})
-}
-
-// CoinUsdCurrencyEQ applies the EQ predicate on the "coin_usd_currency" field.
-func CoinUsdCurrencyEQ(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCoinUsdCurrency), v))
-	})
-}
-
-// CoinUsdCurrencyNEQ applies the NEQ predicate on the "coin_usd_currency" field.
-func CoinUsdCurrencyNEQ(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCoinUsdCurrency), v))
-	})
-}
-
-// CoinUsdCurrencyIn applies the In predicate on the "coin_usd_currency" field.
-func CoinUsdCurrencyIn(vs ...decimal.Decimal) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldCoinUsdCurrency), v...))
-	})
-}
-
-// CoinUsdCurrencyNotIn applies the NotIn predicate on the "coin_usd_currency" field.
-func CoinUsdCurrencyNotIn(vs ...decimal.Decimal) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldCoinUsdCurrency), v...))
-	})
-}
-
-// CoinUsdCurrencyGT applies the GT predicate on the "coin_usd_currency" field.
-func CoinUsdCurrencyGT(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCoinUsdCurrency), v))
-	})
-}
-
-// CoinUsdCurrencyGTE applies the GTE predicate on the "coin_usd_currency" field.
-func CoinUsdCurrencyGTE(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCoinUsdCurrency), v))
-	})
-}
-
-// CoinUsdCurrencyLT applies the LT predicate on the "coin_usd_currency" field.
-func CoinUsdCurrencyLT(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCoinUsdCurrency), v))
-	})
-}
-
-// CoinUsdCurrencyLTE applies the LTE predicate on the "coin_usd_currency" field.
-func CoinUsdCurrencyLTE(v decimal.Decimal) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCoinUsdCurrency), v))
-	})
-}
-
-// CoinUsdCurrencyIsNil applies the IsNil predicate on the "coin_usd_currency" field.
-func CoinUsdCurrencyIsNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldCoinUsdCurrency)))
-	})
-}
-
-// CoinUsdCurrencyNotNil applies the NotNil predicate on the "coin_usd_currency" field.
-func CoinUsdCurrencyNotNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldCoinUsdCurrency)))
-	})
-}
-
-// IoExtraEQ applies the EQ predicate on the "io_extra" field.
-func IoExtraEQ(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldIoExtra), v))
-	})
-}
-
-// IoExtraNEQ applies the NEQ predicate on the "io_extra" field.
-func IoExtraNEQ(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldIoExtra), v))
-	})
-}
-
-// IoExtraIn applies the In predicate on the "io_extra" field.
-func IoExtraIn(vs ...string) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldIoExtra), v...))
-	})
-}
-
-// IoExtraNotIn applies the NotIn predicate on the "io_extra" field.
-func IoExtraNotIn(vs ...string) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldIoExtra), v...))
-	})
-}
-
-// IoExtraGT applies the GT predicate on the "io_extra" field.
-func IoExtraGT(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldIoExtra), v))
-	})
-}
-
-// IoExtraGTE applies the GTE predicate on the "io_extra" field.
-func IoExtraGTE(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldIoExtra), v))
-	})
-}
-
-// IoExtraLT applies the LT predicate on the "io_extra" field.
-func IoExtraLT(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldIoExtra), v))
-	})
-}
-
-// IoExtraLTE applies the LTE predicate on the "io_extra" field.
-func IoExtraLTE(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldIoExtra), v))
-	})
-}
-
-// IoExtraContains applies the Contains predicate on the "io_extra" field.
-func IoExtraContains(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldIoExtra), v))
-	})
-}
-
-// IoExtraHasPrefix applies the HasPrefix predicate on the "io_extra" field.
-func IoExtraHasPrefix(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldIoExtra), v))
-	})
-}
-
-// IoExtraHasSuffix applies the HasSuffix predicate on the "io_extra" field.
-func IoExtraHasSuffix(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldIoExtra), v))
-	})
-}
-
-// IoExtraIsNil applies the IsNil predicate on the "io_extra" field.
-func IoExtraIsNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldIoExtra)))
-	})
-}
-
-// IoExtraNotNil applies the NotNil predicate on the "io_extra" field.
-func IoExtraNotNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldIoExtra)))
-	})
-}
-
-// IoExtraEqualFold applies the EqualFold predicate on the "io_extra" field.
-func IoExtraEqualFold(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldIoExtra), v))
-	})
-}
-
-// IoExtraContainsFold applies the ContainsFold predicate on the "io_extra" field.
-func IoExtraContainsFold(v string) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldIoExtra), v))
-	})
-}
-
-// FromOldIDEQ applies the EQ predicate on the "from_old_id" field.
-func FromOldIDEQ(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFromOldID), v))
-	})
-}
-
-// FromOldIDNEQ applies the NEQ predicate on the "from_old_id" field.
-func FromOldIDNEQ(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFromOldID), v))
-	})
-}
-
-// FromOldIDIn applies the In predicate on the "from_old_id" field.
-func FromOldIDIn(vs ...uuid.UUID) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldFromOldID), v...))
-	})
-}
-
-// FromOldIDNotIn applies the NotIn predicate on the "from_old_id" field.
-func FromOldIDNotIn(vs ...uuid.UUID) predicate.Detail {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldFromOldID), v...))
-	})
-}
-
-// FromOldIDGT applies the GT predicate on the "from_old_id" field.
-func FromOldIDGT(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldFromOldID), v))
-	})
-}
-
-// FromOldIDGTE applies the GTE predicate on the "from_old_id" field.
-func FromOldIDGTE(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldFromOldID), v))
-	})
-}
-
-// FromOldIDLT applies the LT predicate on the "from_old_id" field.
-func FromOldIDLT(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldFromOldID), v))
-	})
-}
-
-// FromOldIDLTE applies the LTE predicate on the "from_old_id" field.
-func FromOldIDLTE(v uuid.UUID) predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldFromOldID), v))
-	})
-}
-
-// FromOldIDIsNil applies the IsNil predicate on the "from_old_id" field.
-func FromOldIDIsNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.IsNull(s.C(FieldFromOldID)))
-	})
-}
-
-// FromOldIDNotNil applies the NotNil predicate on the "from_old_id" field.
-func FromOldIDNotNil() predicate.Detail {
-	return predicate.Detail(func(s *sql.Selector) {
-		s.Where(sql.NotNull(s.C(FieldFromOldID)))
+		s.Where(sql.ContainsFold(s.C(FieldSampleCol), v))
 	})
 }
 

@@ -1,28 +1,18 @@
-//nolint:nolintlint,dupl
 package detail
 
+/*
 import (
 	"context"
 	"fmt"
 
-	commontracer "github.com/NpoolPlatform/service-template/pkg/tracer"
-
-	converter "github.com/NpoolPlatform/service-template/pkg/mgr/detail/converter"
-	crud "github.com/NpoolPlatform/service-template/pkg/mgr/detail/crud"
-	tracer "github.com/NpoolPlatform/service-template/pkg/mgr/detail/tracer"
-
-	constant "github.com/NpoolPlatform/service-template/pkg/message/const"
-
-	"go.opentelemetry.io/otel"
-	scodes "go.opentelemetry.io/otel/codes"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mgr/v1/detail"
+	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mw/v1/detail"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func ValidateCreate(info *npool.DetailReq) error { //nolint
@@ -116,26 +106,6 @@ func ValidateCreateMany(in []*npool.DetailReq) error {
 }
 
 func (s *Server) CreateDetail(ctx context.Context, in *npool.CreateDetailRequest) (*npool.CreateDetailResponse, error) {
-	var err error
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateDetail")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(scodes.Error, err.Error())
-			span.RecordError(err)
-		}
-	}()
-
-	span = tracer.Trace(span, in.GetInfo())
-
-	err = ValidateCreate(in.GetInfo())
-	if err != nil {
-		return &npool.CreateDetailResponse{}, status.Error(codes.InvalidArgument, err.Error())
-	}
-
-	span = commontracer.TraceInvoker(span, "detail", "crud", "Create")
 
 	info, err := crud.Create(ctx, in.GetInfo())
 	if err != nil {
@@ -149,18 +119,6 @@ func (s *Server) CreateDetail(ctx context.Context, in *npool.CreateDetailRequest
 }
 
 func (s *Server) CreateDetails(ctx context.Context, in *npool.CreateDetailsRequest) (*npool.CreateDetailsResponse, error) {
-	var err error
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "CreateDetails")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(scodes.Error, err.Error())
-			span.RecordError(err)
-		}
-	}()
-
 	if len(in.GetInfos()) == 0 {
 		return &npool.CreateDetailsResponse{}, status.Error(codes.InvalidArgument, "Infos is empty")
 	}
@@ -169,9 +127,6 @@ func (s *Server) CreateDetails(ctx context.Context, in *npool.CreateDetailsReque
 	if err != nil {
 		return &npool.CreateDetailsResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
-	span = tracer.TraceMany(span, in.GetInfos())
-	span = commontracer.TraceInvoker(span, "detail", "crud", "CreateBulk")
 
 	rows, err := crud.CreateBulk(ctx, in.GetInfos())
 	if err != nil {
@@ -183,3 +138,4 @@ func (s *Server) CreateDetails(ctx context.Context, in *npool.CreateDetailsReque
 		Infos: converter.Ent2GrpcMany(rows),
 	}, nil
 }
+*/

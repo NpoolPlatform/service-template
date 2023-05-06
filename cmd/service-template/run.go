@@ -8,9 +8,11 @@ import (
 	"github.com/NpoolPlatform/service-template/pkg/migrator"
 
 	"github.com/NpoolPlatform/service-template/pkg/feeder"
+	"github.com/NpoolPlatform/service-template/pkg/pubsub"
 	"github.com/NpoolPlatform/service-template/pkg/watcher"
 
 	action "github.com/NpoolPlatform/go-service-framework/pkg/action"
+	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
 
 	apicli "github.com/NpoolPlatform/basal-middleware/pkg/client/api"
 
@@ -46,9 +48,34 @@ func run(ctx context.Context) error {
 	return nil
 }
 
-func watch(ctx context.Context) error {
-	go watcher.Watch(ctx)
-	go feeder.Watch(ctx)
+func shutdown(ctx context.Context) {
+	<-ctx.Done()
+	logger.Sugar().Infow(
+		"Watch",
+		"State", "Done",
+		"Error", ctx.Err(),
+	)
+	_ = pubsub.Shutdown(ctx) //nolint
+}
+
+func _watch(ctx context.Context, cancel context.CancelFunc, w func(ctx context.Context)) {
+	defer func() {
+		if err := recover(); err != nil {
+			logger.Sugar().Errorw(
+				"Watch",
+				"State", "Panic",
+				"Error", err,
+			)
+			cancel()
+		}
+	}()
+	w(ctx)
+}
+
+func watch(ctx context.Context, cancel context.CancelFunc) error {
+	go shutdown(ctx)
+	go _watch(ctx, cancel, watcher.Watch)
+	go _watch(ctx, cancel, feeder.Watch)
 	return nil
 }
 

@@ -9,9 +9,9 @@ import (
 	grpc2 "github.com/NpoolPlatform/go-service-framework/pkg/grpc"
 
 	"github.com/NpoolPlatform/libent-cruder/pkg/cruder"
-	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mgr/v1/detail"
+	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mw/v1/detail"
 
-	constant "github.com/NpoolPlatform/service-template/pkg/message/const"
+	constant "github.com/NpoolPlatform/service-template/pkg/const"
 )
 
 var timeout = 10 * time.Second
@@ -22,7 +22,7 @@ func withCRUD(ctx context.Context, handler handler) (cruder.Any, error) {
 	_ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 
-	conn, err := grpc2.GetGRPCConn(constant.ServiceName, grpc2.GRPCTAG)
+	conn, err := grpc2.GetGRPCConn(constant.ServiceDomain, grpc2.GRPCTAG)
 	if err != nil {
 		return nil, fmt.Errorf("fail get detail connection: %v", err)
 	}

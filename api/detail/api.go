@@ -1,18 +1,18 @@
 package detail
 
 import (
-	"github.com/NpoolPlatform/message/npool/servicetmpl/mgr/v1/detail"
+	"github.com/NpoolPlatform/message/npool/servicetmpl/mw/v1/detail"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 )
 
 type Server struct {
-	detail.UnimplementedManagerServer
+	detail.UnimplementedMiddlewareServer
 }
 
 func Register(server grpc.ServiceRegistrar) {
-	detail.RegisterManagerServer(server, &Server{})
+	detail.RegisterMiddlewareServer(server, &Server{})
 }
 
 func RegisterGateway(mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error {

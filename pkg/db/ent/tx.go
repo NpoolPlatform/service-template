@@ -16,6 +16,8 @@ type Tx struct {
 	config
 	// Detail is the client for interacting with the Detail builders.
 	Detail *DetailClient
+	// PubsubMessage is the client for interacting with the PubsubMessage builders.
+	PubsubMessage *PubsubMessageClient
 
 	// lazily loaded.
 	client     *Client
@@ -152,6 +154,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Detail = NewDetailClient(tx.config)
+	tx.PubsubMessage = NewPubsubMessageClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

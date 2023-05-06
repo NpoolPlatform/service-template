@@ -1,25 +1,15 @@
-//nolint:nolintlint,dupl
 package detail
 
+/*
 import (
 	"context"
 	"fmt"
 
-	commontracer "github.com/NpoolPlatform/service-template/pkg/tracer"
-
-	converter "github.com/NpoolPlatform/service-template/pkg/mgr/detail/converter"
-	crud "github.com/NpoolPlatform/service-template/pkg/mgr/detail/crud"
-	tracer "github.com/NpoolPlatform/service-template/pkg/mgr/detail/tracer"
-
-	constant "github.com/NpoolPlatform/service-template/pkg/message/const"
-
-	"go.opentelemetry.io/otel"
-	scodes "go.opentelemetry.io/otel/codes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
-	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mgr/v1/detail"
+	npool "github.com/NpoolPlatform/message/npool/servicetmpl/mw/v1/detail"
 
 	"github.com/google/uuid"
 	"github.com/shopspring/decimal"
@@ -120,26 +110,10 @@ func ValidateUpdate(info *npool.DetailReq) error { //nolint
 }
 
 func (s *Server) UpdateDetail(ctx context.Context, in *npool.UpdateDetailRequest) (*npool.UpdateDetailResponse, error) {
-	var err error
-
-	_, span := otel.Tracer(constant.ServiceName).Start(ctx, "UpdateDetail")
-	defer span.End()
-
-	defer func() {
-		if err != nil {
-			span.SetStatus(scodes.Error, err.Error())
-			span.RecordError(err)
-		}
-	}()
-
-	span = tracer.Trace(span, in.GetInfo())
-
 	err = ValidateUpdate(in.GetInfo())
 	if err != nil {
 		return &npool.UpdateDetailResponse{}, status.Error(codes.InvalidArgument, err.Error())
 	}
-
-	span = commontracer.TraceInvoker(span, "detail", "crud", "Update")
 
 	info, err := crud.Update(ctx, in.GetInfo())
 	if err != nil {
@@ -151,3 +125,5 @@ func (s *Server) UpdateDetail(ctx context.Context, in *npool.UpdateDetailRequest
 		Info: converter.Ent2Grpc(info),
 	}, nil
 }
+
+*/

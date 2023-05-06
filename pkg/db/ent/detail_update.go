@@ -12,8 +12,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/predicate"
-	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // DetailUpdate is the builder for updating Detail entities.
@@ -85,203 +83,36 @@ func (du *DetailUpdate) AddDeletedAt(u int32) *DetailUpdate {
 	return du
 }
 
-// SetAppID sets the "app_id" field.
-func (du *DetailUpdate) SetAppID(u uuid.UUID) *DetailUpdate {
-	du.mutation.SetAppID(u)
+// SetAutoID sets the "auto_id" field.
+func (du *DetailUpdate) SetAutoID(u uint32) *DetailUpdate {
+	du.mutation.ResetAutoID()
+	du.mutation.SetAutoID(u)
 	return du
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (du *DetailUpdate) SetNillableAppID(u *uuid.UUID) *DetailUpdate {
-	if u != nil {
-		du.SetAppID(*u)
-	}
+// AddAutoID adds u to the "auto_id" field.
+func (du *DetailUpdate) AddAutoID(u int32) *DetailUpdate {
+	du.mutation.AddAutoID(u)
 	return du
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (du *DetailUpdate) ClearAppID() *DetailUpdate {
-	du.mutation.ClearAppID()
+// SetSampleCol sets the "sample_col" field.
+func (du *DetailUpdate) SetSampleCol(s string) *DetailUpdate {
+	du.mutation.SetSampleCol(s)
 	return du
 }
 
-// SetUserID sets the "user_id" field.
-func (du *DetailUpdate) SetUserID(u uuid.UUID) *DetailUpdate {
-	du.mutation.SetUserID(u)
-	return du
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (du *DetailUpdate) SetNillableUserID(u *uuid.UUID) *DetailUpdate {
-	if u != nil {
-		du.SetUserID(*u)
-	}
-	return du
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (du *DetailUpdate) ClearUserID() *DetailUpdate {
-	du.mutation.ClearUserID()
-	return du
-}
-
-// SetCoinTypeID sets the "coin_type_id" field.
-func (du *DetailUpdate) SetCoinTypeID(u uuid.UUID) *DetailUpdate {
-	du.mutation.SetCoinTypeID(u)
-	return du
-}
-
-// SetNillableCoinTypeID sets the "coin_type_id" field if the given value is not nil.
-func (du *DetailUpdate) SetNillableCoinTypeID(u *uuid.UUID) *DetailUpdate {
-	if u != nil {
-		du.SetCoinTypeID(*u)
-	}
-	return du
-}
-
-// ClearCoinTypeID clears the value of the "coin_type_id" field.
-func (du *DetailUpdate) ClearCoinTypeID() *DetailUpdate {
-	du.mutation.ClearCoinTypeID()
-	return du
-}
-
-// SetIoType sets the "io_type" field.
-func (du *DetailUpdate) SetIoType(s string) *DetailUpdate {
-	du.mutation.SetIoType(s)
-	return du
-}
-
-// SetNillableIoType sets the "io_type" field if the given value is not nil.
-func (du *DetailUpdate) SetNillableIoType(s *string) *DetailUpdate {
+// SetNillableSampleCol sets the "sample_col" field if the given value is not nil.
+func (du *DetailUpdate) SetNillableSampleCol(s *string) *DetailUpdate {
 	if s != nil {
-		du.SetIoType(*s)
+		du.SetSampleCol(*s)
 	}
 	return du
 }
 
-// ClearIoType clears the value of the "io_type" field.
-func (du *DetailUpdate) ClearIoType() *DetailUpdate {
-	du.mutation.ClearIoType()
-	return du
-}
-
-// SetIoSubType sets the "io_sub_type" field.
-func (du *DetailUpdate) SetIoSubType(s string) *DetailUpdate {
-	du.mutation.SetIoSubType(s)
-	return du
-}
-
-// SetNillableIoSubType sets the "io_sub_type" field if the given value is not nil.
-func (du *DetailUpdate) SetNillableIoSubType(s *string) *DetailUpdate {
-	if s != nil {
-		du.SetIoSubType(*s)
-	}
-	return du
-}
-
-// ClearIoSubType clears the value of the "io_sub_type" field.
-func (du *DetailUpdate) ClearIoSubType() *DetailUpdate {
-	du.mutation.ClearIoSubType()
-	return du
-}
-
-// SetAmount sets the "amount" field.
-func (du *DetailUpdate) SetAmount(d decimal.Decimal) *DetailUpdate {
-	du.mutation.SetAmount(d)
-	return du
-}
-
-// SetNillableAmount sets the "amount" field if the given value is not nil.
-func (du *DetailUpdate) SetNillableAmount(d *decimal.Decimal) *DetailUpdate {
-	if d != nil {
-		du.SetAmount(*d)
-	}
-	return du
-}
-
-// ClearAmount clears the value of the "amount" field.
-func (du *DetailUpdate) ClearAmount() *DetailUpdate {
-	du.mutation.ClearAmount()
-	return du
-}
-
-// SetFromCoinTypeID sets the "from_coin_type_id" field.
-func (du *DetailUpdate) SetFromCoinTypeID(u uuid.UUID) *DetailUpdate {
-	du.mutation.SetFromCoinTypeID(u)
-	return du
-}
-
-// SetNillableFromCoinTypeID sets the "from_coin_type_id" field if the given value is not nil.
-func (du *DetailUpdate) SetNillableFromCoinTypeID(u *uuid.UUID) *DetailUpdate {
-	if u != nil {
-		du.SetFromCoinTypeID(*u)
-	}
-	return du
-}
-
-// ClearFromCoinTypeID clears the value of the "from_coin_type_id" field.
-func (du *DetailUpdate) ClearFromCoinTypeID() *DetailUpdate {
-	du.mutation.ClearFromCoinTypeID()
-	return du
-}
-
-// SetCoinUsdCurrency sets the "coin_usd_currency" field.
-func (du *DetailUpdate) SetCoinUsdCurrency(d decimal.Decimal) *DetailUpdate {
-	du.mutation.SetCoinUsdCurrency(d)
-	return du
-}
-
-// SetNillableCoinUsdCurrency sets the "coin_usd_currency" field if the given value is not nil.
-func (du *DetailUpdate) SetNillableCoinUsdCurrency(d *decimal.Decimal) *DetailUpdate {
-	if d != nil {
-		du.SetCoinUsdCurrency(*d)
-	}
-	return du
-}
-
-// ClearCoinUsdCurrency clears the value of the "coin_usd_currency" field.
-func (du *DetailUpdate) ClearCoinUsdCurrency() *DetailUpdate {
-	du.mutation.ClearCoinUsdCurrency()
-	return du
-}
-
-// SetIoExtra sets the "io_extra" field.
-func (du *DetailUpdate) SetIoExtra(s string) *DetailUpdate {
-	du.mutation.SetIoExtra(s)
-	return du
-}
-
-// SetNillableIoExtra sets the "io_extra" field if the given value is not nil.
-func (du *DetailUpdate) SetNillableIoExtra(s *string) *DetailUpdate {
-	if s != nil {
-		du.SetIoExtra(*s)
-	}
-	return du
-}
-
-// ClearIoExtra clears the value of the "io_extra" field.
-func (du *DetailUpdate) ClearIoExtra() *DetailUpdate {
-	du.mutation.ClearIoExtra()
-	return du
-}
-
-// SetFromOldID sets the "from_old_id" field.
-func (du *DetailUpdate) SetFromOldID(u uuid.UUID) *DetailUpdate {
-	du.mutation.SetFromOldID(u)
-	return du
-}
-
-// SetNillableFromOldID sets the "from_old_id" field if the given value is not nil.
-func (du *DetailUpdate) SetNillableFromOldID(u *uuid.UUID) *DetailUpdate {
-	if u != nil {
-		du.SetFromOldID(*u)
-	}
-	return du
-}
-
-// ClearFromOldID clears the value of the "from_old_id" field.
-func (du *DetailUpdate) ClearFromOldID() *DetailUpdate {
-	du.mutation.ClearFromOldID()
+// ClearSampleCol clears the value of the "sample_col" field.
+func (du *DetailUpdate) ClearSampleCol() *DetailUpdate {
+	du.mutation.ClearSampleCol()
 	return du
 }
 
@@ -425,134 +256,31 @@ func (du *DetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: detail.FieldDeletedAt,
 		})
 	}
-	if value, ok := du.mutation.AppID(); ok {
+	if value, ok := du.mutation.AutoID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
+			Type:   field.TypeUint32,
 			Value:  value,
-			Column: detail.FieldAppID,
+			Column: detail.FieldAutoID,
 		})
 	}
-	if du.mutation.AppIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: detail.FieldAppID,
-		})
-	}
-	if value, ok := du.mutation.UserID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
+	if value, ok := du.mutation.AddedAutoID(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
 			Value:  value,
-			Column: detail.FieldUserID,
+			Column: detail.FieldAutoID,
 		})
 	}
-	if du.mutation.UserIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: detail.FieldUserID,
-		})
-	}
-	if value, ok := du.mutation.CoinTypeID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: detail.FieldCoinTypeID,
-		})
-	}
-	if du.mutation.CoinTypeIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: detail.FieldCoinTypeID,
-		})
-	}
-	if value, ok := du.mutation.IoType(); ok {
+	if value, ok := du.mutation.SampleCol(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: detail.FieldIoType,
+			Column: detail.FieldSampleCol,
 		})
 	}
-	if du.mutation.IoTypeCleared() {
+	if du.mutation.SampleColCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: detail.FieldIoType,
-		})
-	}
-	if value, ok := du.mutation.IoSubType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: detail.FieldIoSubType,
-		})
-	}
-	if du.mutation.IoSubTypeCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: detail.FieldIoSubType,
-		})
-	}
-	if value, ok := du.mutation.Amount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: detail.FieldAmount,
-		})
-	}
-	if du.mutation.AmountCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: detail.FieldAmount,
-		})
-	}
-	if value, ok := du.mutation.FromCoinTypeID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: detail.FieldFromCoinTypeID,
-		})
-	}
-	if du.mutation.FromCoinTypeIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: detail.FieldFromCoinTypeID,
-		})
-	}
-	if value, ok := du.mutation.CoinUsdCurrency(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: detail.FieldCoinUsdCurrency,
-		})
-	}
-	if du.mutation.CoinUsdCurrencyCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: detail.FieldCoinUsdCurrency,
-		})
-	}
-	if value, ok := du.mutation.IoExtra(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: detail.FieldIoExtra,
-		})
-	}
-	if du.mutation.IoExtraCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: detail.FieldIoExtra,
-		})
-	}
-	if value, ok := du.mutation.FromOldID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: detail.FieldFromOldID,
-		})
-	}
-	if du.mutation.FromOldIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: detail.FieldFromOldID,
+			Column: detail.FieldSampleCol,
 		})
 	}
 	_spec.Modifiers = du.modifiers
@@ -631,203 +359,36 @@ func (duo *DetailUpdateOne) AddDeletedAt(u int32) *DetailUpdateOne {
 	return duo
 }
 
-// SetAppID sets the "app_id" field.
-func (duo *DetailUpdateOne) SetAppID(u uuid.UUID) *DetailUpdateOne {
-	duo.mutation.SetAppID(u)
+// SetAutoID sets the "auto_id" field.
+func (duo *DetailUpdateOne) SetAutoID(u uint32) *DetailUpdateOne {
+	duo.mutation.ResetAutoID()
+	duo.mutation.SetAutoID(u)
 	return duo
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (duo *DetailUpdateOne) SetNillableAppID(u *uuid.UUID) *DetailUpdateOne {
-	if u != nil {
-		duo.SetAppID(*u)
-	}
+// AddAutoID adds u to the "auto_id" field.
+func (duo *DetailUpdateOne) AddAutoID(u int32) *DetailUpdateOne {
+	duo.mutation.AddAutoID(u)
 	return duo
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (duo *DetailUpdateOne) ClearAppID() *DetailUpdateOne {
-	duo.mutation.ClearAppID()
+// SetSampleCol sets the "sample_col" field.
+func (duo *DetailUpdateOne) SetSampleCol(s string) *DetailUpdateOne {
+	duo.mutation.SetSampleCol(s)
 	return duo
 }
 
-// SetUserID sets the "user_id" field.
-func (duo *DetailUpdateOne) SetUserID(u uuid.UUID) *DetailUpdateOne {
-	duo.mutation.SetUserID(u)
-	return duo
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (duo *DetailUpdateOne) SetNillableUserID(u *uuid.UUID) *DetailUpdateOne {
-	if u != nil {
-		duo.SetUserID(*u)
-	}
-	return duo
-}
-
-// ClearUserID clears the value of the "user_id" field.
-func (duo *DetailUpdateOne) ClearUserID() *DetailUpdateOne {
-	duo.mutation.ClearUserID()
-	return duo
-}
-
-// SetCoinTypeID sets the "coin_type_id" field.
-func (duo *DetailUpdateOne) SetCoinTypeID(u uuid.UUID) *DetailUpdateOne {
-	duo.mutation.SetCoinTypeID(u)
-	return duo
-}
-
-// SetNillableCoinTypeID sets the "coin_type_id" field if the given value is not nil.
-func (duo *DetailUpdateOne) SetNillableCoinTypeID(u *uuid.UUID) *DetailUpdateOne {
-	if u != nil {
-		duo.SetCoinTypeID(*u)
-	}
-	return duo
-}
-
-// ClearCoinTypeID clears the value of the "coin_type_id" field.
-func (duo *DetailUpdateOne) ClearCoinTypeID() *DetailUpdateOne {
-	duo.mutation.ClearCoinTypeID()
-	return duo
-}
-
-// SetIoType sets the "io_type" field.
-func (duo *DetailUpdateOne) SetIoType(s string) *DetailUpdateOne {
-	duo.mutation.SetIoType(s)
-	return duo
-}
-
-// SetNillableIoType sets the "io_type" field if the given value is not nil.
-func (duo *DetailUpdateOne) SetNillableIoType(s *string) *DetailUpdateOne {
+// SetNillableSampleCol sets the "sample_col" field if the given value is not nil.
+func (duo *DetailUpdateOne) SetNillableSampleCol(s *string) *DetailUpdateOne {
 	if s != nil {
-		duo.SetIoType(*s)
+		duo.SetSampleCol(*s)
 	}
 	return duo
 }
 
-// ClearIoType clears the value of the "io_type" field.
-func (duo *DetailUpdateOne) ClearIoType() *DetailUpdateOne {
-	duo.mutation.ClearIoType()
-	return duo
-}
-
-// SetIoSubType sets the "io_sub_type" field.
-func (duo *DetailUpdateOne) SetIoSubType(s string) *DetailUpdateOne {
-	duo.mutation.SetIoSubType(s)
-	return duo
-}
-
-// SetNillableIoSubType sets the "io_sub_type" field if the given value is not nil.
-func (duo *DetailUpdateOne) SetNillableIoSubType(s *string) *DetailUpdateOne {
-	if s != nil {
-		duo.SetIoSubType(*s)
-	}
-	return duo
-}
-
-// ClearIoSubType clears the value of the "io_sub_type" field.
-func (duo *DetailUpdateOne) ClearIoSubType() *DetailUpdateOne {
-	duo.mutation.ClearIoSubType()
-	return duo
-}
-
-// SetAmount sets the "amount" field.
-func (duo *DetailUpdateOne) SetAmount(d decimal.Decimal) *DetailUpdateOne {
-	duo.mutation.SetAmount(d)
-	return duo
-}
-
-// SetNillableAmount sets the "amount" field if the given value is not nil.
-func (duo *DetailUpdateOne) SetNillableAmount(d *decimal.Decimal) *DetailUpdateOne {
-	if d != nil {
-		duo.SetAmount(*d)
-	}
-	return duo
-}
-
-// ClearAmount clears the value of the "amount" field.
-func (duo *DetailUpdateOne) ClearAmount() *DetailUpdateOne {
-	duo.mutation.ClearAmount()
-	return duo
-}
-
-// SetFromCoinTypeID sets the "from_coin_type_id" field.
-func (duo *DetailUpdateOne) SetFromCoinTypeID(u uuid.UUID) *DetailUpdateOne {
-	duo.mutation.SetFromCoinTypeID(u)
-	return duo
-}
-
-// SetNillableFromCoinTypeID sets the "from_coin_type_id" field if the given value is not nil.
-func (duo *DetailUpdateOne) SetNillableFromCoinTypeID(u *uuid.UUID) *DetailUpdateOne {
-	if u != nil {
-		duo.SetFromCoinTypeID(*u)
-	}
-	return duo
-}
-
-// ClearFromCoinTypeID clears the value of the "from_coin_type_id" field.
-func (duo *DetailUpdateOne) ClearFromCoinTypeID() *DetailUpdateOne {
-	duo.mutation.ClearFromCoinTypeID()
-	return duo
-}
-
-// SetCoinUsdCurrency sets the "coin_usd_currency" field.
-func (duo *DetailUpdateOne) SetCoinUsdCurrency(d decimal.Decimal) *DetailUpdateOne {
-	duo.mutation.SetCoinUsdCurrency(d)
-	return duo
-}
-
-// SetNillableCoinUsdCurrency sets the "coin_usd_currency" field if the given value is not nil.
-func (duo *DetailUpdateOne) SetNillableCoinUsdCurrency(d *decimal.Decimal) *DetailUpdateOne {
-	if d != nil {
-		duo.SetCoinUsdCurrency(*d)
-	}
-	return duo
-}
-
-// ClearCoinUsdCurrency clears the value of the "coin_usd_currency" field.
-func (duo *DetailUpdateOne) ClearCoinUsdCurrency() *DetailUpdateOne {
-	duo.mutation.ClearCoinUsdCurrency()
-	return duo
-}
-
-// SetIoExtra sets the "io_extra" field.
-func (duo *DetailUpdateOne) SetIoExtra(s string) *DetailUpdateOne {
-	duo.mutation.SetIoExtra(s)
-	return duo
-}
-
-// SetNillableIoExtra sets the "io_extra" field if the given value is not nil.
-func (duo *DetailUpdateOne) SetNillableIoExtra(s *string) *DetailUpdateOne {
-	if s != nil {
-		duo.SetIoExtra(*s)
-	}
-	return duo
-}
-
-// ClearIoExtra clears the value of the "io_extra" field.
-func (duo *DetailUpdateOne) ClearIoExtra() *DetailUpdateOne {
-	duo.mutation.ClearIoExtra()
-	return duo
-}
-
-// SetFromOldID sets the "from_old_id" field.
-func (duo *DetailUpdateOne) SetFromOldID(u uuid.UUID) *DetailUpdateOne {
-	duo.mutation.SetFromOldID(u)
-	return duo
-}
-
-// SetNillableFromOldID sets the "from_old_id" field if the given value is not nil.
-func (duo *DetailUpdateOne) SetNillableFromOldID(u *uuid.UUID) *DetailUpdateOne {
-	if u != nil {
-		duo.SetFromOldID(*u)
-	}
-	return duo
-}
-
-// ClearFromOldID clears the value of the "from_old_id" field.
-func (duo *DetailUpdateOne) ClearFromOldID() *DetailUpdateOne {
-	duo.mutation.ClearFromOldID()
+// ClearSampleCol clears the value of the "sample_col" field.
+func (duo *DetailUpdateOne) ClearSampleCol() *DetailUpdateOne {
+	duo.mutation.ClearSampleCol()
 	return duo
 }
 
@@ -1001,134 +562,31 @@ func (duo *DetailUpdateOne) sqlSave(ctx context.Context) (_node *Detail, err err
 			Column: detail.FieldDeletedAt,
 		})
 	}
-	if value, ok := duo.mutation.AppID(); ok {
+	if value, ok := duo.mutation.AutoID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
+			Type:   field.TypeUint32,
 			Value:  value,
-			Column: detail.FieldAppID,
+			Column: detail.FieldAutoID,
 		})
 	}
-	if duo.mutation.AppIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: detail.FieldAppID,
-		})
-	}
-	if value, ok := duo.mutation.UserID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
+	if value, ok := duo.mutation.AddedAutoID(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeUint32,
 			Value:  value,
-			Column: detail.FieldUserID,
+			Column: detail.FieldAutoID,
 		})
 	}
-	if duo.mutation.UserIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: detail.FieldUserID,
-		})
-	}
-	if value, ok := duo.mutation.CoinTypeID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: detail.FieldCoinTypeID,
-		})
-	}
-	if duo.mutation.CoinTypeIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: detail.FieldCoinTypeID,
-		})
-	}
-	if value, ok := duo.mutation.IoType(); ok {
+	if value, ok := duo.mutation.SampleCol(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: detail.FieldIoType,
+			Column: detail.FieldSampleCol,
 		})
 	}
-	if duo.mutation.IoTypeCleared() {
+	if duo.mutation.SampleColCleared() {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
-			Column: detail.FieldIoType,
-		})
-	}
-	if value, ok := duo.mutation.IoSubType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: detail.FieldIoSubType,
-		})
-	}
-	if duo.mutation.IoSubTypeCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: detail.FieldIoSubType,
-		})
-	}
-	if value, ok := duo.mutation.Amount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: detail.FieldAmount,
-		})
-	}
-	if duo.mutation.AmountCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: detail.FieldAmount,
-		})
-	}
-	if value, ok := duo.mutation.FromCoinTypeID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: detail.FieldFromCoinTypeID,
-		})
-	}
-	if duo.mutation.FromCoinTypeIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: detail.FieldFromCoinTypeID,
-		})
-	}
-	if value, ok := duo.mutation.CoinUsdCurrency(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: detail.FieldCoinUsdCurrency,
-		})
-	}
-	if duo.mutation.CoinUsdCurrencyCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Column: detail.FieldCoinUsdCurrency,
-		})
-	}
-	if value, ok := duo.mutation.IoExtra(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: detail.FieldIoExtra,
-		})
-	}
-	if duo.mutation.IoExtraCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: detail.FieldIoExtra,
-		})
-	}
-	if value, ok := duo.mutation.FromOldID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: detail.FieldFromOldID,
-		})
-	}
-	if duo.mutation.FromOldIDCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Column: detail.FieldFromOldID,
+			Column: detail.FieldSampleCol,
 		})
 	}
 	_spec.Modifiers = duo.modifiers

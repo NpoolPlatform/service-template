@@ -8,3 +8,6 @@ import (
 
 // Detail is the predicate function for detail builders.
 type Detail func(*sql.Selector)
+
+// PubsubMessage is the predicate function for pubsubmessage builders.
+type PubsubMessage func(*sql.Selector)

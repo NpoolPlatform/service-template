@@ -13,7 +13,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
 	"github.com/google/uuid"
-	"github.com/shopspring/decimal"
 )
 
 // DetailCreate is the builder for creating a Detail entity.
@@ -66,142 +65,22 @@ func (dc *DetailCreate) SetNillableDeletedAt(u *uint32) *DetailCreate {
 	return dc
 }
 
-// SetAppID sets the "app_id" field.
-func (dc *DetailCreate) SetAppID(u uuid.UUID) *DetailCreate {
-	dc.mutation.SetAppID(u)
+// SetAutoID sets the "auto_id" field.
+func (dc *DetailCreate) SetAutoID(u uint32) *DetailCreate {
+	dc.mutation.SetAutoID(u)
 	return dc
 }
 
-// SetNillableAppID sets the "app_id" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableAppID(u *uuid.UUID) *DetailCreate {
-	if u != nil {
-		dc.SetAppID(*u)
-	}
+// SetSampleCol sets the "sample_col" field.
+func (dc *DetailCreate) SetSampleCol(s string) *DetailCreate {
+	dc.mutation.SetSampleCol(s)
 	return dc
 }
 
-// SetUserID sets the "user_id" field.
-func (dc *DetailCreate) SetUserID(u uuid.UUID) *DetailCreate {
-	dc.mutation.SetUserID(u)
-	return dc
-}
-
-// SetNillableUserID sets the "user_id" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableUserID(u *uuid.UUID) *DetailCreate {
-	if u != nil {
-		dc.SetUserID(*u)
-	}
-	return dc
-}
-
-// SetCoinTypeID sets the "coin_type_id" field.
-func (dc *DetailCreate) SetCoinTypeID(u uuid.UUID) *DetailCreate {
-	dc.mutation.SetCoinTypeID(u)
-	return dc
-}
-
-// SetNillableCoinTypeID sets the "coin_type_id" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableCoinTypeID(u *uuid.UUID) *DetailCreate {
-	if u != nil {
-		dc.SetCoinTypeID(*u)
-	}
-	return dc
-}
-
-// SetIoType sets the "io_type" field.
-func (dc *DetailCreate) SetIoType(s string) *DetailCreate {
-	dc.mutation.SetIoType(s)
-	return dc
-}
-
-// SetNillableIoType sets the "io_type" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableIoType(s *string) *DetailCreate {
+// SetNillableSampleCol sets the "sample_col" field if the given value is not nil.
+func (dc *DetailCreate) SetNillableSampleCol(s *string) *DetailCreate {
 	if s != nil {
-		dc.SetIoType(*s)
-	}
-	return dc
-}
-
-// SetIoSubType sets the "io_sub_type" field.
-func (dc *DetailCreate) SetIoSubType(s string) *DetailCreate {
-	dc.mutation.SetIoSubType(s)
-	return dc
-}
-
-// SetNillableIoSubType sets the "io_sub_type" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableIoSubType(s *string) *DetailCreate {
-	if s != nil {
-		dc.SetIoSubType(*s)
-	}
-	return dc
-}
-
-// SetAmount sets the "amount" field.
-func (dc *DetailCreate) SetAmount(d decimal.Decimal) *DetailCreate {
-	dc.mutation.SetAmount(d)
-	return dc
-}
-
-// SetNillableAmount sets the "amount" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableAmount(d *decimal.Decimal) *DetailCreate {
-	if d != nil {
-		dc.SetAmount(*d)
-	}
-	return dc
-}
-
-// SetFromCoinTypeID sets the "from_coin_type_id" field.
-func (dc *DetailCreate) SetFromCoinTypeID(u uuid.UUID) *DetailCreate {
-	dc.mutation.SetFromCoinTypeID(u)
-	return dc
-}
-
-// SetNillableFromCoinTypeID sets the "from_coin_type_id" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableFromCoinTypeID(u *uuid.UUID) *DetailCreate {
-	if u != nil {
-		dc.SetFromCoinTypeID(*u)
-	}
-	return dc
-}
-
-// SetCoinUsdCurrency sets the "coin_usd_currency" field.
-func (dc *DetailCreate) SetCoinUsdCurrency(d decimal.Decimal) *DetailCreate {
-	dc.mutation.SetCoinUsdCurrency(d)
-	return dc
-}
-
-// SetNillableCoinUsdCurrency sets the "coin_usd_currency" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableCoinUsdCurrency(d *decimal.Decimal) *DetailCreate {
-	if d != nil {
-		dc.SetCoinUsdCurrency(*d)
-	}
-	return dc
-}
-
-// SetIoExtra sets the "io_extra" field.
-func (dc *DetailCreate) SetIoExtra(s string) *DetailCreate {
-	dc.mutation.SetIoExtra(s)
-	return dc
-}
-
-// SetNillableIoExtra sets the "io_extra" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableIoExtra(s *string) *DetailCreate {
-	if s != nil {
-		dc.SetIoExtra(*s)
-	}
-	return dc
-}
-
-// SetFromOldID sets the "from_old_id" field.
-func (dc *DetailCreate) SetFromOldID(u uuid.UUID) *DetailCreate {
-	dc.mutation.SetFromOldID(u)
-	return dc
-}
-
-// SetNillableFromOldID sets the "from_old_id" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableFromOldID(u *uuid.UUID) *DetailCreate {
-	if u != nil {
-		dc.SetFromOldID(*u)
+		dc.SetSampleCol(*s)
 	}
 	return dc
 }
@@ -320,60 +199,9 @@ func (dc *DetailCreate) defaults() error {
 		v := detail.DefaultDeletedAt()
 		dc.mutation.SetDeletedAt(v)
 	}
-	if _, ok := dc.mutation.AppID(); !ok {
-		if detail.DefaultAppID == nil {
-			return fmt.Errorf("ent: uninitialized detail.DefaultAppID (forgotten import ent/runtime?)")
-		}
-		v := detail.DefaultAppID()
-		dc.mutation.SetAppID(v)
-	}
-	if _, ok := dc.mutation.UserID(); !ok {
-		if detail.DefaultUserID == nil {
-			return fmt.Errorf("ent: uninitialized detail.DefaultUserID (forgotten import ent/runtime?)")
-		}
-		v := detail.DefaultUserID()
-		dc.mutation.SetUserID(v)
-	}
-	if _, ok := dc.mutation.CoinTypeID(); !ok {
-		if detail.DefaultCoinTypeID == nil {
-			return fmt.Errorf("ent: uninitialized detail.DefaultCoinTypeID (forgotten import ent/runtime?)")
-		}
-		v := detail.DefaultCoinTypeID()
-		dc.mutation.SetCoinTypeID(v)
-	}
-	if _, ok := dc.mutation.IoType(); !ok {
-		v := detail.DefaultIoType
-		dc.mutation.SetIoType(v)
-	}
-	if _, ok := dc.mutation.IoSubType(); !ok {
-		v := detail.DefaultIoSubType
-		dc.mutation.SetIoSubType(v)
-	}
-	if _, ok := dc.mutation.Amount(); !ok {
-		v := detail.DefaultAmount
-		dc.mutation.SetAmount(v)
-	}
-	if _, ok := dc.mutation.FromCoinTypeID(); !ok {
-		if detail.DefaultFromCoinTypeID == nil {
-			return fmt.Errorf("ent: uninitialized detail.DefaultFromCoinTypeID (forgotten import ent/runtime?)")
-		}
-		v := detail.DefaultFromCoinTypeID()
-		dc.mutation.SetFromCoinTypeID(v)
-	}
-	if _, ok := dc.mutation.CoinUsdCurrency(); !ok {
-		v := detail.DefaultCoinUsdCurrency
-		dc.mutation.SetCoinUsdCurrency(v)
-	}
-	if _, ok := dc.mutation.IoExtra(); !ok {
-		v := detail.DefaultIoExtra
-		dc.mutation.SetIoExtra(v)
-	}
-	if _, ok := dc.mutation.FromOldID(); !ok {
-		if detail.DefaultFromOldID == nil {
-			return fmt.Errorf("ent: uninitialized detail.DefaultFromOldID (forgotten import ent/runtime?)")
-		}
-		v := detail.DefaultFromOldID()
-		dc.mutation.SetFromOldID(v)
+	if _, ok := dc.mutation.SampleCol(); !ok {
+		v := detail.DefaultSampleCol
+		dc.mutation.SetSampleCol(v)
 	}
 	if _, ok := dc.mutation.ID(); !ok {
 		if detail.DefaultID == nil {
@@ -395,6 +223,9 @@ func (dc *DetailCreate) check() error {
 	}
 	if _, ok := dc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Detail.deleted_at"`)}
+	}
+	if _, ok := dc.mutation.AutoID(); !ok {
+		return &ValidationError{Name: "auto_id", err: errors.New(`ent: missing required field "Detail.auto_id"`)}
 	}
 	return nil
 }
@@ -457,85 +288,21 @@ func (dc *DetailCreate) createSpec() (*Detail, *sqlgraph.CreateSpec) {
 		})
 		_node.DeletedAt = value
 	}
-	if value, ok := dc.mutation.AppID(); ok {
+	if value, ok := dc.mutation.AutoID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
+			Type:   field.TypeUint32,
 			Value:  value,
-			Column: detail.FieldAppID,
+			Column: detail.FieldAutoID,
 		})
-		_node.AppID = value
+		_node.AutoID = value
 	}
-	if value, ok := dc.mutation.UserID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: detail.FieldUserID,
-		})
-		_node.UserID = value
-	}
-	if value, ok := dc.mutation.CoinTypeID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: detail.FieldCoinTypeID,
-		})
-		_node.CoinTypeID = value
-	}
-	if value, ok := dc.mutation.IoType(); ok {
+	if value, ok := dc.mutation.SampleCol(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: detail.FieldIoType,
+			Column: detail.FieldSampleCol,
 		})
-		_node.IoType = value
-	}
-	if value, ok := dc.mutation.IoSubType(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: detail.FieldIoSubType,
-		})
-		_node.IoSubType = value
-	}
-	if value, ok := dc.mutation.Amount(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: detail.FieldAmount,
-		})
-		_node.Amount = value
-	}
-	if value, ok := dc.mutation.FromCoinTypeID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: detail.FieldFromCoinTypeID,
-		})
-		_node.FromCoinTypeID = value
-	}
-	if value, ok := dc.mutation.CoinUsdCurrency(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeOther,
-			Value:  value,
-			Column: detail.FieldCoinUsdCurrency,
-		})
-		_node.CoinUsdCurrency = value
-	}
-	if value, ok := dc.mutation.IoExtra(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: detail.FieldIoExtra,
-		})
-		_node.IoExtra = value
-	}
-	if value, ok := dc.mutation.FromOldID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUUID,
-			Value:  value,
-			Column: detail.FieldFromOldID,
-		})
-		_node.FromOldID = value
+		_node.SampleCol = value
 	}
 	return _node, _spec
 }
@@ -645,183 +412,39 @@ func (u *DetailUpsert) AddDeletedAt(v uint32) *DetailUpsert {
 	return u
 }
 
-// SetAppID sets the "app_id" field.
-func (u *DetailUpsert) SetAppID(v uuid.UUID) *DetailUpsert {
-	u.Set(detail.FieldAppID, v)
+// SetAutoID sets the "auto_id" field.
+func (u *DetailUpsert) SetAutoID(v uint32) *DetailUpsert {
+	u.Set(detail.FieldAutoID, v)
 	return u
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateAppID() *DetailUpsert {
-	u.SetExcluded(detail.FieldAppID)
+// UpdateAutoID sets the "auto_id" field to the value that was provided on create.
+func (u *DetailUpsert) UpdateAutoID() *DetailUpsert {
+	u.SetExcluded(detail.FieldAutoID)
 	return u
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *DetailUpsert) ClearAppID() *DetailUpsert {
-	u.SetNull(detail.FieldAppID)
+// AddAutoID adds v to the "auto_id" field.
+func (u *DetailUpsert) AddAutoID(v uint32) *DetailUpsert {
+	u.Add(detail.FieldAutoID, v)
 	return u
 }
 
-// SetUserID sets the "user_id" field.
-func (u *DetailUpsert) SetUserID(v uuid.UUID) *DetailUpsert {
-	u.Set(detail.FieldUserID, v)
+// SetSampleCol sets the "sample_col" field.
+func (u *DetailUpsert) SetSampleCol(v string) *DetailUpsert {
+	u.Set(detail.FieldSampleCol, v)
 	return u
 }
 
-// UpdateUserID sets the "user_id" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateUserID() *DetailUpsert {
-	u.SetExcluded(detail.FieldUserID)
+// UpdateSampleCol sets the "sample_col" field to the value that was provided on create.
+func (u *DetailUpsert) UpdateSampleCol() *DetailUpsert {
+	u.SetExcluded(detail.FieldSampleCol)
 	return u
 }
 
-// ClearUserID clears the value of the "user_id" field.
-func (u *DetailUpsert) ClearUserID() *DetailUpsert {
-	u.SetNull(detail.FieldUserID)
-	return u
-}
-
-// SetCoinTypeID sets the "coin_type_id" field.
-func (u *DetailUpsert) SetCoinTypeID(v uuid.UUID) *DetailUpsert {
-	u.Set(detail.FieldCoinTypeID, v)
-	return u
-}
-
-// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateCoinTypeID() *DetailUpsert {
-	u.SetExcluded(detail.FieldCoinTypeID)
-	return u
-}
-
-// ClearCoinTypeID clears the value of the "coin_type_id" field.
-func (u *DetailUpsert) ClearCoinTypeID() *DetailUpsert {
-	u.SetNull(detail.FieldCoinTypeID)
-	return u
-}
-
-// SetIoType sets the "io_type" field.
-func (u *DetailUpsert) SetIoType(v string) *DetailUpsert {
-	u.Set(detail.FieldIoType, v)
-	return u
-}
-
-// UpdateIoType sets the "io_type" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateIoType() *DetailUpsert {
-	u.SetExcluded(detail.FieldIoType)
-	return u
-}
-
-// ClearIoType clears the value of the "io_type" field.
-func (u *DetailUpsert) ClearIoType() *DetailUpsert {
-	u.SetNull(detail.FieldIoType)
-	return u
-}
-
-// SetIoSubType sets the "io_sub_type" field.
-func (u *DetailUpsert) SetIoSubType(v string) *DetailUpsert {
-	u.Set(detail.FieldIoSubType, v)
-	return u
-}
-
-// UpdateIoSubType sets the "io_sub_type" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateIoSubType() *DetailUpsert {
-	u.SetExcluded(detail.FieldIoSubType)
-	return u
-}
-
-// ClearIoSubType clears the value of the "io_sub_type" field.
-func (u *DetailUpsert) ClearIoSubType() *DetailUpsert {
-	u.SetNull(detail.FieldIoSubType)
-	return u
-}
-
-// SetAmount sets the "amount" field.
-func (u *DetailUpsert) SetAmount(v decimal.Decimal) *DetailUpsert {
-	u.Set(detail.FieldAmount, v)
-	return u
-}
-
-// UpdateAmount sets the "amount" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateAmount() *DetailUpsert {
-	u.SetExcluded(detail.FieldAmount)
-	return u
-}
-
-// ClearAmount clears the value of the "amount" field.
-func (u *DetailUpsert) ClearAmount() *DetailUpsert {
-	u.SetNull(detail.FieldAmount)
-	return u
-}
-
-// SetFromCoinTypeID sets the "from_coin_type_id" field.
-func (u *DetailUpsert) SetFromCoinTypeID(v uuid.UUID) *DetailUpsert {
-	u.Set(detail.FieldFromCoinTypeID, v)
-	return u
-}
-
-// UpdateFromCoinTypeID sets the "from_coin_type_id" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateFromCoinTypeID() *DetailUpsert {
-	u.SetExcluded(detail.FieldFromCoinTypeID)
-	return u
-}
-
-// ClearFromCoinTypeID clears the value of the "from_coin_type_id" field.
-func (u *DetailUpsert) ClearFromCoinTypeID() *DetailUpsert {
-	u.SetNull(detail.FieldFromCoinTypeID)
-	return u
-}
-
-// SetCoinUsdCurrency sets the "coin_usd_currency" field.
-func (u *DetailUpsert) SetCoinUsdCurrency(v decimal.Decimal) *DetailUpsert {
-	u.Set(detail.FieldCoinUsdCurrency, v)
-	return u
-}
-
-// UpdateCoinUsdCurrency sets the "coin_usd_currency" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateCoinUsdCurrency() *DetailUpsert {
-	u.SetExcluded(detail.FieldCoinUsdCurrency)
-	return u
-}
-
-// ClearCoinUsdCurrency clears the value of the "coin_usd_currency" field.
-func (u *DetailUpsert) ClearCoinUsdCurrency() *DetailUpsert {
-	u.SetNull(detail.FieldCoinUsdCurrency)
-	return u
-}
-
-// SetIoExtra sets the "io_extra" field.
-func (u *DetailUpsert) SetIoExtra(v string) *DetailUpsert {
-	u.Set(detail.FieldIoExtra, v)
-	return u
-}
-
-// UpdateIoExtra sets the "io_extra" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateIoExtra() *DetailUpsert {
-	u.SetExcluded(detail.FieldIoExtra)
-	return u
-}
-
-// ClearIoExtra clears the value of the "io_extra" field.
-func (u *DetailUpsert) ClearIoExtra() *DetailUpsert {
-	u.SetNull(detail.FieldIoExtra)
-	return u
-}
-
-// SetFromOldID sets the "from_old_id" field.
-func (u *DetailUpsert) SetFromOldID(v uuid.UUID) *DetailUpsert {
-	u.Set(detail.FieldFromOldID, v)
-	return u
-}
-
-// UpdateFromOldID sets the "from_old_id" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateFromOldID() *DetailUpsert {
-	u.SetExcluded(detail.FieldFromOldID)
-	return u
-}
-
-// ClearFromOldID clears the value of the "from_old_id" field.
-func (u *DetailUpsert) ClearFromOldID() *DetailUpsert {
-	u.SetNull(detail.FieldFromOldID)
+// ClearSampleCol clears the value of the "sample_col" field.
+func (u *DetailUpsert) ClearSampleCol() *DetailUpsert {
+	u.SetNull(detail.FieldSampleCol)
 	return u
 }
 
@@ -938,213 +561,45 @@ func (u *DetailUpsertOne) UpdateDeletedAt() *DetailUpsertOne {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *DetailUpsertOne) SetAppID(v uuid.UUID) *DetailUpsertOne {
+// SetAutoID sets the "auto_id" field.
+func (u *DetailUpsertOne) SetAutoID(v uint32) *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
-		s.SetAppID(v)
+		s.SetAutoID(v)
 	})
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateAppID() *DetailUpsertOne {
+// AddAutoID adds v to the "auto_id" field.
+func (u *DetailUpsertOne) AddAutoID(v uint32) *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
-		s.UpdateAppID()
+		s.AddAutoID(v)
 	})
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *DetailUpsertOne) ClearAppID() *DetailUpsertOne {
+// UpdateAutoID sets the "auto_id" field to the value that was provided on create.
+func (u *DetailUpsertOne) UpdateAutoID() *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
-		s.ClearAppID()
+		s.UpdateAutoID()
 	})
 }
 
-// SetUserID sets the "user_id" field.
-func (u *DetailUpsertOne) SetUserID(v uuid.UUID) *DetailUpsertOne {
+// SetSampleCol sets the "sample_col" field.
+func (u *DetailUpsertOne) SetSampleCol(v string) *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
-		s.SetUserID(v)
+		s.SetSampleCol(v)
 	})
 }
 
-// UpdateUserID sets the "user_id" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateUserID() *DetailUpsertOne {
+// UpdateSampleCol sets the "sample_col" field to the value that was provided on create.
+func (u *DetailUpsertOne) UpdateSampleCol() *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
-		s.UpdateUserID()
+		s.UpdateSampleCol()
 	})
 }
 
-// ClearUserID clears the value of the "user_id" field.
-func (u *DetailUpsertOne) ClearUserID() *DetailUpsertOne {
+// ClearSampleCol clears the value of the "sample_col" field.
+func (u *DetailUpsertOne) ClearSampleCol() *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
-		s.ClearUserID()
-	})
-}
-
-// SetCoinTypeID sets the "coin_type_id" field.
-func (u *DetailUpsertOne) SetCoinTypeID(v uuid.UUID) *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetCoinTypeID(v)
-	})
-}
-
-// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateCoinTypeID() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateCoinTypeID()
-	})
-}
-
-// ClearCoinTypeID clears the value of the "coin_type_id" field.
-func (u *DetailUpsertOne) ClearCoinTypeID() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearCoinTypeID()
-	})
-}
-
-// SetIoType sets the "io_type" field.
-func (u *DetailUpsertOne) SetIoType(v string) *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetIoType(v)
-	})
-}
-
-// UpdateIoType sets the "io_type" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateIoType() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateIoType()
-	})
-}
-
-// ClearIoType clears the value of the "io_type" field.
-func (u *DetailUpsertOne) ClearIoType() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearIoType()
-	})
-}
-
-// SetIoSubType sets the "io_sub_type" field.
-func (u *DetailUpsertOne) SetIoSubType(v string) *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetIoSubType(v)
-	})
-}
-
-// UpdateIoSubType sets the "io_sub_type" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateIoSubType() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateIoSubType()
-	})
-}
-
-// ClearIoSubType clears the value of the "io_sub_type" field.
-func (u *DetailUpsertOne) ClearIoSubType() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearIoSubType()
-	})
-}
-
-// SetAmount sets the "amount" field.
-func (u *DetailUpsertOne) SetAmount(v decimal.Decimal) *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetAmount(v)
-	})
-}
-
-// UpdateAmount sets the "amount" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateAmount() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateAmount()
-	})
-}
-
-// ClearAmount clears the value of the "amount" field.
-func (u *DetailUpsertOne) ClearAmount() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearAmount()
-	})
-}
-
-// SetFromCoinTypeID sets the "from_coin_type_id" field.
-func (u *DetailUpsertOne) SetFromCoinTypeID(v uuid.UUID) *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetFromCoinTypeID(v)
-	})
-}
-
-// UpdateFromCoinTypeID sets the "from_coin_type_id" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateFromCoinTypeID() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateFromCoinTypeID()
-	})
-}
-
-// ClearFromCoinTypeID clears the value of the "from_coin_type_id" field.
-func (u *DetailUpsertOne) ClearFromCoinTypeID() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearFromCoinTypeID()
-	})
-}
-
-// SetCoinUsdCurrency sets the "coin_usd_currency" field.
-func (u *DetailUpsertOne) SetCoinUsdCurrency(v decimal.Decimal) *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetCoinUsdCurrency(v)
-	})
-}
-
-// UpdateCoinUsdCurrency sets the "coin_usd_currency" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateCoinUsdCurrency() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateCoinUsdCurrency()
-	})
-}
-
-// ClearCoinUsdCurrency clears the value of the "coin_usd_currency" field.
-func (u *DetailUpsertOne) ClearCoinUsdCurrency() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearCoinUsdCurrency()
-	})
-}
-
-// SetIoExtra sets the "io_extra" field.
-func (u *DetailUpsertOne) SetIoExtra(v string) *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetIoExtra(v)
-	})
-}
-
-// UpdateIoExtra sets the "io_extra" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateIoExtra() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateIoExtra()
-	})
-}
-
-// ClearIoExtra clears the value of the "io_extra" field.
-func (u *DetailUpsertOne) ClearIoExtra() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearIoExtra()
-	})
-}
-
-// SetFromOldID sets the "from_old_id" field.
-func (u *DetailUpsertOne) SetFromOldID(v uuid.UUID) *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetFromOldID(v)
-	})
-}
-
-// UpdateFromOldID sets the "from_old_id" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateFromOldID() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateFromOldID()
-	})
-}
-
-// ClearFromOldID clears the value of the "from_old_id" field.
-func (u *DetailUpsertOne) ClearFromOldID() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearFromOldID()
+		s.ClearSampleCol()
 	})
 }
 
@@ -1427,213 +882,45 @@ func (u *DetailUpsertBulk) UpdateDeletedAt() *DetailUpsertBulk {
 	})
 }
 
-// SetAppID sets the "app_id" field.
-func (u *DetailUpsertBulk) SetAppID(v uuid.UUID) *DetailUpsertBulk {
+// SetAutoID sets the "auto_id" field.
+func (u *DetailUpsertBulk) SetAutoID(v uint32) *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
-		s.SetAppID(v)
+		s.SetAutoID(v)
 	})
 }
 
-// UpdateAppID sets the "app_id" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateAppID() *DetailUpsertBulk {
+// AddAutoID adds v to the "auto_id" field.
+func (u *DetailUpsertBulk) AddAutoID(v uint32) *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
-		s.UpdateAppID()
+		s.AddAutoID(v)
 	})
 }
 
-// ClearAppID clears the value of the "app_id" field.
-func (u *DetailUpsertBulk) ClearAppID() *DetailUpsertBulk {
+// UpdateAutoID sets the "auto_id" field to the value that was provided on create.
+func (u *DetailUpsertBulk) UpdateAutoID() *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
-		s.ClearAppID()
+		s.UpdateAutoID()
 	})
 }
 
-// SetUserID sets the "user_id" field.
-func (u *DetailUpsertBulk) SetUserID(v uuid.UUID) *DetailUpsertBulk {
+// SetSampleCol sets the "sample_col" field.
+func (u *DetailUpsertBulk) SetSampleCol(v string) *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
-		s.SetUserID(v)
+		s.SetSampleCol(v)
 	})
 }
 
-// UpdateUserID sets the "user_id" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateUserID() *DetailUpsertBulk {
+// UpdateSampleCol sets the "sample_col" field to the value that was provided on create.
+func (u *DetailUpsertBulk) UpdateSampleCol() *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
-		s.UpdateUserID()
+		s.UpdateSampleCol()
 	})
 }
 
-// ClearUserID clears the value of the "user_id" field.
-func (u *DetailUpsertBulk) ClearUserID() *DetailUpsertBulk {
+// ClearSampleCol clears the value of the "sample_col" field.
+func (u *DetailUpsertBulk) ClearSampleCol() *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
-		s.ClearUserID()
-	})
-}
-
-// SetCoinTypeID sets the "coin_type_id" field.
-func (u *DetailUpsertBulk) SetCoinTypeID(v uuid.UUID) *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetCoinTypeID(v)
-	})
-}
-
-// UpdateCoinTypeID sets the "coin_type_id" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateCoinTypeID() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateCoinTypeID()
-	})
-}
-
-// ClearCoinTypeID clears the value of the "coin_type_id" field.
-func (u *DetailUpsertBulk) ClearCoinTypeID() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearCoinTypeID()
-	})
-}
-
-// SetIoType sets the "io_type" field.
-func (u *DetailUpsertBulk) SetIoType(v string) *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetIoType(v)
-	})
-}
-
-// UpdateIoType sets the "io_type" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateIoType() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateIoType()
-	})
-}
-
-// ClearIoType clears the value of the "io_type" field.
-func (u *DetailUpsertBulk) ClearIoType() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearIoType()
-	})
-}
-
-// SetIoSubType sets the "io_sub_type" field.
-func (u *DetailUpsertBulk) SetIoSubType(v string) *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetIoSubType(v)
-	})
-}
-
-// UpdateIoSubType sets the "io_sub_type" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateIoSubType() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateIoSubType()
-	})
-}
-
-// ClearIoSubType clears the value of the "io_sub_type" field.
-func (u *DetailUpsertBulk) ClearIoSubType() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearIoSubType()
-	})
-}
-
-// SetAmount sets the "amount" field.
-func (u *DetailUpsertBulk) SetAmount(v decimal.Decimal) *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetAmount(v)
-	})
-}
-
-// UpdateAmount sets the "amount" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateAmount() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateAmount()
-	})
-}
-
-// ClearAmount clears the value of the "amount" field.
-func (u *DetailUpsertBulk) ClearAmount() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearAmount()
-	})
-}
-
-// SetFromCoinTypeID sets the "from_coin_type_id" field.
-func (u *DetailUpsertBulk) SetFromCoinTypeID(v uuid.UUID) *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetFromCoinTypeID(v)
-	})
-}
-
-// UpdateFromCoinTypeID sets the "from_coin_type_id" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateFromCoinTypeID() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateFromCoinTypeID()
-	})
-}
-
-// ClearFromCoinTypeID clears the value of the "from_coin_type_id" field.
-func (u *DetailUpsertBulk) ClearFromCoinTypeID() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearFromCoinTypeID()
-	})
-}
-
-// SetCoinUsdCurrency sets the "coin_usd_currency" field.
-func (u *DetailUpsertBulk) SetCoinUsdCurrency(v decimal.Decimal) *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetCoinUsdCurrency(v)
-	})
-}
-
-// UpdateCoinUsdCurrency sets the "coin_usd_currency" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateCoinUsdCurrency() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateCoinUsdCurrency()
-	})
-}
-
-// ClearCoinUsdCurrency clears the value of the "coin_usd_currency" field.
-func (u *DetailUpsertBulk) ClearCoinUsdCurrency() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearCoinUsdCurrency()
-	})
-}
-
-// SetIoExtra sets the "io_extra" field.
-func (u *DetailUpsertBulk) SetIoExtra(v string) *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetIoExtra(v)
-	})
-}
-
-// UpdateIoExtra sets the "io_extra" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateIoExtra() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateIoExtra()
-	})
-}
-
-// ClearIoExtra clears the value of the "io_extra" field.
-func (u *DetailUpsertBulk) ClearIoExtra() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearIoExtra()
-	})
-}
-
-// SetFromOldID sets the "from_old_id" field.
-func (u *DetailUpsertBulk) SetFromOldID(v uuid.UUID) *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.SetFromOldID(v)
-	})
-}
-
-// UpdateFromOldID sets the "from_old_id" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateFromOldID() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateFromOldID()
-	})
-}
-
-// ClearFromOldID clears the value of the "from_old_id" field.
-func (u *DetailUpsertBulk) ClearFromOldID() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.ClearFromOldID()
+		s.ClearSampleCol()
 	})
 }
 
