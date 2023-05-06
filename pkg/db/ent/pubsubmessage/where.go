@@ -101,7 +101,7 @@ func DeletedAt(v uint32) predicate.PubsubMessage {
 }
 
 // AutoID applies equality check predicate on the "auto_id" field. It's identical to AutoIDEQ.
-func AutoID(v int) predicate.PubsubMessage {
+func AutoID(v uint32) predicate.PubsubMessage {
 	return predicate.PubsubMessage(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAutoID), v))
 	})
@@ -335,21 +335,21 @@ func DeletedAtLTE(v uint32) predicate.PubsubMessage {
 }
 
 // AutoIDEQ applies the EQ predicate on the "auto_id" field.
-func AutoIDEQ(v int) predicate.PubsubMessage {
+func AutoIDEQ(v uint32) predicate.PubsubMessage {
 	return predicate.PubsubMessage(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldAutoID), v))
 	})
 }
 
 // AutoIDNEQ applies the NEQ predicate on the "auto_id" field.
-func AutoIDNEQ(v int) predicate.PubsubMessage {
+func AutoIDNEQ(v uint32) predicate.PubsubMessage {
 	return predicate.PubsubMessage(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldAutoID), v))
 	})
 }
 
 // AutoIDIn applies the In predicate on the "auto_id" field.
-func AutoIDIn(vs ...int) predicate.PubsubMessage {
+func AutoIDIn(vs ...uint32) predicate.PubsubMessage {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -360,7 +360,7 @@ func AutoIDIn(vs ...int) predicate.PubsubMessage {
 }
 
 // AutoIDNotIn applies the NotIn predicate on the "auto_id" field.
-func AutoIDNotIn(vs ...int) predicate.PubsubMessage {
+func AutoIDNotIn(vs ...uint32) predicate.PubsubMessage {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -371,28 +371,28 @@ func AutoIDNotIn(vs ...int) predicate.PubsubMessage {
 }
 
 // AutoIDGT applies the GT predicate on the "auto_id" field.
-func AutoIDGT(v int) predicate.PubsubMessage {
+func AutoIDGT(v uint32) predicate.PubsubMessage {
 	return predicate.PubsubMessage(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldAutoID), v))
 	})
 }
 
 // AutoIDGTE applies the GTE predicate on the "auto_id" field.
-func AutoIDGTE(v int) predicate.PubsubMessage {
+func AutoIDGTE(v uint32) predicate.PubsubMessage {
 	return predicate.PubsubMessage(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldAutoID), v))
 	})
 }
 
 // AutoIDLT applies the LT predicate on the "auto_id" field.
-func AutoIDLT(v int) predicate.PubsubMessage {
+func AutoIDLT(v uint32) predicate.PubsubMessage {
 	return predicate.PubsubMessage(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldAutoID), v))
 	})
 }
 
 // AutoIDLTE applies the LTE predicate on the "auto_id" field.
-func AutoIDLTE(v int) predicate.PubsubMessage {
+func AutoIDLTE(v uint32) predicate.PubsubMessage {
 	return predicate.PubsubMessage(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldAutoID), v))
 	})

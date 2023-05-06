@@ -31,7 +31,10 @@ func client() (*ent.Client, error) {
 
 func autoIncrementAutoID(next schema.Applier) schema.Applier {
 	return schema.ApplyFunc(func(ctx context.Context, conn dialect.ExecQuerier, plan *migrate.Plan) error {
-		if err := crudermigrate.AlterColumn(
+		if err := next.Apply(ctx, conn, plan); err != nil {
+			return err
+		}
+		return crudermigrate.AlterColumn(
 			ctx,
 			conn,
 			"service_template",
@@ -41,10 +44,7 @@ func autoIncrementAutoID(next schema.Applier) schema.Applier {
 			true,
 			false,
 			true,
-		); err != nil {
-			return err
-		}
-		return next.Apply(ctx, conn, plan)
+		)
 	})
 }
 
@@ -69,7 +69,7 @@ func WithTx(ctx context.Context, fn func(ctx context.Context, tx *ent.Tx) error)
 		return err
 	}
 
-	tx, err := cli.Debug().Tx(ctx)
+	tx, err := cli.Tx(ctx)
 	if err != nil {
 		return fmt.Errorf("fail get client transaction: %v", err)
 	}

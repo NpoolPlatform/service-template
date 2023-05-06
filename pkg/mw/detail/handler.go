@@ -16,6 +16,7 @@ type Handler struct {
 	AutoID    *uint32
 	ID        *uuid.UUID
 	SampleCol *string
+	Reqs      []*detailcrud.Req
 	Conds     *detailcrud.Conds
 	Offset    int32
 	Limit     int32
@@ -48,6 +49,26 @@ func WithID(ctx context.Context, id *string) func(context.Context, *Handler) err
 func WithSampleCol(ctx context.Context, sampleCol *string) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		h.SampleCol = sampleCol
+		return nil
+	}
+}
+
+func WithReqs(ctx context.Context, reqs []*npool.DetailReq) func(context.Context, *Handler) error {
+	return func(ctx context.Context, h *Handler) error {
+		h.Reqs = []*detailcrud.Req{}
+		for _, req := range reqs {
+			_req := &detailcrud.Req{
+				SampleCol: req.SampleCol,
+			}
+			if req.ID != nil {
+				id, err := uuid.Parse(req.GetID())
+				if err != nil {
+					return err
+				}
+				_req.ID = &id
+			}
+			h.Reqs = append(h.Reqs, _req)
+		}
 		return nil
 	}
 }

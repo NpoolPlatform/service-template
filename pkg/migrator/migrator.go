@@ -61,7 +61,7 @@ func migrateAutoID(ctx context.Context, table string, tx *ent.Tx) error {
 	_, err = tx.
 		ExecContext(
 			ctx,
-			`alter table `+table+` add column auto_id bigint not null auto_increment unique`,
+			`alter table `+table+` add column auto_id int unsigned not null auto_increment unique`,
 		)
 	if err != nil {
 		logger.Sugar().Infow(

@@ -41,8 +41,8 @@ type DetailMutation struct {
 	addupdated_at *int32
 	deleted_at    *uint32
 	adddeleted_at *int32
-	auto_id       *int
-	addauto_id    *int
+	auto_id       *uint32
+	addauto_id    *int32
 	sample_col    *string
 	clearedFields map[string]struct{}
 	done          bool
@@ -323,13 +323,13 @@ func (m *DetailMutation) ResetDeletedAt() {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (m *DetailMutation) SetAutoID(i int) {
-	m.auto_id = &i
+func (m *DetailMutation) SetAutoID(u uint32) {
+	m.auto_id = &u
 	m.addauto_id = nil
 }
 
 // AutoID returns the value of the "auto_id" field in the mutation.
-func (m *DetailMutation) AutoID() (r int, exists bool) {
+func (m *DetailMutation) AutoID() (r uint32, exists bool) {
 	v := m.auto_id
 	if v == nil {
 		return
@@ -340,7 +340,7 @@ func (m *DetailMutation) AutoID() (r int, exists bool) {
 // OldAutoID returns the old "auto_id" field's value of the Detail entity.
 // If the Detail object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldAutoID(ctx context.Context) (v int, err error) {
+func (m *DetailMutation) OldAutoID(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAutoID is only allowed on UpdateOne operations")
 	}
@@ -354,17 +354,17 @@ func (m *DetailMutation) OldAutoID(ctx context.Context) (v int, err error) {
 	return oldValue.AutoID, nil
 }
 
-// AddAutoID adds i to the "auto_id" field.
-func (m *DetailMutation) AddAutoID(i int) {
+// AddAutoID adds u to the "auto_id" field.
+func (m *DetailMutation) AddAutoID(u int32) {
 	if m.addauto_id != nil {
-		*m.addauto_id += i
+		*m.addauto_id += u
 	} else {
-		m.addauto_id = &i
+		m.addauto_id = &u
 	}
 }
 
 // AddedAutoID returns the value that was added to the "auto_id" field in this mutation.
-func (m *DetailMutation) AddedAutoID() (r int, exists bool) {
+func (m *DetailMutation) AddedAutoID() (r int32, exists bool) {
 	v := m.addauto_id
 	if v == nil {
 		return
@@ -530,7 +530,7 @@ func (m *DetailMutation) SetField(name string, value ent.Value) error {
 		m.SetDeletedAt(v)
 		return nil
 	case detail.FieldAutoID:
-		v, ok := value.(int)
+		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -610,7 +610,7 @@ func (m *DetailMutation) AddField(name string, value ent.Value) error {
 		m.AddDeletedAt(v)
 		return nil
 	case detail.FieldAutoID:
-		v, ok := value.(int)
+		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -731,8 +731,8 @@ type PubsubMessageMutation struct {
 	addupdated_at *int32
 	deleted_at    *uint32
 	adddeleted_at *int32
-	auto_id       *int
-	addauto_id    *int
+	auto_id       *uint32
+	addauto_id    *int32
 	message_id    *string
 	state         *string
 	resp_to_id    *uuid.UUID
@@ -1017,13 +1017,13 @@ func (m *PubsubMessageMutation) ResetDeletedAt() {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (m *PubsubMessageMutation) SetAutoID(i int) {
-	m.auto_id = &i
+func (m *PubsubMessageMutation) SetAutoID(u uint32) {
+	m.auto_id = &u
 	m.addauto_id = nil
 }
 
 // AutoID returns the value of the "auto_id" field in the mutation.
-func (m *PubsubMessageMutation) AutoID() (r int, exists bool) {
+func (m *PubsubMessageMutation) AutoID() (r uint32, exists bool) {
 	v := m.auto_id
 	if v == nil {
 		return
@@ -1034,7 +1034,7 @@ func (m *PubsubMessageMutation) AutoID() (r int, exists bool) {
 // OldAutoID returns the old "auto_id" field's value of the PubsubMessage entity.
 // If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PubsubMessageMutation) OldAutoID(ctx context.Context) (v int, err error) {
+func (m *PubsubMessageMutation) OldAutoID(ctx context.Context) (v uint32, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAutoID is only allowed on UpdateOne operations")
 	}
@@ -1048,17 +1048,17 @@ func (m *PubsubMessageMutation) OldAutoID(ctx context.Context) (v int, err error
 	return oldValue.AutoID, nil
 }
 
-// AddAutoID adds i to the "auto_id" field.
-func (m *PubsubMessageMutation) AddAutoID(i int) {
+// AddAutoID adds u to the "auto_id" field.
+func (m *PubsubMessageMutation) AddAutoID(u int32) {
 	if m.addauto_id != nil {
-		*m.addauto_id += i
+		*m.addauto_id += u
 	} else {
-		m.addauto_id = &i
+		m.addauto_id = &u
 	}
 }
 
 // AddedAutoID returns the value that was added to the "auto_id" field in this mutation.
-func (m *PubsubMessageMutation) AddedAutoID() (r int, exists bool) {
+func (m *PubsubMessageMutation) AddedAutoID() (r int32, exists bool) {
 	v := m.addauto_id
 	if v == nil {
 		return
@@ -1448,7 +1448,7 @@ func (m *PubsubMessageMutation) SetField(name string, value ent.Value) error {
 		m.SetDeletedAt(v)
 		return nil
 	case pubsubmessage.FieldAutoID:
-		v, ok := value.(int)
+		v, ok := value.(uint32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1556,7 +1556,7 @@ func (m *PubsubMessageMutation) AddField(name string, value ent.Value) error {
 		m.AddDeletedAt(v)
 		return nil
 	case pubsubmessage.FieldAutoID:
-		v, ok := value.(int)
+		v, ok := value.(int32)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

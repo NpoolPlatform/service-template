@@ -66,8 +66,8 @@ func (dc *DetailCreate) SetNillableDeletedAt(u *uint32) *DetailCreate {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (dc *DetailCreate) SetAutoID(i int) *DetailCreate {
-	dc.mutation.SetAutoID(i)
+func (dc *DetailCreate) SetAutoID(u uint32) *DetailCreate {
+	dc.mutation.SetAutoID(u)
 	return dc
 }
 
@@ -290,7 +290,7 @@ func (dc *DetailCreate) createSpec() (*Detail, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := dc.mutation.AutoID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: detail.FieldAutoID,
 		})
@@ -413,7 +413,7 @@ func (u *DetailUpsert) AddDeletedAt(v uint32) *DetailUpsert {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (u *DetailUpsert) SetAutoID(v int) *DetailUpsert {
+func (u *DetailUpsert) SetAutoID(v uint32) *DetailUpsert {
 	u.Set(detail.FieldAutoID, v)
 	return u
 }
@@ -425,7 +425,7 @@ func (u *DetailUpsert) UpdateAutoID() *DetailUpsert {
 }
 
 // AddAutoID adds v to the "auto_id" field.
-func (u *DetailUpsert) AddAutoID(v int) *DetailUpsert {
+func (u *DetailUpsert) AddAutoID(v uint32) *DetailUpsert {
 	u.Add(detail.FieldAutoID, v)
 	return u
 }
@@ -562,14 +562,14 @@ func (u *DetailUpsertOne) UpdateDeletedAt() *DetailUpsertOne {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (u *DetailUpsertOne) SetAutoID(v int) *DetailUpsertOne {
+func (u *DetailUpsertOne) SetAutoID(v uint32) *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
 		s.SetAutoID(v)
 	})
 }
 
 // AddAutoID adds v to the "auto_id" field.
-func (u *DetailUpsertOne) AddAutoID(v int) *DetailUpsertOne {
+func (u *DetailUpsertOne) AddAutoID(v uint32) *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
 		s.AddAutoID(v)
 	})
@@ -883,14 +883,14 @@ func (u *DetailUpsertBulk) UpdateDeletedAt() *DetailUpsertBulk {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (u *DetailUpsertBulk) SetAutoID(v int) *DetailUpsertBulk {
+func (u *DetailUpsertBulk) SetAutoID(v uint32) *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
 		s.SetAutoID(v)
 	})
 }
 
 // AddAutoID adds v to the "auto_id" field.
-func (u *DetailUpsertBulk) AddAutoID(v int) *DetailUpsertBulk {
+func (u *DetailUpsertBulk) AddAutoID(v uint32) *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
 		s.AddAutoID(v)
 	})

@@ -66,8 +66,8 @@ func (pmc *PubsubMessageCreate) SetNillableDeletedAt(u *uint32) *PubsubMessageCr
 }
 
 // SetAutoID sets the "auto_id" field.
-func (pmc *PubsubMessageCreate) SetAutoID(i int) *PubsubMessageCreate {
-	pmc.mutation.SetAutoID(i)
+func (pmc *PubsubMessageCreate) SetAutoID(u uint32) *PubsubMessageCreate {
+	pmc.mutation.SetAutoID(u)
 	return pmc
 }
 
@@ -353,7 +353,7 @@ func (pmc *PubsubMessageCreate) createSpec() (*PubsubMessage, *sqlgraph.CreateSp
 	}
 	if value, ok := pmc.mutation.AutoID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: pubsubmessage.FieldAutoID,
 		})
@@ -508,7 +508,7 @@ func (u *PubsubMessageUpsert) AddDeletedAt(v uint32) *PubsubMessageUpsert {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (u *PubsubMessageUpsert) SetAutoID(v int) *PubsubMessageUpsert {
+func (u *PubsubMessageUpsert) SetAutoID(v uint32) *PubsubMessageUpsert {
 	u.Set(pubsubmessage.FieldAutoID, v)
 	return u
 }
@@ -520,7 +520,7 @@ func (u *PubsubMessageUpsert) UpdateAutoID() *PubsubMessageUpsert {
 }
 
 // AddAutoID adds v to the "auto_id" field.
-func (u *PubsubMessageUpsert) AddAutoID(v int) *PubsubMessageUpsert {
+func (u *PubsubMessageUpsert) AddAutoID(v uint32) *PubsubMessageUpsert {
 	u.Add(pubsubmessage.FieldAutoID, v)
 	return u
 }
@@ -729,14 +729,14 @@ func (u *PubsubMessageUpsertOne) UpdateDeletedAt() *PubsubMessageUpsertOne {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (u *PubsubMessageUpsertOne) SetAutoID(v int) *PubsubMessageUpsertOne {
+func (u *PubsubMessageUpsertOne) SetAutoID(v uint32) *PubsubMessageUpsertOne {
 	return u.Update(func(s *PubsubMessageUpsert) {
 		s.SetAutoID(v)
 	})
 }
 
 // AddAutoID adds v to the "auto_id" field.
-func (u *PubsubMessageUpsertOne) AddAutoID(v int) *PubsubMessageUpsertOne {
+func (u *PubsubMessageUpsertOne) AddAutoID(v uint32) *PubsubMessageUpsertOne {
 	return u.Update(func(s *PubsubMessageUpsert) {
 		s.AddAutoID(v)
 	})
@@ -1134,14 +1134,14 @@ func (u *PubsubMessageUpsertBulk) UpdateDeletedAt() *PubsubMessageUpsertBulk {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (u *PubsubMessageUpsertBulk) SetAutoID(v int) *PubsubMessageUpsertBulk {
+func (u *PubsubMessageUpsertBulk) SetAutoID(v uint32) *PubsubMessageUpsertBulk {
 	return u.Update(func(s *PubsubMessageUpsert) {
 		s.SetAutoID(v)
 	})
 }
 
 // AddAutoID adds v to the "auto_id" field.
-func (u *PubsubMessageUpsertBulk) AddAutoID(v int) *PubsubMessageUpsertBulk {
+func (u *PubsubMessageUpsertBulk) AddAutoID(v uint32) *PubsubMessageUpsertBulk {
 	return u.Update(func(s *PubsubMessageUpsert) {
 		s.AddAutoID(v)
 	})

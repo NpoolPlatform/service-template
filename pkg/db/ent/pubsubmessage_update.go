@@ -85,15 +85,15 @@ func (pmu *PubsubMessageUpdate) AddDeletedAt(u int32) *PubsubMessageUpdate {
 }
 
 // SetAutoID sets the "auto_id" field.
-func (pmu *PubsubMessageUpdate) SetAutoID(i int) *PubsubMessageUpdate {
+func (pmu *PubsubMessageUpdate) SetAutoID(u uint32) *PubsubMessageUpdate {
 	pmu.mutation.ResetAutoID()
-	pmu.mutation.SetAutoID(i)
+	pmu.mutation.SetAutoID(u)
 	return pmu
 }
 
-// AddAutoID adds i to the "auto_id" field.
-func (pmu *PubsubMessageUpdate) AddAutoID(i int) *PubsubMessageUpdate {
-	pmu.mutation.AddAutoID(i)
+// AddAutoID adds u to the "auto_id" field.
+func (pmu *PubsubMessageUpdate) AddAutoID(u int32) *PubsubMessageUpdate {
+	pmu.mutation.AddAutoID(u)
 	return pmu
 }
 
@@ -339,14 +339,14 @@ func (pmu *PubsubMessageUpdate) sqlSave(ctx context.Context) (n int, err error) 
 	}
 	if value, ok := pmu.mutation.AutoID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: pubsubmessage.FieldAutoID,
 		})
 	}
 	if value, ok := pmu.mutation.AddedAutoID(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: pubsubmessage.FieldAutoID,
 		})
@@ -493,15 +493,15 @@ func (pmuo *PubsubMessageUpdateOne) AddDeletedAt(u int32) *PubsubMessageUpdateOn
 }
 
 // SetAutoID sets the "auto_id" field.
-func (pmuo *PubsubMessageUpdateOne) SetAutoID(i int) *PubsubMessageUpdateOne {
+func (pmuo *PubsubMessageUpdateOne) SetAutoID(u uint32) *PubsubMessageUpdateOne {
 	pmuo.mutation.ResetAutoID()
-	pmuo.mutation.SetAutoID(i)
+	pmuo.mutation.SetAutoID(u)
 	return pmuo
 }
 
-// AddAutoID adds i to the "auto_id" field.
-func (pmuo *PubsubMessageUpdateOne) AddAutoID(i int) *PubsubMessageUpdateOne {
-	pmuo.mutation.AddAutoID(i)
+// AddAutoID adds u to the "auto_id" field.
+func (pmuo *PubsubMessageUpdateOne) AddAutoID(u int32) *PubsubMessageUpdateOne {
+	pmuo.mutation.AddAutoID(u)
 	return pmuo
 }
 
@@ -777,14 +777,14 @@ func (pmuo *PubsubMessageUpdateOne) sqlSave(ctx context.Context) (_node *PubsubM
 	}
 	if value, ok := pmuo.mutation.AutoID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: pubsubmessage.FieldAutoID,
 		})
 	}
 	if value, ok := pmuo.mutation.AddedAutoID(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeUint32,
 			Value:  value,
 			Column: pubsubmessage.FieldAutoID,
 		})

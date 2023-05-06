@@ -23,7 +23,7 @@ type Detail struct {
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
 	// AutoID holds the value of the "auto_id" field.
-	AutoID int `json:"auto_id,omitempty"`
+	AutoID uint32 `json:"auto_id,omitempty"`
 	// SampleCol holds the value of the "sample_col" field.
 	SampleCol string `json:"sample_col,omitempty"`
 }
@@ -82,7 +82,7 @@ func (d *Detail) assignValues(columns []string, values []interface{}) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field auto_id", values[i])
 			} else if value.Valid {
-				d.AutoID = int(value.Int64)
+				d.AutoID = uint32(value.Int64)
 			}
 		case detail.FieldSampleCol:
 			if value, ok := values[i].(*sql.NullString); !ok {
