@@ -1,5 +1,7 @@
 USE service_template;
 
+DROP PROCEDURE IF EXISTS;
+
 DELIMITER $$
 CREATE PROCEDURE id_to_ent_id()
 BEGIN
@@ -40,6 +42,6 @@ BEGIN
     ALTER TABLE details DROP PRIMARY KEY;
     ALTER TABLE details ADD PRIMARY KEY (id);
   END IF;
-END$$
+END $$
 
 CALL id_to_ent_id();
