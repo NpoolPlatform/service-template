@@ -7,20 +7,20 @@ import (
 	"github.com/NpoolPlatform/service-template/pkg/db/mixin"
 )
 
-// Detail holds the schema definition for the Detail entity.
-type Detail struct {
+// IgnoreID holds the schema definition for the IgnoreID entity.
+type IgnoreID struct {
 	ent.Schema
 }
 
-func (Detail) Mixin() []ent.Mixin {
+func (IgnoreID) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.TimeMixin{},
 		crudermixin.AutoIDMixin{},
 	}
 }
 
-// Fields of the Detail.
-func (Detail) Fields() []ent.Field {
+// Fields of the IgnoreID.
+func (IgnoreID) Fields() []ent.Field {
 	return []ent.Field{
 		field.
 			String("sample_col").
@@ -29,7 +29,7 @@ func (Detail) Fields() []ent.Field {
 	}
 }
 
-// Edges of the Detail.
-func (Detail) Edges() []ent.Edge {
+// Edges of the IgnoreID.
+func (IgnoreID) Edges() []ent.Edge {
 	return nil
 }

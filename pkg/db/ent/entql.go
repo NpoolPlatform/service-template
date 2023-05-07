@@ -4,6 +4,7 @@ package ent
 
 import (
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/ignoreid"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/pubsubmessage"
 
 	"entgo.io/ent/dialect/sql"
@@ -14,7 +15,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 2)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 3)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   detail.Table,
@@ -34,6 +35,24 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   ignoreid.Table,
+			Columns: ignoreid.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeUUID,
+				Column: ignoreid.FieldID,
+			},
+		},
+		Type: "IgnoreID",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			ignoreid.FieldCreatedAt: {Type: field.TypeUint32, Column: ignoreid.FieldCreatedAt},
+			ignoreid.FieldUpdatedAt: {Type: field.TypeUint32, Column: ignoreid.FieldUpdatedAt},
+			ignoreid.FieldDeletedAt: {Type: field.TypeUint32, Column: ignoreid.FieldDeletedAt},
+			ignoreid.FieldAutoID:    {Type: field.TypeUint32, Column: ignoreid.FieldAutoID},
+			ignoreid.FieldSampleCol: {Type: field.TypeString, Column: ignoreid.FieldSampleCol},
+		},
+	}
+	graph.Nodes[2] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   pubsubmessage.Table,
 			Columns: pubsubmessage.Columns,
@@ -130,6 +149,71 @@ func (f *DetailFilter) WhereSampleCol(p entql.StringP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (iiq *IgnoreIDQuery) addPredicate(pred func(s *sql.Selector)) {
+	iiq.predicates = append(iiq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the IgnoreIDQuery builder.
+func (iiq *IgnoreIDQuery) Filter() *IgnoreIDFilter {
+	return &IgnoreIDFilter{config: iiq.config, predicateAdder: iiq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *IgnoreIDMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the IgnoreIDMutation builder.
+func (m *IgnoreIDMutation) Filter() *IgnoreIDFilter {
+	return &IgnoreIDFilter{config: m.config, predicateAdder: m}
+}
+
+// IgnoreIDFilter provides a generic filtering capability at runtime for IgnoreIDQuery.
+type IgnoreIDFilter struct {
+	predicateAdder
+	config
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *IgnoreIDFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql [16]byte predicate on the id field.
+func (f *IgnoreIDFilter) WhereID(p entql.ValueP) {
+	f.Where(p.Field(ignoreid.FieldID))
+}
+
+// WhereCreatedAt applies the entql uint32 predicate on the created_at field.
+func (f *IgnoreIDFilter) WhereCreatedAt(p entql.Uint32P) {
+	f.Where(p.Field(ignoreid.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql uint32 predicate on the updated_at field.
+func (f *IgnoreIDFilter) WhereUpdatedAt(p entql.Uint32P) {
+	f.Where(p.Field(ignoreid.FieldUpdatedAt))
+}
+
+// WhereDeletedAt applies the entql uint32 predicate on the deleted_at field.
+func (f *IgnoreIDFilter) WhereDeletedAt(p entql.Uint32P) {
+	f.Where(p.Field(ignoreid.FieldDeletedAt))
+}
+
+// WhereAutoID applies the entql uint32 predicate on the auto_id field.
+func (f *IgnoreIDFilter) WhereAutoID(p entql.Uint32P) {
+	f.Where(p.Field(ignoreid.FieldAutoID))
+}
+
+// WhereSampleCol applies the entql string predicate on the sample_col field.
+func (f *IgnoreIDFilter) WhereSampleCol(p entql.StringP) {
+	f.Where(p.Field(ignoreid.FieldSampleCol))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (pmq *PubsubMessageQuery) addPredicate(pred func(s *sql.Selector)) {
 	pmq.predicates = append(pmq.predicates, pred)
 }
@@ -158,7 +242,7 @@ type PubsubMessageFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *PubsubMessageFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

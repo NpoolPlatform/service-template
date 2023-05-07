@@ -6,6 +6,7 @@ import (
 	"context"
 
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/ignoreid"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/pubsubmessage"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/schema"
 	"github.com/google/uuid"
@@ -30,6 +31,8 @@ func init() {
 	}
 	detailMixinFields0 := detailMixin[0].Fields()
 	_ = detailMixinFields0
+	detailMixinFields1 := detailMixin[1].Fields()
+	_ = detailMixinFields1
 	detailFields := schema.Detail{}.Fields()
 	_ = detailFields
 	// detailDescCreatedAt is the schema descriptor for created_at field.
@@ -47,13 +50,51 @@ func init() {
 	// detail.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	detail.DefaultDeletedAt = detailDescDeletedAt.Default.(func() uint32)
 	// detailDescSampleCol is the schema descriptor for sample_col field.
-	detailDescSampleCol := detailFields[1].Descriptor()
+	detailDescSampleCol := detailFields[0].Descriptor()
 	// detail.DefaultSampleCol holds the default value on creation for the sample_col field.
 	detail.DefaultSampleCol = detailDescSampleCol.Default.(string)
 	// detailDescID is the schema descriptor for id field.
-	detailDescID := detailFields[0].Descriptor()
+	detailDescID := detailMixinFields1[0].Descriptor()
 	// detail.DefaultID holds the default value on creation for the id field.
 	detail.DefaultID = detailDescID.Default.(func() uuid.UUID)
+	ignoreidMixin := schema.IgnoreID{}.Mixin()
+	ignoreid.Policy = privacy.NewPolicies(ignoreidMixin[0], schema.IgnoreID{})
+	ignoreid.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := ignoreid.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	ignoreidMixinFields0 := ignoreidMixin[0].Fields()
+	_ = ignoreidMixinFields0
+	ignoreidMixinFields1 := ignoreidMixin[1].Fields()
+	_ = ignoreidMixinFields1
+	ignoreidFields := schema.IgnoreID{}.Fields()
+	_ = ignoreidFields
+	// ignoreidDescCreatedAt is the schema descriptor for created_at field.
+	ignoreidDescCreatedAt := ignoreidMixinFields0[0].Descriptor()
+	// ignoreid.DefaultCreatedAt holds the default value on creation for the created_at field.
+	ignoreid.DefaultCreatedAt = ignoreidDescCreatedAt.Default.(func() uint32)
+	// ignoreidDescUpdatedAt is the schema descriptor for updated_at field.
+	ignoreidDescUpdatedAt := ignoreidMixinFields0[1].Descriptor()
+	// ignoreid.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	ignoreid.DefaultUpdatedAt = ignoreidDescUpdatedAt.Default.(func() uint32)
+	// ignoreid.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	ignoreid.UpdateDefaultUpdatedAt = ignoreidDescUpdatedAt.UpdateDefault.(func() uint32)
+	// ignoreidDescDeletedAt is the schema descriptor for deleted_at field.
+	ignoreidDescDeletedAt := ignoreidMixinFields0[2].Descriptor()
+	// ignoreid.DefaultDeletedAt holds the default value on creation for the deleted_at field.
+	ignoreid.DefaultDeletedAt = ignoreidDescDeletedAt.Default.(func() uint32)
+	// ignoreidDescSampleCol is the schema descriptor for sample_col field.
+	ignoreidDescSampleCol := ignoreidFields[0].Descriptor()
+	// ignoreid.DefaultSampleCol holds the default value on creation for the sample_col field.
+	ignoreid.DefaultSampleCol = ignoreidDescSampleCol.Default.(string)
+	// ignoreidDescID is the schema descriptor for id field.
+	ignoreidDescID := ignoreidMixinFields1[0].Descriptor()
+	// ignoreid.DefaultID holds the default value on creation for the id field.
+	ignoreid.DefaultID = ignoreidDescID.Default.(func() uuid.UUID)
 	pubsubmessageMixin := schema.PubsubMessage{}.Mixin()
 	pubsubmessage.Policy = privacy.NewPolicies(pubsubmessageMixin[0], schema.PubsubMessage{})
 	pubsubmessage.Hooks[0] = func(next ent.Mutator) ent.Mutator {
@@ -66,6 +107,8 @@ func init() {
 	}
 	pubsubmessageMixinFields0 := pubsubmessageMixin[0].Fields()
 	_ = pubsubmessageMixinFields0
+	pubsubmessageMixinFields1 := pubsubmessageMixin[1].Fields()
+	_ = pubsubmessageMixinFields1
 	pubsubmessageFields := schema.PubsubMessage{}.Fields()
 	_ = pubsubmessageFields
 	// pubsubmessageDescCreatedAt is the schema descriptor for created_at field.
@@ -83,27 +126,31 @@ func init() {
 	// pubsubmessage.DefaultDeletedAt holds the default value on creation for the deleted_at field.
 	pubsubmessage.DefaultDeletedAt = pubsubmessageDescDeletedAt.Default.(func() uint32)
 	// pubsubmessageDescMessageID is the schema descriptor for message_id field.
-	pubsubmessageDescMessageID := pubsubmessageFields[1].Descriptor()
+	pubsubmessageDescMessageID := pubsubmessageFields[0].Descriptor()
 	// pubsubmessage.DefaultMessageID holds the default value on creation for the message_id field.
 	pubsubmessage.DefaultMessageID = pubsubmessageDescMessageID.Default.(string)
 	// pubsubmessageDescState is the schema descriptor for state field.
-	pubsubmessageDescState := pubsubmessageFields[2].Descriptor()
+	pubsubmessageDescState := pubsubmessageFields[1].Descriptor()
 	// pubsubmessage.DefaultState holds the default value on creation for the state field.
 	pubsubmessage.DefaultState = pubsubmessageDescState.Default.(string)
 	// pubsubmessageDescRespToID is the schema descriptor for resp_to_id field.
-	pubsubmessageDescRespToID := pubsubmessageFields[3].Descriptor()
+	pubsubmessageDescRespToID := pubsubmessageFields[2].Descriptor()
 	// pubsubmessage.DefaultRespToID holds the default value on creation for the resp_to_id field.
 	pubsubmessage.DefaultRespToID = pubsubmessageDescRespToID.Default.(func() uuid.UUID)
 	// pubsubmessageDescUndoID is the schema descriptor for undo_id field.
-	pubsubmessageDescUndoID := pubsubmessageFields[4].Descriptor()
+	pubsubmessageDescUndoID := pubsubmessageFields[3].Descriptor()
 	// pubsubmessage.DefaultUndoID holds the default value on creation for the undo_id field.
 	pubsubmessage.DefaultUndoID = pubsubmessageDescUndoID.Default.(func() uuid.UUID)
 	// pubsubmessageDescArguments is the schema descriptor for arguments field.
-	pubsubmessageDescArguments := pubsubmessageFields[5].Descriptor()
+	pubsubmessageDescArguments := pubsubmessageFields[4].Descriptor()
 	// pubsubmessage.DefaultArguments holds the default value on creation for the arguments field.
 	pubsubmessage.DefaultArguments = pubsubmessageDescArguments.Default.(string)
+	// pubsubmessageDescID is the schema descriptor for id field.
+	pubsubmessageDescID := pubsubmessageMixinFields1[0].Descriptor()
+	// pubsubmessage.DefaultID holds the default value on creation for the id field.
+	pubsubmessage.DefaultID = pubsubmessageDescID.Default.(func() uuid.UUID)
 }
 
 const (
-	Version = "v0.11.2" // Version of ent codegen.
+	Version = "v0.12.0" // Version of ent codegen.
 )

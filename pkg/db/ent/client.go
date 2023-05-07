@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/ignoreid"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/pubsubmessage"
 
 	"entgo.io/ent/dialect"
@@ -25,6 +26,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Detail is the client for interacting with the Detail builders.
 	Detail *DetailClient
+	// IgnoreID is the client for interacting with the IgnoreID builders.
+	IgnoreID *IgnoreIDClient
 	// PubsubMessage is the client for interacting with the PubsubMessage builders.
 	PubsubMessage *PubsubMessageClient
 }
@@ -41,6 +44,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Detail = NewDetailClient(c.config)
+	c.IgnoreID = NewIgnoreIDClient(c.config)
 	c.PubsubMessage = NewPubsubMessageClient(c.config)
 }
 
@@ -76,6 +80,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ctx:           ctx,
 		config:        cfg,
 		Detail:        NewDetailClient(cfg),
+		IgnoreID:      NewIgnoreIDClient(cfg),
 		PubsubMessage: NewPubsubMessageClient(cfg),
 	}, nil
 }
@@ -97,6 +102,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ctx:           ctx,
 		config:        cfg,
 		Detail:        NewDetailClient(cfg),
+		IgnoreID:      NewIgnoreIDClient(cfg),
 		PubsubMessage: NewPubsubMessageClient(cfg),
 	}, nil
 }
@@ -128,6 +134,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.Detail.Use(hooks...)
+	c.IgnoreID.Use(hooks...)
 	c.PubsubMessage.Use(hooks...)
 }
 
@@ -220,6 +227,97 @@ func (c *DetailClient) GetX(ctx context.Context, id uuid.UUID) *Detail {
 func (c *DetailClient) Hooks() []Hook {
 	hooks := c.hooks.Detail
 	return append(hooks[:len(hooks):len(hooks)], detail.Hooks[:]...)
+}
+
+// IgnoreIDClient is a client for the IgnoreID schema.
+type IgnoreIDClient struct {
+	config
+}
+
+// NewIgnoreIDClient returns a client for the IgnoreID from the given config.
+func NewIgnoreIDClient(c config) *IgnoreIDClient {
+	return &IgnoreIDClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `ignoreid.Hooks(f(g(h())))`.
+func (c *IgnoreIDClient) Use(hooks ...Hook) {
+	c.hooks.IgnoreID = append(c.hooks.IgnoreID, hooks...)
+}
+
+// Create returns a builder for creating a IgnoreID entity.
+func (c *IgnoreIDClient) Create() *IgnoreIDCreate {
+	mutation := newIgnoreIDMutation(c.config, OpCreate)
+	return &IgnoreIDCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of IgnoreID entities.
+func (c *IgnoreIDClient) CreateBulk(builders ...*IgnoreIDCreate) *IgnoreIDCreateBulk {
+	return &IgnoreIDCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for IgnoreID.
+func (c *IgnoreIDClient) Update() *IgnoreIDUpdate {
+	mutation := newIgnoreIDMutation(c.config, OpUpdate)
+	return &IgnoreIDUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *IgnoreIDClient) UpdateOne(ii *IgnoreID) *IgnoreIDUpdateOne {
+	mutation := newIgnoreIDMutation(c.config, OpUpdateOne, withIgnoreID(ii))
+	return &IgnoreIDUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *IgnoreIDClient) UpdateOneID(id uuid.UUID) *IgnoreIDUpdateOne {
+	mutation := newIgnoreIDMutation(c.config, OpUpdateOne, withIgnoreIDID(id))
+	return &IgnoreIDUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for IgnoreID.
+func (c *IgnoreIDClient) Delete() *IgnoreIDDelete {
+	mutation := newIgnoreIDMutation(c.config, OpDelete)
+	return &IgnoreIDDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *IgnoreIDClient) DeleteOne(ii *IgnoreID) *IgnoreIDDeleteOne {
+	return c.DeleteOneID(ii.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *IgnoreIDClient) DeleteOneID(id uuid.UUID) *IgnoreIDDeleteOne {
+	builder := c.Delete().Where(ignoreid.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &IgnoreIDDeleteOne{builder}
+}
+
+// Query returns a query builder for IgnoreID.
+func (c *IgnoreIDClient) Query() *IgnoreIDQuery {
+	return &IgnoreIDQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a IgnoreID entity by its id.
+func (c *IgnoreIDClient) Get(ctx context.Context, id uuid.UUID) (*IgnoreID, error) {
+	return c.Query().Where(ignoreid.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *IgnoreIDClient) GetX(ctx context.Context, id uuid.UUID) *IgnoreID {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *IgnoreIDClient) Hooks() []Hook {
+	hooks := c.hooks.IgnoreID
+	return append(hooks[:len(hooks):len(hooks)], ignoreid.Hooks[:]...)
 }
 
 // PubsubMessageClient is a client for the PubsubMessage schema.

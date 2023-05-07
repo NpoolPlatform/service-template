@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/ignoreid"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/pubsubmessage"
 )
 
@@ -33,6 +34,7 @@ type OrderFunc func(*sql.Selector)
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
 		detail.Table:        detail.ValidColumn,
+		ignoreid.Table:      ignoreid.ValidColumn,
 		pubsubmessage.Table: pubsubmessage.ValidColumn,
 	}
 	check, ok := checks[table]

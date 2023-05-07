@@ -23,6 +23,21 @@ var (
 		Columns:    DetailsColumns,
 		PrimaryKey: []*schema.Column{DetailsColumns[0]},
 	}
+	// IgnoreIdsColumns holds the columns for the "ignore_ids" table.
+	IgnoreIdsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "created_at", Type: field.TypeUint32},
+		{Name: "updated_at", Type: field.TypeUint32},
+		{Name: "deleted_at", Type: field.TypeUint32},
+		{Name: "auto_id", Type: field.TypeUint32, Unique: true},
+		{Name: "sample_col", Type: field.TypeString, Nullable: true, Default: ""},
+	}
+	// IgnoreIdsTable holds the schema information for the "ignore_ids" table.
+	IgnoreIdsTable = &schema.Table{
+		Name:       "ignore_ids",
+		Columns:    IgnoreIdsColumns,
+		PrimaryKey: []*schema.Column{IgnoreIdsColumns[0]},
+	}
 	// PubsubMessagesColumns holds the columns for the "pubsub_messages" table.
 	PubsubMessagesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -57,6 +72,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		DetailsTable,
+		IgnoreIdsTable,
 		PubsubMessagesTable,
 	}
 )

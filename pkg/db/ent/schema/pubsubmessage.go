@@ -26,9 +26,6 @@ func (PubsubMessage) Mixin() []ent.Mixin {
 func (PubsubMessage) Fields() []ent.Field {
 	return []ent.Field{
 		field.
-			UUID("id", uuid.UUID{}).
-			Unique(),
-		field.
 			String("message_id").
 			Optional().
 			Default(msgpb.MsgID_DefaultMsgID.String()),

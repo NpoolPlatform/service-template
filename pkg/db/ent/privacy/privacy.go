@@ -174,6 +174,30 @@ func (f DetailMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.DetailMutation", m)
 }
 
+// The IgnoreIDQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type IgnoreIDQueryRuleFunc func(context.Context, *ent.IgnoreIDQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f IgnoreIDQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.IgnoreIDQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.IgnoreIDQuery", q)
+}
+
+// The IgnoreIDMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type IgnoreIDMutationRuleFunc func(context.Context, *ent.IgnoreIDMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f IgnoreIDMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.IgnoreIDMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.IgnoreIDMutation", m)
+}
+
 // The PubsubMessageQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type PubsubMessageQueryRuleFunc func(context.Context, *ent.PubsubMessageQuery) error
@@ -235,6 +259,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
 	case *ent.DetailQuery:
 		return q.Filter(), nil
+	case *ent.IgnoreIDQuery:
+		return q.Filter(), nil
 	case *ent.PubsubMessageQuery:
 		return q.Filter(), nil
 	default:
@@ -245,6 +271,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
 	case *ent.DetailMutation:
+		return m.Filter(), nil
+	case *ent.IgnoreIDMutation:
 		return m.Filter(), nil
 	case *ent.PubsubMessageMutation:
 		return m.Filter(), nil

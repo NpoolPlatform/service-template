@@ -16,6 +16,8 @@ type Tx struct {
 	config
 	// Detail is the client for interacting with the Detail builders.
 	Detail *DetailClient
+	// IgnoreID is the client for interacting with the IgnoreID builders.
+	IgnoreID *IgnoreIDClient
 	// PubsubMessage is the client for interacting with the PubsubMessage builders.
 	PubsubMessage *PubsubMessageClient
 
@@ -154,6 +156,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Detail = NewDetailClient(tx.config)
+	tx.IgnoreID = NewIgnoreIDClient(tx.config)
 	tx.PubsubMessage = NewPubsubMessageClient(tx.config)
 }
 

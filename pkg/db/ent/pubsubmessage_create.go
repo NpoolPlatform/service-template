@@ -147,6 +147,14 @@ func (pmc *PubsubMessageCreate) SetID(u uuid.UUID) *PubsubMessageCreate {
 	return pmc
 }
 
+// SetNillableID sets the "id" field if the given value is not nil.
+func (pmc *PubsubMessageCreate) SetNillableID(u *uuid.UUID) *PubsubMessageCreate {
+	if u != nil {
+		pmc.SetID(*u)
+	}
+	return pmc
+}
+
 // Mutation returns the PubsubMessageMutation object of the builder.
 func (pmc *PubsubMessageCreate) Mutation() *PubsubMessageMutation {
 	return pmc.mutation
@@ -272,6 +280,13 @@ func (pmc *PubsubMessageCreate) defaults() error {
 	if _, ok := pmc.mutation.Arguments(); !ok {
 		v := pubsubmessage.DefaultArguments
 		pmc.mutation.SetArguments(v)
+	}
+	if _, ok := pmc.mutation.ID(); !ok {
+		if pubsubmessage.DefaultID == nil {
+			return fmt.Errorf("ent: uninitialized pubsubmessage.DefaultID (forgotten import ent/runtime?)")
+		}
+		v := pubsubmessage.DefaultID()
+		pmc.mutation.SetID(v)
 	}
 	return nil
 }

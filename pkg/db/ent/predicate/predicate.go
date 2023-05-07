@@ -9,5 +9,8 @@ import (
 // Detail is the predicate function for detail builders.
 type Detail func(*sql.Selector)
 
+// IgnoreID is the predicate function for ignoreid builders.
+type IgnoreID func(*sql.Selector)
+
 // PubsubMessage is the predicate function for pubsubmessage builders.
 type PubsubMessage func(*sql.Selector)

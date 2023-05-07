@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
+	"github.com/NpoolPlatform/service-template/pkg/db/ent/ignoreid"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/pubsubmessage"
 	"github.com/google/uuid"
@@ -26,6 +27,7 @@ const (
 
 	// Node types.
 	TypeDetail        = "Detail"
+	TypeIgnoreID      = "IgnoreID"
 	TypePubsubMessage = "PubsubMessage"
 )
 
@@ -717,6 +719,696 @@ func (m *DetailMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *DetailMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Detail edge %s", name)
+}
+
+// IgnoreIDMutation represents an operation that mutates the IgnoreID nodes in the graph.
+type IgnoreIDMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *uuid.UUID
+	created_at    *uint32
+	addcreated_at *int32
+	updated_at    *uint32
+	addupdated_at *int32
+	deleted_at    *uint32
+	adddeleted_at *int32
+	auto_id       *uint32
+	addauto_id    *int32
+	sample_col    *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*IgnoreID, error)
+	predicates    []predicate.IgnoreID
+}
+
+var _ ent.Mutation = (*IgnoreIDMutation)(nil)
+
+// ignoreidOption allows management of the mutation configuration using functional options.
+type ignoreidOption func(*IgnoreIDMutation)
+
+// newIgnoreIDMutation creates new mutation for the IgnoreID entity.
+func newIgnoreIDMutation(c config, op Op, opts ...ignoreidOption) *IgnoreIDMutation {
+	m := &IgnoreIDMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeIgnoreID,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withIgnoreIDID sets the ID field of the mutation.
+func withIgnoreIDID(id uuid.UUID) ignoreidOption {
+	return func(m *IgnoreIDMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *IgnoreID
+		)
+		m.oldValue = func(ctx context.Context) (*IgnoreID, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().IgnoreID.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withIgnoreID sets the old IgnoreID of the mutation.
+func withIgnoreID(node *IgnoreID) ignoreidOption {
+	return func(m *IgnoreIDMutation) {
+		m.oldValue = func(context.Context) (*IgnoreID, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m IgnoreIDMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m IgnoreIDMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// SetID sets the value of the id field. Note that this
+// operation is only accepted on creation of IgnoreID entities.
+func (m *IgnoreIDMutation) SetID(id uuid.UUID) {
+	m.id = &id
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *IgnoreIDMutation) ID() (id uuid.UUID, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *IgnoreIDMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []uuid.UUID{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().IgnoreID.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *IgnoreIDMutation) SetCreatedAt(u uint32) {
+	m.created_at = &u
+	m.addcreated_at = nil
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *IgnoreIDMutation) CreatedAt() (r uint32, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the IgnoreID entity.
+// If the IgnoreID object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *IgnoreIDMutation) OldCreatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// AddCreatedAt adds u to the "created_at" field.
+func (m *IgnoreIDMutation) AddCreatedAt(u int32) {
+	if m.addcreated_at != nil {
+		*m.addcreated_at += u
+	} else {
+		m.addcreated_at = &u
+	}
+}
+
+// AddedCreatedAt returns the value that was added to the "created_at" field in this mutation.
+func (m *IgnoreIDMutation) AddedCreatedAt() (r int32, exists bool) {
+	v := m.addcreated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *IgnoreIDMutation) ResetCreatedAt() {
+	m.created_at = nil
+	m.addcreated_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *IgnoreIDMutation) SetUpdatedAt(u uint32) {
+	m.updated_at = &u
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *IgnoreIDMutation) UpdatedAt() (r uint32, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the IgnoreID entity.
+// If the IgnoreID object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *IgnoreIDMutation) OldUpdatedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds u to the "updated_at" field.
+func (m *IgnoreIDMutation) AddUpdatedAt(u int32) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += u
+	} else {
+		m.addupdated_at = &u
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *IgnoreIDMutation) AddedUpdatedAt() (r int32, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *IgnoreIDMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// SetDeletedAt sets the "deleted_at" field.
+func (m *IgnoreIDMutation) SetDeletedAt(u uint32) {
+	m.deleted_at = &u
+	m.adddeleted_at = nil
+}
+
+// DeletedAt returns the value of the "deleted_at" field in the mutation.
+func (m *IgnoreIDMutation) DeletedAt() (r uint32, exists bool) {
+	v := m.deleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDeletedAt returns the old "deleted_at" field's value of the IgnoreID entity.
+// If the IgnoreID object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *IgnoreIDMutation) OldDeletedAt(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDeletedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDeletedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDeletedAt: %w", err)
+	}
+	return oldValue.DeletedAt, nil
+}
+
+// AddDeletedAt adds u to the "deleted_at" field.
+func (m *IgnoreIDMutation) AddDeletedAt(u int32) {
+	if m.adddeleted_at != nil {
+		*m.adddeleted_at += u
+	} else {
+		m.adddeleted_at = &u
+	}
+}
+
+// AddedDeletedAt returns the value that was added to the "deleted_at" field in this mutation.
+func (m *IgnoreIDMutation) AddedDeletedAt() (r int32, exists bool) {
+	v := m.adddeleted_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDeletedAt resets all changes to the "deleted_at" field.
+func (m *IgnoreIDMutation) ResetDeletedAt() {
+	m.deleted_at = nil
+	m.adddeleted_at = nil
+}
+
+// SetAutoID sets the "auto_id" field.
+func (m *IgnoreIDMutation) SetAutoID(u uint32) {
+	m.auto_id = &u
+	m.addauto_id = nil
+}
+
+// AutoID returns the value of the "auto_id" field in the mutation.
+func (m *IgnoreIDMutation) AutoID() (r uint32, exists bool) {
+	v := m.auto_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAutoID returns the old "auto_id" field's value of the IgnoreID entity.
+// If the IgnoreID object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *IgnoreIDMutation) OldAutoID(ctx context.Context) (v uint32, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAutoID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAutoID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAutoID: %w", err)
+	}
+	return oldValue.AutoID, nil
+}
+
+// AddAutoID adds u to the "auto_id" field.
+func (m *IgnoreIDMutation) AddAutoID(u int32) {
+	if m.addauto_id != nil {
+		*m.addauto_id += u
+	} else {
+		m.addauto_id = &u
+	}
+}
+
+// AddedAutoID returns the value that was added to the "auto_id" field in this mutation.
+func (m *IgnoreIDMutation) AddedAutoID() (r int32, exists bool) {
+	v := m.addauto_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAutoID resets all changes to the "auto_id" field.
+func (m *IgnoreIDMutation) ResetAutoID() {
+	m.auto_id = nil
+	m.addauto_id = nil
+}
+
+// SetSampleCol sets the "sample_col" field.
+func (m *IgnoreIDMutation) SetSampleCol(s string) {
+	m.sample_col = &s
+}
+
+// SampleCol returns the value of the "sample_col" field in the mutation.
+func (m *IgnoreIDMutation) SampleCol() (r string, exists bool) {
+	v := m.sample_col
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSampleCol returns the old "sample_col" field's value of the IgnoreID entity.
+// If the IgnoreID object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *IgnoreIDMutation) OldSampleCol(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSampleCol is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSampleCol requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSampleCol: %w", err)
+	}
+	return oldValue.SampleCol, nil
+}
+
+// ClearSampleCol clears the value of the "sample_col" field.
+func (m *IgnoreIDMutation) ClearSampleCol() {
+	m.sample_col = nil
+	m.clearedFields[ignoreid.FieldSampleCol] = struct{}{}
+}
+
+// SampleColCleared returns if the "sample_col" field was cleared in this mutation.
+func (m *IgnoreIDMutation) SampleColCleared() bool {
+	_, ok := m.clearedFields[ignoreid.FieldSampleCol]
+	return ok
+}
+
+// ResetSampleCol resets all changes to the "sample_col" field.
+func (m *IgnoreIDMutation) ResetSampleCol() {
+	m.sample_col = nil
+	delete(m.clearedFields, ignoreid.FieldSampleCol)
+}
+
+// Where appends a list predicates to the IgnoreIDMutation builder.
+func (m *IgnoreIDMutation) Where(ps ...predicate.IgnoreID) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *IgnoreIDMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (IgnoreID).
+func (m *IgnoreIDMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *IgnoreIDMutation) Fields() []string {
+	fields := make([]string, 0, 5)
+	if m.created_at != nil {
+		fields = append(fields, ignoreid.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, ignoreid.FieldUpdatedAt)
+	}
+	if m.deleted_at != nil {
+		fields = append(fields, ignoreid.FieldDeletedAt)
+	}
+	if m.auto_id != nil {
+		fields = append(fields, ignoreid.FieldAutoID)
+	}
+	if m.sample_col != nil {
+		fields = append(fields, ignoreid.FieldSampleCol)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *IgnoreIDMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case ignoreid.FieldCreatedAt:
+		return m.CreatedAt()
+	case ignoreid.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case ignoreid.FieldDeletedAt:
+		return m.DeletedAt()
+	case ignoreid.FieldAutoID:
+		return m.AutoID()
+	case ignoreid.FieldSampleCol:
+		return m.SampleCol()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *IgnoreIDMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case ignoreid.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case ignoreid.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case ignoreid.FieldDeletedAt:
+		return m.OldDeletedAt(ctx)
+	case ignoreid.FieldAutoID:
+		return m.OldAutoID(ctx)
+	case ignoreid.FieldSampleCol:
+		return m.OldSampleCol(ctx)
+	}
+	return nil, fmt.Errorf("unknown IgnoreID field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *IgnoreIDMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case ignoreid.FieldCreatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case ignoreid.FieldUpdatedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case ignoreid.FieldDeletedAt:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDeletedAt(v)
+		return nil
+	case ignoreid.FieldAutoID:
+		v, ok := value.(uint32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAutoID(v)
+		return nil
+	case ignoreid.FieldSampleCol:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSampleCol(v)
+		return nil
+	}
+	return fmt.Errorf("unknown IgnoreID field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *IgnoreIDMutation) AddedFields() []string {
+	var fields []string
+	if m.addcreated_at != nil {
+		fields = append(fields, ignoreid.FieldCreatedAt)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, ignoreid.FieldUpdatedAt)
+	}
+	if m.adddeleted_at != nil {
+		fields = append(fields, ignoreid.FieldDeletedAt)
+	}
+	if m.addauto_id != nil {
+		fields = append(fields, ignoreid.FieldAutoID)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *IgnoreIDMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case ignoreid.FieldCreatedAt:
+		return m.AddedCreatedAt()
+	case ignoreid.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	case ignoreid.FieldDeletedAt:
+		return m.AddedDeletedAt()
+	case ignoreid.FieldAutoID:
+		return m.AddedAutoID()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *IgnoreIDMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case ignoreid.FieldCreatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreatedAt(v)
+		return nil
+	case ignoreid.FieldUpdatedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	case ignoreid.FieldDeletedAt:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDeletedAt(v)
+		return nil
+	case ignoreid.FieldAutoID:
+		v, ok := value.(int32)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAutoID(v)
+		return nil
+	}
+	return fmt.Errorf("unknown IgnoreID numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *IgnoreIDMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(ignoreid.FieldSampleCol) {
+		fields = append(fields, ignoreid.FieldSampleCol)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *IgnoreIDMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *IgnoreIDMutation) ClearField(name string) error {
+	switch name {
+	case ignoreid.FieldSampleCol:
+		m.ClearSampleCol()
+		return nil
+	}
+	return fmt.Errorf("unknown IgnoreID nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *IgnoreIDMutation) ResetField(name string) error {
+	switch name {
+	case ignoreid.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case ignoreid.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case ignoreid.FieldDeletedAt:
+		m.ResetDeletedAt()
+		return nil
+	case ignoreid.FieldAutoID:
+		m.ResetAutoID()
+		return nil
+	case ignoreid.FieldSampleCol:
+		m.ResetSampleCol()
+		return nil
+	}
+	return fmt.Errorf("unknown IgnoreID field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *IgnoreIDMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *IgnoreIDMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *IgnoreIDMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *IgnoreIDMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *IgnoreIDMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *IgnoreIDMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *IgnoreIDMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown IgnoreID unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *IgnoreIDMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown IgnoreID edge %s", name)
 }
 
 // PubsubMessageMutation represents an operation that mutates the PubsubMessage nodes in the graph.

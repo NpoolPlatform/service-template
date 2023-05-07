@@ -22,6 +22,19 @@ func (f DetailFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, erro
 	return f(ctx, mv)
 }
 
+// The IgnoreIDFunc type is an adapter to allow the use of ordinary
+// function as IgnoreID mutator.
+type IgnoreIDFunc func(context.Context, *ent.IgnoreIDMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f IgnoreIDFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.IgnoreIDMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.IgnoreIDMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The PubsubMessageFunc type is an adapter to allow the use of ordinary
 // function as PubsubMessage mutator.
 type PubsubMessageFunc func(context.Context, *ent.PubsubMessageMutation) (ent.Value, error)
