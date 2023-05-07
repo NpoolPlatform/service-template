@@ -1,6 +1,6 @@
 USE service_template;
 
-DROP PROCEDURE IF EXISTS;
+DROP PROCEDURE IF EXISTS id_to_ent_id;
 
 DELIMITER $$
 CREATE PROCEDURE id_to_ent_id()
