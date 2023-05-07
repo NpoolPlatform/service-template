@@ -43,5 +43,6 @@ BEGIN
     ALTER TABLE details ADD PRIMARY KEY (id);
   END IF;
 END $$
+DELIMITER;
 
 CALL id_to_ent_id();
