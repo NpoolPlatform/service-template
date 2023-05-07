@@ -3,7 +3,6 @@ module github.com/NpoolPlatform/service-template
 go 1.17
 
 require (
-	ariga.io/atlas v0.10.0
 	entgo.io/ent v0.12.0
 	github.com/NpoolPlatform/basal-middleware v0.0.0-20230421085555-165e4722a9ba
 	github.com/NpoolPlatform/go-service-framework v0.0.0-20230507024845-c15be37b4e7a
@@ -19,6 +18,7 @@ require (
 )
 
 require (
+	ariga.io/atlas v0.10.0 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/Shonminh/apollo-client v0.4.0 // indirect
 	github.com/ThreeDotsLabs/watermill v1.2.0 // indirect

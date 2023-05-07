@@ -69,7 +69,7 @@ func CreateDetails(ctx context.Context, in []*npool.DetailReq) ([]*npool.Detail,
 func GetDetail(ctx context.Context, id string) (*npool.Detail, error) {
 	info, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetDetail(ctx, &npool.GetDetailRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, fmt.Errorf("fail get detail: %v", err)
@@ -121,7 +121,7 @@ func GetDetails(ctx context.Context, conds *npool.Conds, limit, offset int32) ([
 func ExistDetail(ctx context.Context, id string) (bool, error) {
 	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.ExistDetail(ctx, &npool.ExistDetailRequest{
-			ID: id,
+			EntID: id,
 		})
 		if err != nil {
 			return nil, fmt.Errorf("fail get detail: %v", err)
