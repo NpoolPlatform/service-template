@@ -116,3 +116,5 @@ replace google.golang.org/grpc => github.com/grpc/grpc-go v1.41.0
 replace entgo.io/ent => entgo.io/ent v0.11.2
 
 replace ariga.io/atlas => ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e
+
+replace github.com/ugorji/go => github.com/ugorji/go v0.0.0-20190204201341-e444a5086c43
