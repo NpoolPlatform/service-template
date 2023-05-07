@@ -35,7 +35,7 @@ MAIN:BEGIN
     AND
     column_name = 'id';
 
-  IF _count <= 0; THEN
+  IF _count <= 0 THEN
     ALTER TABLE details ADD COLUMN id INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT;
     ALTER TABLE details DROP PRIMARY KEY;
     ALTER TABLE details ADD PRIMARY KEY (id);
