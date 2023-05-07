@@ -9,7 +9,7 @@ import (
 
 	"github.com/NpoolPlatform/service-template/pkg/feeder"
 	"github.com/NpoolPlatform/service-template/pkg/pubsub"
-	"github.com/NpoolPlatform/service-template/pkg/watcher"
+	"github.com/NpoolPlatform/service-template/pkg/service"
 
 	action "github.com/NpoolPlatform/go-service-framework/pkg/action"
 	"github.com/NpoolPlatform/go-service-framework/pkg/logger"
@@ -28,6 +28,9 @@ var runCmd = &cli.Command{
 	Aliases: []string{"s"},
 	Usage:   "Run the daemon",
 	Action: func(c *cli.Context) error {
+		defer feeder.Shutdown()
+		defer service.Shutdown()
+
 		return action.Run(
 			c.Context,
 			run,
@@ -74,7 +77,7 @@ func _watch(ctx context.Context, cancel context.CancelFunc, w func(ctx context.C
 
 func watch(ctx context.Context, cancel context.CancelFunc) error {
 	go shutdown(ctx)
-	go _watch(ctx, cancel, watcher.Watch)
+	go _watch(ctx, cancel, service.Watch)
 	go _watch(ctx, cancel, feeder.Watch)
 	return nil
 }
