@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -65,9 +64,17 @@ func (dc *DetailCreate) SetNillableDeletedAt(u *uint32) *DetailCreate {
 	return dc
 }
 
-// SetAutoID sets the "auto_id" field.
-func (dc *DetailCreate) SetAutoID(u uint32) *DetailCreate {
-	dc.mutation.SetAutoID(u)
+// SetEntID sets the "ent_id" field.
+func (dc *DetailCreate) SetEntID(u uuid.UUID) *DetailCreate {
+	dc.mutation.SetEntID(u)
+	return dc
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (dc *DetailCreate) SetNillableEntID(u *uuid.UUID) *DetailCreate {
+	if u != nil {
+		dc.SetEntID(*u)
+	}
 	return dc
 }
 
@@ -86,16 +93,8 @@ func (dc *DetailCreate) SetNillableSampleCol(s *string) *DetailCreate {
 }
 
 // SetID sets the "id" field.
-func (dc *DetailCreate) SetID(u uuid.UUID) *DetailCreate {
+func (dc *DetailCreate) SetID(u uint32) *DetailCreate {
 	dc.mutation.SetID(u)
-	return dc
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (dc *DetailCreate) SetNillableID(u *uuid.UUID) *DetailCreate {
-	if u != nil {
-		dc.SetID(*u)
-	}
 	return dc
 }
 
@@ -199,16 +198,16 @@ func (dc *DetailCreate) defaults() error {
 		v := detail.DefaultDeletedAt()
 		dc.mutation.SetDeletedAt(v)
 	}
+	if _, ok := dc.mutation.EntID(); !ok {
+		if detail.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized detail.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := detail.DefaultEntID()
+		dc.mutation.SetEntID(v)
+	}
 	if _, ok := dc.mutation.SampleCol(); !ok {
 		v := detail.DefaultSampleCol
 		dc.mutation.SetSampleCol(v)
-	}
-	if _, ok := dc.mutation.ID(); !ok {
-		if detail.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized detail.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := detail.DefaultID()
-		dc.mutation.SetID(v)
 	}
 	return nil
 }
@@ -224,8 +223,8 @@ func (dc *DetailCreate) check() error {
 	if _, ok := dc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "Detail.deleted_at"`)}
 	}
-	if _, ok := dc.mutation.AutoID(); !ok {
-		return &ValidationError{Name: "auto_id", err: errors.New(`ent: missing required field "Detail.auto_id"`)}
+	if _, ok := dc.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "Detail.ent_id"`)}
 	}
 	return nil
 }
@@ -238,12 +237,9 @@ func (dc *DetailCreate) sqlSave(ctx context.Context) (*Detail, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -254,7 +250,7 @@ func (dc *DetailCreate) createSpec() (*Detail, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: detail.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: detail.FieldID,
 			},
 		}
@@ -262,7 +258,7 @@ func (dc *DetailCreate) createSpec() (*Detail, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = dc.conflict
 	if id, ok := dc.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := dc.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -288,13 +284,13 @@ func (dc *DetailCreate) createSpec() (*Detail, *sqlgraph.CreateSpec) {
 		})
 		_node.DeletedAt = value
 	}
-	if value, ok := dc.mutation.AutoID(); ok {
+	if value, ok := dc.mutation.EntID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: detail.FieldAutoID,
+			Column: detail.FieldEntID,
 		})
-		_node.AutoID = value
+		_node.EntID = value
 	}
 	if value, ok := dc.mutation.SampleCol(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -412,21 +408,15 @@ func (u *DetailUpsert) AddDeletedAt(v uint32) *DetailUpsert {
 	return u
 }
 
-// SetAutoID sets the "auto_id" field.
-func (u *DetailUpsert) SetAutoID(v uint32) *DetailUpsert {
-	u.Set(detail.FieldAutoID, v)
+// SetEntID sets the "ent_id" field.
+func (u *DetailUpsert) SetEntID(v uuid.UUID) *DetailUpsert {
+	u.Set(detail.FieldEntID, v)
 	return u
 }
 
-// UpdateAutoID sets the "auto_id" field to the value that was provided on create.
-func (u *DetailUpsert) UpdateAutoID() *DetailUpsert {
-	u.SetExcluded(detail.FieldAutoID)
-	return u
-}
-
-// AddAutoID adds v to the "auto_id" field.
-func (u *DetailUpsert) AddAutoID(v uint32) *DetailUpsert {
-	u.Add(detail.FieldAutoID, v)
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *DetailUpsert) UpdateEntID() *DetailUpsert {
+	u.SetExcluded(detail.FieldEntID)
 	return u
 }
 
@@ -561,24 +551,17 @@ func (u *DetailUpsertOne) UpdateDeletedAt() *DetailUpsertOne {
 	})
 }
 
-// SetAutoID sets the "auto_id" field.
-func (u *DetailUpsertOne) SetAutoID(v uint32) *DetailUpsertOne {
+// SetEntID sets the "ent_id" field.
+func (u *DetailUpsertOne) SetEntID(v uuid.UUID) *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
-		s.SetAutoID(v)
+		s.SetEntID(v)
 	})
 }
 
-// AddAutoID adds v to the "auto_id" field.
-func (u *DetailUpsertOne) AddAutoID(v uint32) *DetailUpsertOne {
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *DetailUpsertOne) UpdateEntID() *DetailUpsertOne {
 	return u.Update(func(s *DetailUpsert) {
-		s.AddAutoID(v)
-	})
-}
-
-// UpdateAutoID sets the "auto_id" field to the value that was provided on create.
-func (u *DetailUpsertOne) UpdateAutoID() *DetailUpsertOne {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateAutoID()
+		s.UpdateEntID()
 	})
 }
 
@@ -619,12 +602,7 @@ func (u *DetailUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *DetailUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: DetailUpsertOne.ID is not supported by MySQL driver. Use DetailUpsertOne.Exec instead")
-	}
+func (u *DetailUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -633,7 +611,7 @@ func (u *DetailUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *DetailUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *DetailUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -684,6 +662,10 @@ func (dcb *DetailCreateBulk) Save(ctx context.Context) ([]*Detail, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -882,24 +864,17 @@ func (u *DetailUpsertBulk) UpdateDeletedAt() *DetailUpsertBulk {
 	})
 }
 
-// SetAutoID sets the "auto_id" field.
-func (u *DetailUpsertBulk) SetAutoID(v uint32) *DetailUpsertBulk {
+// SetEntID sets the "ent_id" field.
+func (u *DetailUpsertBulk) SetEntID(v uuid.UUID) *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
-		s.SetAutoID(v)
+		s.SetEntID(v)
 	})
 }
 
-// AddAutoID adds v to the "auto_id" field.
-func (u *DetailUpsertBulk) AddAutoID(v uint32) *DetailUpsertBulk {
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *DetailUpsertBulk) UpdateEntID() *DetailUpsertBulk {
 	return u.Update(func(s *DetailUpsert) {
-		s.AddAutoID(v)
-	})
-}
-
-// UpdateAutoID sets the "auto_id" field to the value that was provided on create.
-func (u *DetailUpsertBulk) UpdateAutoID() *DetailUpsertBulk {
-	return u.Update(func(s *DetailUpsert) {
-		s.UpdateAutoID()
+		s.UpdateEntID()
 	})
 }
 

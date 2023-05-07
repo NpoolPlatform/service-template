@@ -13,8 +13,7 @@ import (
 )
 
 type Handler struct {
-	AutoID    *uint32
-	ID        *uuid.UUID
+	EntID     *uuid.UUID
 	SampleCol *string
 	Reqs      []*detailcrud.Req
 	Conds     *detailcrud.Conds
@@ -32,7 +31,7 @@ func NewHandler(ctx context.Context, options ...func(context.Context, *Handler) 
 	return handler, nil
 }
 
-func WithID(ctx context.Context, id *string) func(context.Context, *Handler) error {
+func WithEntID(ctx context.Context, id *string) func(context.Context, *Handler) error {
 	return func(ctx context.Context, h *Handler) error {
 		if id == nil {
 			return nil
@@ -41,7 +40,7 @@ func WithID(ctx context.Context, id *string) func(context.Context, *Handler) err
 		if err != nil {
 			return err
 		}
-		h.ID = &_id
+		h.EntID = &_id
 		return nil
 	}
 }
@@ -60,12 +59,12 @@ func WithReqs(ctx context.Context, reqs []*npool.DetailReq) func(context.Context
 			_req := &detailcrud.Req{
 				SampleCol: req.SampleCol,
 			}
-			if req.ID != nil {
-				id, err := uuid.Parse(req.GetID())
+			if req.EntID != nil {
+				id, err := uuid.Parse(req.GetEntID())
 				if err != nil {
 					return err
 				}
-				_req.ID = &id
+				_req.EntID = &id
 			}
 			h.Reqs = append(h.Reqs, _req)
 		}
@@ -79,18 +78,15 @@ func WithConds(ctx context.Context, conds *npool.Conds) func(context.Context, *H
 		if conds == nil {
 			return nil
 		}
-		if conds.AutoID != nil {
-			h.Conds.AutoID = &cruder.Cond{
-				Op:  conds.GetAutoID().GetOp(),
-				Val: conds.GetAutoID().GetValue(),
-			}
-		}
-		if conds.ID != nil {
-			id, err := uuid.Parse(conds.GetID().GetValue())
+		if conds.EntID != nil {
+			id, err := uuid.Parse(conds.GetEntID().GetValue())
 			if err != nil {
 				return err
 			}
-			h.Conds.ID = &cruder.Cond{Op: conds.GetID().GetOp(), Val: id}
+			h.Conds.EntID = &cruder.Cond{
+				Op:  conds.GetEntID().GetOp(),
+				Val: id,
+			}
 		}
 		if conds.SampleCol != nil {
 			h.Conds.SampleCol = &cruder.Cond{

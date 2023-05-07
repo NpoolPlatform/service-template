@@ -72,7 +72,7 @@ func (iid *IgnoreIDDelete) sqlExec(ctx context.Context) (int, error) {
 		Node: &sqlgraph.NodeSpec{
 			Table: ignoreid.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: ignoreid.FieldID,
 			},
 		},

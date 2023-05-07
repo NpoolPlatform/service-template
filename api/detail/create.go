@@ -16,7 +16,7 @@ func (s *Server) CreateDetail(ctx context.Context, in *npool.CreateDetailRequest
 	req := in.GetInfo()
 	handler, err := detail1.NewHandler(
 		ctx,
-		detail1.WithID(ctx, req.ID),
+		detail1.WithEntID(ctx, req.EntID),
 		detail1.WithSampleCol(ctx, req.SampleCol),
 	)
 	if err != nil {

@@ -8,8 +8,8 @@ import (
 )
 
 func (h *Handler) GetDetail(ctx context.Context) (*npool.Detail, error) {
-	if h.AutoID == nil {
-		return nil, fmt.Errorf("invalid auto_id")
+	if h.EntID == nil {
+		return nil, fmt.Errorf("invalid ent_id")
 	}
 	return nil, nil
 }

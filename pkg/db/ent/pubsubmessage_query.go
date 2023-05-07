@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/predicate"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/pubsubmessage"
-	"github.com/google/uuid"
 )
 
 // PubsubMessageQuery is the builder for querying PubsubMessage entities.
@@ -87,8 +86,8 @@ func (pmq *PubsubMessageQuery) FirstX(ctx context.Context) *PubsubMessage {
 
 // FirstID returns the first PubsubMessage ID from the query.
 // Returns a *NotFoundError when no PubsubMessage ID was found.
-func (pmq *PubsubMessageQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (pmq *PubsubMessageQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = pmq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (pmq *PubsubMessageQuery) FirstID(ctx context.Context) (id uuid.UUID, err e
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (pmq *PubsubMessageQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (pmq *PubsubMessageQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := pmq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (pmq *PubsubMessageQuery) OnlyX(ctx context.Context) *PubsubMessage {
 // OnlyID is like Only, but returns the only PubsubMessage ID in the query.
 // Returns a *NotSingularError when more than one PubsubMessage ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (pmq *PubsubMessageQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (pmq *PubsubMessageQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = pmq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (pmq *PubsubMessageQuery) OnlyID(ctx context.Context) (id uuid.UUID, err er
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (pmq *PubsubMessageQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (pmq *PubsubMessageQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := pmq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (pmq *PubsubMessageQuery) AllX(ctx context.Context) []*PubsubMessage {
 }
 
 // IDs executes the query and returns a list of PubsubMessage IDs.
-func (pmq *PubsubMessageQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (pmq *PubsubMessageQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := pmq.Select(pubsubmessage.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (pmq *PubsubMessageQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (pmq *PubsubMessageQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (pmq *PubsubMessageQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := pmq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (pmq *PubsubMessageQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   pubsubmessage.Table,
 			Columns: pubsubmessage.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: pubsubmessage.FieldID,
 			},
 		},

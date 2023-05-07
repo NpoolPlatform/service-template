@@ -18,8 +18,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
-	// FieldAutoID holds the string denoting the auto_id field in the database.
-	FieldAutoID = "auto_id"
+	// FieldEntID holds the string denoting the ent_id field in the database.
+	FieldEntID = "ent_id"
 	// FieldSampleCol holds the string denoting the sample_col field in the database.
 	FieldSampleCol = "sample_col"
 	// Table holds the table name of the ignoreid in the database.
@@ -32,7 +32,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
-	FieldAutoID,
+	FieldEntID,
 	FieldSampleCol,
 }
 
@@ -63,8 +63,8 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultEntID holds the default value on creation for the "ent_id" field.
+	DefaultEntID func() uuid.UUID
 	// DefaultSampleCol holds the default value on creation for the "sample_col" field.
 	DefaultSampleCol string
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
 )

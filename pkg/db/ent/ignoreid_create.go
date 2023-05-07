@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -65,9 +64,17 @@ func (iic *IgnoreIDCreate) SetNillableDeletedAt(u *uint32) *IgnoreIDCreate {
 	return iic
 }
 
-// SetAutoID sets the "auto_id" field.
-func (iic *IgnoreIDCreate) SetAutoID(u uint32) *IgnoreIDCreate {
-	iic.mutation.SetAutoID(u)
+// SetEntID sets the "ent_id" field.
+func (iic *IgnoreIDCreate) SetEntID(u uuid.UUID) *IgnoreIDCreate {
+	iic.mutation.SetEntID(u)
+	return iic
+}
+
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (iic *IgnoreIDCreate) SetNillableEntID(u *uuid.UUID) *IgnoreIDCreate {
+	if u != nil {
+		iic.SetEntID(*u)
+	}
 	return iic
 }
 
@@ -86,16 +93,8 @@ func (iic *IgnoreIDCreate) SetNillableSampleCol(s *string) *IgnoreIDCreate {
 }
 
 // SetID sets the "id" field.
-func (iic *IgnoreIDCreate) SetID(u uuid.UUID) *IgnoreIDCreate {
+func (iic *IgnoreIDCreate) SetID(u uint32) *IgnoreIDCreate {
 	iic.mutation.SetID(u)
-	return iic
-}
-
-// SetNillableID sets the "id" field if the given value is not nil.
-func (iic *IgnoreIDCreate) SetNillableID(u *uuid.UUID) *IgnoreIDCreate {
-	if u != nil {
-		iic.SetID(*u)
-	}
 	return iic
 }
 
@@ -199,16 +198,16 @@ func (iic *IgnoreIDCreate) defaults() error {
 		v := ignoreid.DefaultDeletedAt()
 		iic.mutation.SetDeletedAt(v)
 	}
+	if _, ok := iic.mutation.EntID(); !ok {
+		if ignoreid.DefaultEntID == nil {
+			return fmt.Errorf("ent: uninitialized ignoreid.DefaultEntID (forgotten import ent/runtime?)")
+		}
+		v := ignoreid.DefaultEntID()
+		iic.mutation.SetEntID(v)
+	}
 	if _, ok := iic.mutation.SampleCol(); !ok {
 		v := ignoreid.DefaultSampleCol
 		iic.mutation.SetSampleCol(v)
-	}
-	if _, ok := iic.mutation.ID(); !ok {
-		if ignoreid.DefaultID == nil {
-			return fmt.Errorf("ent: uninitialized ignoreid.DefaultID (forgotten import ent/runtime?)")
-		}
-		v := ignoreid.DefaultID()
-		iic.mutation.SetID(v)
 	}
 	return nil
 }
@@ -224,8 +223,8 @@ func (iic *IgnoreIDCreate) check() error {
 	if _, ok := iic.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`ent: missing required field "IgnoreID.deleted_at"`)}
 	}
-	if _, ok := iic.mutation.AutoID(); !ok {
-		return &ValidationError{Name: "auto_id", err: errors.New(`ent: missing required field "IgnoreID.auto_id"`)}
+	if _, ok := iic.mutation.EntID(); !ok {
+		return &ValidationError{Name: "ent_id", err: errors.New(`ent: missing required field "IgnoreID.ent_id"`)}
 	}
 	return nil
 }
@@ -238,12 +237,9 @@ func (iic *IgnoreIDCreate) sqlSave(ctx context.Context) (*IgnoreID, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(*uuid.UUID); ok {
-			_node.ID = *id
-		} else if err := _node.ID.Scan(_spec.ID.Value); err != nil {
-			return nil, err
-		}
+	if _spec.ID.Value != _node.ID {
+		id := _spec.ID.Value.(int64)
+		_node.ID = uint32(id)
 	}
 	return _node, nil
 }
@@ -254,7 +250,7 @@ func (iic *IgnoreIDCreate) createSpec() (*IgnoreID, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: ignoreid.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: ignoreid.FieldID,
 			},
 		}
@@ -262,7 +258,7 @@ func (iic *IgnoreIDCreate) createSpec() (*IgnoreID, *sqlgraph.CreateSpec) {
 	_spec.OnConflict = iic.conflict
 	if id, ok := iic.mutation.ID(); ok {
 		_node.ID = id
-		_spec.ID.Value = &id
+		_spec.ID.Value = id
 	}
 	if value, ok := iic.mutation.CreatedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -288,13 +284,13 @@ func (iic *IgnoreIDCreate) createSpec() (*IgnoreID, *sqlgraph.CreateSpec) {
 		})
 		_node.DeletedAt = value
 	}
-	if value, ok := iic.mutation.AutoID(); ok {
+	if value, ok := iic.mutation.EntID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: ignoreid.FieldAutoID,
+			Column: ignoreid.FieldEntID,
 		})
-		_node.AutoID = value
+		_node.EntID = value
 	}
 	if value, ok := iic.mutation.SampleCol(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -412,21 +408,15 @@ func (u *IgnoreIDUpsert) AddDeletedAt(v uint32) *IgnoreIDUpsert {
 	return u
 }
 
-// SetAutoID sets the "auto_id" field.
-func (u *IgnoreIDUpsert) SetAutoID(v uint32) *IgnoreIDUpsert {
-	u.Set(ignoreid.FieldAutoID, v)
+// SetEntID sets the "ent_id" field.
+func (u *IgnoreIDUpsert) SetEntID(v uuid.UUID) *IgnoreIDUpsert {
+	u.Set(ignoreid.FieldEntID, v)
 	return u
 }
 
-// UpdateAutoID sets the "auto_id" field to the value that was provided on create.
-func (u *IgnoreIDUpsert) UpdateAutoID() *IgnoreIDUpsert {
-	u.SetExcluded(ignoreid.FieldAutoID)
-	return u
-}
-
-// AddAutoID adds v to the "auto_id" field.
-func (u *IgnoreIDUpsert) AddAutoID(v uint32) *IgnoreIDUpsert {
-	u.Add(ignoreid.FieldAutoID, v)
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *IgnoreIDUpsert) UpdateEntID() *IgnoreIDUpsert {
+	u.SetExcluded(ignoreid.FieldEntID)
 	return u
 }
 
@@ -561,24 +551,17 @@ func (u *IgnoreIDUpsertOne) UpdateDeletedAt() *IgnoreIDUpsertOne {
 	})
 }
 
-// SetAutoID sets the "auto_id" field.
-func (u *IgnoreIDUpsertOne) SetAutoID(v uint32) *IgnoreIDUpsertOne {
+// SetEntID sets the "ent_id" field.
+func (u *IgnoreIDUpsertOne) SetEntID(v uuid.UUID) *IgnoreIDUpsertOne {
 	return u.Update(func(s *IgnoreIDUpsert) {
-		s.SetAutoID(v)
+		s.SetEntID(v)
 	})
 }
 
-// AddAutoID adds v to the "auto_id" field.
-func (u *IgnoreIDUpsertOne) AddAutoID(v uint32) *IgnoreIDUpsertOne {
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *IgnoreIDUpsertOne) UpdateEntID() *IgnoreIDUpsertOne {
 	return u.Update(func(s *IgnoreIDUpsert) {
-		s.AddAutoID(v)
-	})
-}
-
-// UpdateAutoID sets the "auto_id" field to the value that was provided on create.
-func (u *IgnoreIDUpsertOne) UpdateAutoID() *IgnoreIDUpsertOne {
-	return u.Update(func(s *IgnoreIDUpsert) {
-		s.UpdateAutoID()
+		s.UpdateEntID()
 	})
 }
 
@@ -619,12 +602,7 @@ func (u *IgnoreIDUpsertOne) ExecX(ctx context.Context) {
 }
 
 // Exec executes the UPSERT query and returns the inserted/updated ID.
-func (u *IgnoreIDUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
-	if u.create.driver.Dialect() == dialect.MySQL {
-		// In case of "ON CONFLICT", there is no way to get back non-numeric ID
-		// fields from the database since MySQL does not support the RETURNING clause.
-		return id, errors.New("ent: IgnoreIDUpsertOne.ID is not supported by MySQL driver. Use IgnoreIDUpsertOne.Exec instead")
-	}
+func (u *IgnoreIDUpsertOne) ID(ctx context.Context) (id uint32, err error) {
 	node, err := u.create.Save(ctx)
 	if err != nil {
 		return id, err
@@ -633,7 +611,7 @@ func (u *IgnoreIDUpsertOne) ID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // IDX is like ID, but panics if an error occurs.
-func (u *IgnoreIDUpsertOne) IDX(ctx context.Context) uuid.UUID {
+func (u *IgnoreIDUpsertOne) IDX(ctx context.Context) uint32 {
 	id, err := u.ID(ctx)
 	if err != nil {
 		panic(err)
@@ -684,6 +662,10 @@ func (iicb *IgnoreIDCreateBulk) Save(ctx context.Context) ([]*IgnoreID, error) {
 					return nil, err
 				}
 				mutation.id = &nodes[i].ID
+				if specs[i].ID.Value != nil && nodes[i].ID == 0 {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = uint32(id)
+				}
 				mutation.done = true
 				return nodes[i], nil
 			})
@@ -882,24 +864,17 @@ func (u *IgnoreIDUpsertBulk) UpdateDeletedAt() *IgnoreIDUpsertBulk {
 	})
 }
 
-// SetAutoID sets the "auto_id" field.
-func (u *IgnoreIDUpsertBulk) SetAutoID(v uint32) *IgnoreIDUpsertBulk {
+// SetEntID sets the "ent_id" field.
+func (u *IgnoreIDUpsertBulk) SetEntID(v uuid.UUID) *IgnoreIDUpsertBulk {
 	return u.Update(func(s *IgnoreIDUpsert) {
-		s.SetAutoID(v)
+		s.SetEntID(v)
 	})
 }
 
-// AddAutoID adds v to the "auto_id" field.
-func (u *IgnoreIDUpsertBulk) AddAutoID(v uint32) *IgnoreIDUpsertBulk {
+// UpdateEntID sets the "ent_id" field to the value that was provided on create.
+func (u *IgnoreIDUpsertBulk) UpdateEntID() *IgnoreIDUpsertBulk {
 	return u.Update(func(s *IgnoreIDUpsert) {
-		s.AddAutoID(v)
-	})
-}
-
-// UpdateAutoID sets the "auto_id" field to the value that was provided on create.
-func (u *IgnoreIDUpsertBulk) UpdateAutoID() *IgnoreIDUpsertBulk {
-	return u.Update(func(s *IgnoreIDUpsert) {
-		s.UpdateAutoID()
+		s.UpdateEntID()
 	})
 }
 

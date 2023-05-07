@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/ignoreid"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // IgnoreIDUpdate is the builder for updating IgnoreID entities.
@@ -83,16 +84,17 @@ func (iiu *IgnoreIDUpdate) AddDeletedAt(u int32) *IgnoreIDUpdate {
 	return iiu
 }
 
-// SetAutoID sets the "auto_id" field.
-func (iiu *IgnoreIDUpdate) SetAutoID(u uint32) *IgnoreIDUpdate {
-	iiu.mutation.ResetAutoID()
-	iiu.mutation.SetAutoID(u)
+// SetEntID sets the "ent_id" field.
+func (iiu *IgnoreIDUpdate) SetEntID(u uuid.UUID) *IgnoreIDUpdate {
+	iiu.mutation.SetEntID(u)
 	return iiu
 }
 
-// AddAutoID adds u to the "auto_id" field.
-func (iiu *IgnoreIDUpdate) AddAutoID(u int32) *IgnoreIDUpdate {
-	iiu.mutation.AddAutoID(u)
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (iiu *IgnoreIDUpdate) SetNillableEntID(u *uuid.UUID) *IgnoreIDUpdate {
+	if u != nil {
+		iiu.SetEntID(*u)
+	}
 	return iiu
 }
 
@@ -202,7 +204,7 @@ func (iiu *IgnoreIDUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   ignoreid.Table,
 			Columns: ignoreid.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: ignoreid.FieldID,
 			},
 		},
@@ -256,18 +258,11 @@ func (iiu *IgnoreIDUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: ignoreid.FieldDeletedAt,
 		})
 	}
-	if value, ok := iiu.mutation.AutoID(); ok {
+	if value, ok := iiu.mutation.EntID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: ignoreid.FieldAutoID,
-		})
-	}
-	if value, ok := iiu.mutation.AddedAutoID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: ignoreid.FieldAutoID,
+			Column: ignoreid.FieldEntID,
 		})
 	}
 	if value, ok := iiu.mutation.SampleCol(); ok {
@@ -359,16 +354,17 @@ func (iiuo *IgnoreIDUpdateOne) AddDeletedAt(u int32) *IgnoreIDUpdateOne {
 	return iiuo
 }
 
-// SetAutoID sets the "auto_id" field.
-func (iiuo *IgnoreIDUpdateOne) SetAutoID(u uint32) *IgnoreIDUpdateOne {
-	iiuo.mutation.ResetAutoID()
-	iiuo.mutation.SetAutoID(u)
+// SetEntID sets the "ent_id" field.
+func (iiuo *IgnoreIDUpdateOne) SetEntID(u uuid.UUID) *IgnoreIDUpdateOne {
+	iiuo.mutation.SetEntID(u)
 	return iiuo
 }
 
-// AddAutoID adds u to the "auto_id" field.
-func (iiuo *IgnoreIDUpdateOne) AddAutoID(u int32) *IgnoreIDUpdateOne {
-	iiuo.mutation.AddAutoID(u)
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (iiuo *IgnoreIDUpdateOne) SetNillableEntID(u *uuid.UUID) *IgnoreIDUpdateOne {
+	if u != nil {
+		iiuo.SetEntID(*u)
+	}
 	return iiuo
 }
 
@@ -491,7 +487,7 @@ func (iiuo *IgnoreIDUpdateOne) sqlSave(ctx context.Context) (_node *IgnoreID, er
 			Table:   ignoreid.Table,
 			Columns: ignoreid.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: ignoreid.FieldID,
 			},
 		},
@@ -562,18 +558,11 @@ func (iiuo *IgnoreIDUpdateOne) sqlSave(ctx context.Context) (_node *IgnoreID, er
 			Column: ignoreid.FieldDeletedAt,
 		})
 	}
-	if value, ok := iiuo.mutation.AutoID(); ok {
+	if value, ok := iiuo.mutation.EntID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: ignoreid.FieldAutoID,
-		})
-	}
-	if value, ok := iiuo.mutation.AddedAutoID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: ignoreid.FieldAutoID,
+			Column: ignoreid.FieldEntID,
 		})
 	}
 	if value, ok := iiuo.mutation.SampleCol(); ok {

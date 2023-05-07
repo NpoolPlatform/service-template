@@ -36,15 +36,14 @@ type DetailMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *uuid.UUID
+	id            *uint32
 	created_at    *uint32
 	addcreated_at *int32
 	updated_at    *uint32
 	addupdated_at *int32
 	deleted_at    *uint32
 	adddeleted_at *int32
-	auto_id       *uint32
-	addauto_id    *int32
+	ent_id        *uuid.UUID
 	sample_col    *string
 	clearedFields map[string]struct{}
 	done          bool
@@ -72,7 +71,7 @@ func newDetailMutation(c config, op Op, opts ...detailOption) *DetailMutation {
 }
 
 // withDetailID sets the ID field of the mutation.
-func withDetailID(id uuid.UUID) detailOption {
+func withDetailID(id uint32) detailOption {
 	return func(m *DetailMutation) {
 		var (
 			err   error
@@ -124,13 +123,13 @@ func (m DetailMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of Detail entities.
-func (m *DetailMutation) SetID(id uuid.UUID) {
+func (m *DetailMutation) SetID(id uint32) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *DetailMutation) ID() (id uuid.UUID, exists bool) {
+func (m *DetailMutation) ID() (id uint32, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -141,12 +140,12 @@ func (m *DetailMutation) ID() (id uuid.UUID, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *DetailMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+func (m *DetailMutation) IDs(ctx context.Context) ([]uint32, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uuid.UUID{id}, nil
+			return []uint32{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -324,60 +323,40 @@ func (m *DetailMutation) ResetDeletedAt() {
 	m.adddeleted_at = nil
 }
 
-// SetAutoID sets the "auto_id" field.
-func (m *DetailMutation) SetAutoID(u uint32) {
-	m.auto_id = &u
-	m.addauto_id = nil
+// SetEntID sets the "ent_id" field.
+func (m *DetailMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
 }
 
-// AutoID returns the value of the "auto_id" field in the mutation.
-func (m *DetailMutation) AutoID() (r uint32, exists bool) {
-	v := m.auto_id
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *DetailMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAutoID returns the old "auto_id" field's value of the Detail entity.
+// OldEntID returns the old "ent_id" field's value of the Detail entity.
 // If the Detail object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *DetailMutation) OldAutoID(ctx context.Context) (v uint32, err error) {
+func (m *DetailMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAutoID is only allowed on UpdateOne operations")
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAutoID requires an ID field in the mutation")
+		return v, errors.New("OldEntID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAutoID: %w", err)
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
 	}
-	return oldValue.AutoID, nil
+	return oldValue.EntID, nil
 }
 
-// AddAutoID adds u to the "auto_id" field.
-func (m *DetailMutation) AddAutoID(u int32) {
-	if m.addauto_id != nil {
-		*m.addauto_id += u
-	} else {
-		m.addauto_id = &u
-	}
-}
-
-// AddedAutoID returns the value that was added to the "auto_id" field in this mutation.
-func (m *DetailMutation) AddedAutoID() (r int32, exists bool) {
-	v := m.addauto_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAutoID resets all changes to the "auto_id" field.
-func (m *DetailMutation) ResetAutoID() {
-	m.auto_id = nil
-	m.addauto_id = nil
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *DetailMutation) ResetEntID() {
+	m.ent_id = nil
 }
 
 // SetSampleCol sets the "sample_col" field.
@@ -458,8 +437,8 @@ func (m *DetailMutation) Fields() []string {
 	if m.deleted_at != nil {
 		fields = append(fields, detail.FieldDeletedAt)
 	}
-	if m.auto_id != nil {
-		fields = append(fields, detail.FieldAutoID)
+	if m.ent_id != nil {
+		fields = append(fields, detail.FieldEntID)
 	}
 	if m.sample_col != nil {
 		fields = append(fields, detail.FieldSampleCol)
@@ -478,8 +457,8 @@ func (m *DetailMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case detail.FieldDeletedAt:
 		return m.DeletedAt()
-	case detail.FieldAutoID:
-		return m.AutoID()
+	case detail.FieldEntID:
+		return m.EntID()
 	case detail.FieldSampleCol:
 		return m.SampleCol()
 	}
@@ -497,8 +476,8 @@ func (m *DetailMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldUpdatedAt(ctx)
 	case detail.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
-	case detail.FieldAutoID:
-		return m.OldAutoID(ctx)
+	case detail.FieldEntID:
+		return m.OldEntID(ctx)
 	case detail.FieldSampleCol:
 		return m.OldSampleCol(ctx)
 	}
@@ -531,12 +510,12 @@ func (m *DetailMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDeletedAt(v)
 		return nil
-	case detail.FieldAutoID:
-		v, ok := value.(uint32)
+	case detail.FieldEntID:
+		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAutoID(v)
+		m.SetEntID(v)
 		return nil
 	case detail.FieldSampleCol:
 		v, ok := value.(string)
@@ -562,9 +541,6 @@ func (m *DetailMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, detail.FieldDeletedAt)
 	}
-	if m.addauto_id != nil {
-		fields = append(fields, detail.FieldAutoID)
-	}
 	return fields
 }
 
@@ -579,8 +555,6 @@ func (m *DetailMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case detail.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case detail.FieldAutoID:
-		return m.AddedAutoID()
 	}
 	return nil, false
 }
@@ -610,13 +584,6 @@ func (m *DetailMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedAt(v)
-		return nil
-	case detail.FieldAutoID:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAutoID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Detail numeric field %s", name)
@@ -663,8 +630,8 @@ func (m *DetailMutation) ResetField(name string) error {
 	case detail.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
-	case detail.FieldAutoID:
-		m.ResetAutoID()
+	case detail.FieldEntID:
+		m.ResetEntID()
 		return nil
 	case detail.FieldSampleCol:
 		m.ResetSampleCol()
@@ -726,15 +693,14 @@ type IgnoreIDMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *uuid.UUID
+	id            *uint32
 	created_at    *uint32
 	addcreated_at *int32
 	updated_at    *uint32
 	addupdated_at *int32
 	deleted_at    *uint32
 	adddeleted_at *int32
-	auto_id       *uint32
-	addauto_id    *int32
+	ent_id        *uuid.UUID
 	sample_col    *string
 	clearedFields map[string]struct{}
 	done          bool
@@ -762,7 +728,7 @@ func newIgnoreIDMutation(c config, op Op, opts ...ignoreidOption) *IgnoreIDMutat
 }
 
 // withIgnoreIDID sets the ID field of the mutation.
-func withIgnoreIDID(id uuid.UUID) ignoreidOption {
+func withIgnoreIDID(id uint32) ignoreidOption {
 	return func(m *IgnoreIDMutation) {
 		var (
 			err   error
@@ -814,13 +780,13 @@ func (m IgnoreIDMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of IgnoreID entities.
-func (m *IgnoreIDMutation) SetID(id uuid.UUID) {
+func (m *IgnoreIDMutation) SetID(id uint32) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *IgnoreIDMutation) ID() (id uuid.UUID, exists bool) {
+func (m *IgnoreIDMutation) ID() (id uint32, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -831,12 +797,12 @@ func (m *IgnoreIDMutation) ID() (id uuid.UUID, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *IgnoreIDMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+func (m *IgnoreIDMutation) IDs(ctx context.Context) ([]uint32, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uuid.UUID{id}, nil
+			return []uint32{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -1014,60 +980,40 @@ func (m *IgnoreIDMutation) ResetDeletedAt() {
 	m.adddeleted_at = nil
 }
 
-// SetAutoID sets the "auto_id" field.
-func (m *IgnoreIDMutation) SetAutoID(u uint32) {
-	m.auto_id = &u
-	m.addauto_id = nil
+// SetEntID sets the "ent_id" field.
+func (m *IgnoreIDMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
 }
 
-// AutoID returns the value of the "auto_id" field in the mutation.
-func (m *IgnoreIDMutation) AutoID() (r uint32, exists bool) {
-	v := m.auto_id
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *IgnoreIDMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAutoID returns the old "auto_id" field's value of the IgnoreID entity.
+// OldEntID returns the old "ent_id" field's value of the IgnoreID entity.
 // If the IgnoreID object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *IgnoreIDMutation) OldAutoID(ctx context.Context) (v uint32, err error) {
+func (m *IgnoreIDMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAutoID is only allowed on UpdateOne operations")
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAutoID requires an ID field in the mutation")
+		return v, errors.New("OldEntID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAutoID: %w", err)
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
 	}
-	return oldValue.AutoID, nil
+	return oldValue.EntID, nil
 }
 
-// AddAutoID adds u to the "auto_id" field.
-func (m *IgnoreIDMutation) AddAutoID(u int32) {
-	if m.addauto_id != nil {
-		*m.addauto_id += u
-	} else {
-		m.addauto_id = &u
-	}
-}
-
-// AddedAutoID returns the value that was added to the "auto_id" field in this mutation.
-func (m *IgnoreIDMutation) AddedAutoID() (r int32, exists bool) {
-	v := m.addauto_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAutoID resets all changes to the "auto_id" field.
-func (m *IgnoreIDMutation) ResetAutoID() {
-	m.auto_id = nil
-	m.addauto_id = nil
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *IgnoreIDMutation) ResetEntID() {
+	m.ent_id = nil
 }
 
 // SetSampleCol sets the "sample_col" field.
@@ -1148,8 +1094,8 @@ func (m *IgnoreIDMutation) Fields() []string {
 	if m.deleted_at != nil {
 		fields = append(fields, ignoreid.FieldDeletedAt)
 	}
-	if m.auto_id != nil {
-		fields = append(fields, ignoreid.FieldAutoID)
+	if m.ent_id != nil {
+		fields = append(fields, ignoreid.FieldEntID)
 	}
 	if m.sample_col != nil {
 		fields = append(fields, ignoreid.FieldSampleCol)
@@ -1168,8 +1114,8 @@ func (m *IgnoreIDMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case ignoreid.FieldDeletedAt:
 		return m.DeletedAt()
-	case ignoreid.FieldAutoID:
-		return m.AutoID()
+	case ignoreid.FieldEntID:
+		return m.EntID()
 	case ignoreid.FieldSampleCol:
 		return m.SampleCol()
 	}
@@ -1187,8 +1133,8 @@ func (m *IgnoreIDMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldUpdatedAt(ctx)
 	case ignoreid.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
-	case ignoreid.FieldAutoID:
-		return m.OldAutoID(ctx)
+	case ignoreid.FieldEntID:
+		return m.OldEntID(ctx)
 	case ignoreid.FieldSampleCol:
 		return m.OldSampleCol(ctx)
 	}
@@ -1221,12 +1167,12 @@ func (m *IgnoreIDMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDeletedAt(v)
 		return nil
-	case ignoreid.FieldAutoID:
-		v, ok := value.(uint32)
+	case ignoreid.FieldEntID:
+		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAutoID(v)
+		m.SetEntID(v)
 		return nil
 	case ignoreid.FieldSampleCol:
 		v, ok := value.(string)
@@ -1252,9 +1198,6 @@ func (m *IgnoreIDMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, ignoreid.FieldDeletedAt)
 	}
-	if m.addauto_id != nil {
-		fields = append(fields, ignoreid.FieldAutoID)
-	}
 	return fields
 }
 
@@ -1269,8 +1212,6 @@ func (m *IgnoreIDMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case ignoreid.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case ignoreid.FieldAutoID:
-		return m.AddedAutoID()
 	}
 	return nil, false
 }
@@ -1300,13 +1241,6 @@ func (m *IgnoreIDMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedAt(v)
-		return nil
-	case ignoreid.FieldAutoID:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAutoID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown IgnoreID numeric field %s", name)
@@ -1353,8 +1287,8 @@ func (m *IgnoreIDMutation) ResetField(name string) error {
 	case ignoreid.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
-	case ignoreid.FieldAutoID:
-		m.ResetAutoID()
+	case ignoreid.FieldEntID:
+		m.ResetEntID()
 		return nil
 	case ignoreid.FieldSampleCol:
 		m.ResetSampleCol()
@@ -1416,15 +1350,14 @@ type PubsubMessageMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *uuid.UUID
+	id            *uint32
 	created_at    *uint32
 	addcreated_at *int32
 	updated_at    *uint32
 	addupdated_at *int32
 	deleted_at    *uint32
 	adddeleted_at *int32
-	auto_id       *uint32
-	addauto_id    *int32
+	ent_id        *uuid.UUID
 	message_id    *string
 	state         *string
 	resp_to_id    *uuid.UUID
@@ -1456,7 +1389,7 @@ func newPubsubMessageMutation(c config, op Op, opts ...pubsubmessageOption) *Pub
 }
 
 // withPubsubMessageID sets the ID field of the mutation.
-func withPubsubMessageID(id uuid.UUID) pubsubmessageOption {
+func withPubsubMessageID(id uint32) pubsubmessageOption {
 	return func(m *PubsubMessageMutation) {
 		var (
 			err   error
@@ -1508,13 +1441,13 @@ func (m PubsubMessageMutation) Tx() (*Tx, error) {
 
 // SetID sets the value of the id field. Note that this
 // operation is only accepted on creation of PubsubMessage entities.
-func (m *PubsubMessageMutation) SetID(id uuid.UUID) {
+func (m *PubsubMessageMutation) SetID(id uint32) {
 	m.id = &id
 }
 
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *PubsubMessageMutation) ID() (id uuid.UUID, exists bool) {
+func (m *PubsubMessageMutation) ID() (id uint32, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -1525,12 +1458,12 @@ func (m *PubsubMessageMutation) ID() (id uuid.UUID, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *PubsubMessageMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
+func (m *PubsubMessageMutation) IDs(ctx context.Context) ([]uint32, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []uuid.UUID{id}, nil
+			return []uint32{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -1708,60 +1641,40 @@ func (m *PubsubMessageMutation) ResetDeletedAt() {
 	m.adddeleted_at = nil
 }
 
-// SetAutoID sets the "auto_id" field.
-func (m *PubsubMessageMutation) SetAutoID(u uint32) {
-	m.auto_id = &u
-	m.addauto_id = nil
+// SetEntID sets the "ent_id" field.
+func (m *PubsubMessageMutation) SetEntID(u uuid.UUID) {
+	m.ent_id = &u
 }
 
-// AutoID returns the value of the "auto_id" field in the mutation.
-func (m *PubsubMessageMutation) AutoID() (r uint32, exists bool) {
-	v := m.auto_id
+// EntID returns the value of the "ent_id" field in the mutation.
+func (m *PubsubMessageMutation) EntID() (r uuid.UUID, exists bool) {
+	v := m.ent_id
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAutoID returns the old "auto_id" field's value of the PubsubMessage entity.
+// OldEntID returns the old "ent_id" field's value of the PubsubMessage entity.
 // If the PubsubMessage object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *PubsubMessageMutation) OldAutoID(ctx context.Context) (v uint32, err error) {
+func (m *PubsubMessageMutation) OldEntID(ctx context.Context) (v uuid.UUID, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAutoID is only allowed on UpdateOne operations")
+		return v, errors.New("OldEntID is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAutoID requires an ID field in the mutation")
+		return v, errors.New("OldEntID requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAutoID: %w", err)
+		return v, fmt.Errorf("querying old value for OldEntID: %w", err)
 	}
-	return oldValue.AutoID, nil
+	return oldValue.EntID, nil
 }
 
-// AddAutoID adds u to the "auto_id" field.
-func (m *PubsubMessageMutation) AddAutoID(u int32) {
-	if m.addauto_id != nil {
-		*m.addauto_id += u
-	} else {
-		m.addauto_id = &u
-	}
-}
-
-// AddedAutoID returns the value that was added to the "auto_id" field in this mutation.
-func (m *PubsubMessageMutation) AddedAutoID() (r int32, exists bool) {
-	v := m.addauto_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetAutoID resets all changes to the "auto_id" field.
-func (m *PubsubMessageMutation) ResetAutoID() {
-	m.auto_id = nil
-	m.addauto_id = nil
+// ResetEntID resets all changes to the "ent_id" field.
+func (m *PubsubMessageMutation) ResetEntID() {
+	m.ent_id = nil
 }
 
 // SetMessageID sets the "message_id" field.
@@ -2038,8 +1951,8 @@ func (m *PubsubMessageMutation) Fields() []string {
 	if m.deleted_at != nil {
 		fields = append(fields, pubsubmessage.FieldDeletedAt)
 	}
-	if m.auto_id != nil {
-		fields = append(fields, pubsubmessage.FieldAutoID)
+	if m.ent_id != nil {
+		fields = append(fields, pubsubmessage.FieldEntID)
 	}
 	if m.message_id != nil {
 		fields = append(fields, pubsubmessage.FieldMessageID)
@@ -2070,8 +1983,8 @@ func (m *PubsubMessageMutation) Field(name string) (ent.Value, bool) {
 		return m.UpdatedAt()
 	case pubsubmessage.FieldDeletedAt:
 		return m.DeletedAt()
-	case pubsubmessage.FieldAutoID:
-		return m.AutoID()
+	case pubsubmessage.FieldEntID:
+		return m.EntID()
 	case pubsubmessage.FieldMessageID:
 		return m.MessageID()
 	case pubsubmessage.FieldState:
@@ -2097,8 +2010,8 @@ func (m *PubsubMessageMutation) OldField(ctx context.Context, name string) (ent.
 		return m.OldUpdatedAt(ctx)
 	case pubsubmessage.FieldDeletedAt:
 		return m.OldDeletedAt(ctx)
-	case pubsubmessage.FieldAutoID:
-		return m.OldAutoID(ctx)
+	case pubsubmessage.FieldEntID:
+		return m.OldEntID(ctx)
 	case pubsubmessage.FieldMessageID:
 		return m.OldMessageID(ctx)
 	case pubsubmessage.FieldState:
@@ -2139,12 +2052,12 @@ func (m *PubsubMessageMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDeletedAt(v)
 		return nil
-	case pubsubmessage.FieldAutoID:
-		v, ok := value.(uint32)
+	case pubsubmessage.FieldEntID:
+		v, ok := value.(uuid.UUID)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAutoID(v)
+		m.SetEntID(v)
 		return nil
 	case pubsubmessage.FieldMessageID:
 		v, ok := value.(string)
@@ -2198,9 +2111,6 @@ func (m *PubsubMessageMutation) AddedFields() []string {
 	if m.adddeleted_at != nil {
 		fields = append(fields, pubsubmessage.FieldDeletedAt)
 	}
-	if m.addauto_id != nil {
-		fields = append(fields, pubsubmessage.FieldAutoID)
-	}
 	return fields
 }
 
@@ -2215,8 +2125,6 @@ func (m *PubsubMessageMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUpdatedAt()
 	case pubsubmessage.FieldDeletedAt:
 		return m.AddedDeletedAt()
-	case pubsubmessage.FieldAutoID:
-		return m.AddedAutoID()
 	}
 	return nil, false
 }
@@ -2246,13 +2154,6 @@ func (m *PubsubMessageMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddDeletedAt(v)
-		return nil
-	case pubsubmessage.FieldAutoID:
-		v, ok := value.(int32)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAutoID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown PubsubMessage numeric field %s", name)
@@ -2323,8 +2224,8 @@ func (m *PubsubMessageMutation) ResetField(name string) error {
 	case pubsubmessage.FieldDeletedAt:
 		m.ResetDeletedAt()
 		return nil
-	case pubsubmessage.FieldAutoID:
-		m.ResetAutoID()
+	case pubsubmessage.FieldEntID:
+		m.ResetEntID()
 		return nil
 	case pubsubmessage.FieldMessageID:
 		m.ResetMessageID()

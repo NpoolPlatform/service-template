@@ -14,14 +14,14 @@ func (h *Handler) CreateDetail(ctx context.Context) (*npool.Detail, error) {
 		info, err := detailcrud.CreateSet(
 			cli.Detail.Create(),
 			&detailcrud.Req{
-				ID:        h.ID,
+				EntID:     h.EntID,
 				SampleCol: h.SampleCol,
 			},
 		).Save(_ctx)
 		if err != nil {
 			return err
 		}
-		h.AutoID = &info.AutoID
+		h.EntID = &info.EntID
 		return nil
 	})
 	if err != nil {

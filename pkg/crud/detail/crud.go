@@ -10,13 +10,13 @@ import (
 )
 
 type Req struct {
-	ID        *uuid.UUID
+	EntID     *uuid.UUID
 	SampleCol *string
 }
 
 func CreateSet(c *ent.DetailCreate, req *Req) *ent.DetailCreate {
-	if req.ID != nil {
-		c.SetID(*req.ID)
+	if req.EntID != nil {
+		c.SetEntID(*req.EntID)
 	}
 	if req.SampleCol != nil {
 		c.SetSampleCol(*req.SampleCol)
@@ -32,32 +32,19 @@ func UpdateSet(u *ent.DetailUpdateOne, req *Req) *ent.DetailUpdateOne {
 }
 
 type Conds struct {
-	AutoID    *cruder.Cond
-	ID        *cruder.Cond
+	EntID     *cruder.Cond
 	SampleCol *cruder.Cond
 }
 
 func SetQueryConds(q *ent.DetailQuery, conds *Conds) (*ent.DetailQuery, error) {
-	if conds.AutoID != nil {
-		switch conds.AutoID.Op {
+	if conds.EntID != nil {
+		switch conds.EntID.Op {
 		case cruder.EQ:
-			id, ok := conds.AutoID.Val.(uint32)
+			id, ok := conds.EntID.Val.(uuid.UUID)
 			if !ok {
-				return nil, fmt.Errorf("invalid auto id")
+				return nil, fmt.Errorf("invalid ent id")
 			}
-			q.Where(entdetail.AutoID(id))
-		default:
-			return nil, fmt.Errorf("invalid sample field")
-		}
-	}
-	if conds.ID != nil {
-		switch conds.ID.Op {
-		case cruder.EQ:
-			id, ok := conds.ID.Val.(uuid.UUID)
-			if !ok {
-				return nil, fmt.Errorf("invalid id")
-			}
-			q.Where(entdetail.ID(id))
+			q.Where(entdetail.EntID(id))
 		default:
 			return nil, fmt.Errorf("invalid sample field")
 		}

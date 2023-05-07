@@ -15,15 +15,15 @@ import (
 type Detail struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID uuid.UUID `json:"id,omitempty"`
+	ID uint32 `json:"id,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt uint32 `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
 	UpdatedAt uint32 `json:"updated_at,omitempty"`
 	// DeletedAt holds the value of the "deleted_at" field.
 	DeletedAt uint32 `json:"deleted_at,omitempty"`
-	// AutoID holds the value of the "auto_id" field.
-	AutoID uint32 `json:"auto_id,omitempty"`
+	// EntID holds the value of the "ent_id" field.
+	EntID uuid.UUID `json:"ent_id,omitempty"`
 	// SampleCol holds the value of the "sample_col" field.
 	SampleCol string `json:"sample_col,omitempty"`
 }
@@ -33,11 +33,11 @@ func (*Detail) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case detail.FieldCreatedAt, detail.FieldUpdatedAt, detail.FieldDeletedAt, detail.FieldAutoID:
+		case detail.FieldID, detail.FieldCreatedAt, detail.FieldUpdatedAt, detail.FieldDeletedAt:
 			values[i] = new(sql.NullInt64)
 		case detail.FieldSampleCol:
 			values[i] = new(sql.NullString)
-		case detail.FieldID:
+		case detail.FieldEntID:
 			values[i] = new(uuid.UUID)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Detail", columns[i])
@@ -55,11 +55,11 @@ func (d *Detail) assignValues(columns []string, values []interface{}) error {
 	for i := range columns {
 		switch columns[i] {
 		case detail.FieldID:
-			if value, ok := values[i].(*uuid.UUID); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value != nil {
-				d.ID = *value
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			d.ID = uint32(value.Int64)
 		case detail.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -78,11 +78,11 @@ func (d *Detail) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				d.DeletedAt = uint32(value.Int64)
 			}
-		case detail.FieldAutoID:
-			if value, ok := values[i].(*sql.NullInt64); !ok {
-				return fmt.Errorf("unexpected type %T for field auto_id", values[i])
-			} else if value.Valid {
-				d.AutoID = uint32(value.Int64)
+		case detail.FieldEntID:
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field ent_id", values[i])
+			} else if value != nil {
+				d.EntID = *value
 			}
 		case detail.FieldSampleCol:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -127,8 +127,8 @@ func (d *Detail) String() string {
 	builder.WriteString("deleted_at=")
 	builder.WriteString(fmt.Sprintf("%v", d.DeletedAt))
 	builder.WriteString(", ")
-	builder.WriteString("auto_id=")
-	builder.WriteString(fmt.Sprintf("%v", d.AutoID))
+	builder.WriteString("ent_id=")
+	builder.WriteString(fmt.Sprintf("%v", d.EntID))
 	builder.WriteString(", ")
 	builder.WriteString("sample_col=")
 	builder.WriteString(d.SampleCol)

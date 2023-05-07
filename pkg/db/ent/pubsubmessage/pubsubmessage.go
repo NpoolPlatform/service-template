@@ -18,8 +18,8 @@ const (
 	FieldUpdatedAt = "updated_at"
 	// FieldDeletedAt holds the string denoting the deleted_at field in the database.
 	FieldDeletedAt = "deleted_at"
-	// FieldAutoID holds the string denoting the auto_id field in the database.
-	FieldAutoID = "auto_id"
+	// FieldEntID holds the string denoting the ent_id field in the database.
+	FieldEntID = "ent_id"
 	// FieldMessageID holds the string denoting the message_id field in the database.
 	FieldMessageID = "message_id"
 	// FieldState holds the string denoting the state field in the database.
@@ -40,7 +40,7 @@ var Columns = []string{
 	FieldCreatedAt,
 	FieldUpdatedAt,
 	FieldDeletedAt,
-	FieldAutoID,
+	FieldEntID,
 	FieldMessageID,
 	FieldState,
 	FieldRespToID,
@@ -75,6 +75,8 @@ var (
 	UpdateDefaultUpdatedAt func() uint32
 	// DefaultDeletedAt holds the default value on creation for the "deleted_at" field.
 	DefaultDeletedAt func() uint32
+	// DefaultEntID holds the default value on creation for the "ent_id" field.
+	DefaultEntID func() uuid.UUID
 	// DefaultMessageID holds the default value on creation for the "message_id" field.
 	DefaultMessageID string
 	// DefaultState holds the default value on creation for the "state" field.
@@ -85,6 +87,4 @@ var (
 	DefaultUndoID func() uuid.UUID
 	// DefaultArguments holds the default value on creation for the "arguments" field.
 	DefaultArguments string
-	// DefaultID holds the default value on creation for the "id" field.
-	DefaultID func() uuid.UUID
 )

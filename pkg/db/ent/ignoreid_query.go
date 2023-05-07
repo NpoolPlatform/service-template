@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/ignoreid"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/predicate"
-	"github.com/google/uuid"
 )
 
 // IgnoreIDQuery is the builder for querying IgnoreID entities.
@@ -87,8 +86,8 @@ func (iiq *IgnoreIDQuery) FirstX(ctx context.Context) *IgnoreID {
 
 // FirstID returns the first IgnoreID ID from the query.
 // Returns a *NotFoundError when no IgnoreID ID was found.
-func (iiq *IgnoreIDQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (iiq *IgnoreIDQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = iiq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (iiq *IgnoreIDQuery) FirstID(ctx context.Context) (id uuid.UUID, err error)
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (iiq *IgnoreIDQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (iiq *IgnoreIDQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := iiq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (iiq *IgnoreIDQuery) OnlyX(ctx context.Context) *IgnoreID {
 // OnlyID is like Only, but returns the only IgnoreID ID in the query.
 // Returns a *NotSingularError when more than one IgnoreID ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (iiq *IgnoreIDQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (iiq *IgnoreIDQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = iiq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (iiq *IgnoreIDQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) 
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (iiq *IgnoreIDQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (iiq *IgnoreIDQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := iiq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (iiq *IgnoreIDQuery) AllX(ctx context.Context) []*IgnoreID {
 }
 
 // IDs executes the query and returns a list of IgnoreID IDs.
-func (iiq *IgnoreIDQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (iiq *IgnoreIDQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := iiq.Select(ignoreid.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (iiq *IgnoreIDQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (iiq *IgnoreIDQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (iiq *IgnoreIDQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := iiq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (iiq *IgnoreIDQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   ignoreid.Table,
 			Columns: ignoreid.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: ignoreid.FieldID,
 			},
 		},

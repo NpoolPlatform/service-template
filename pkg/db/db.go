@@ -8,13 +8,9 @@ import (
 
 	"github.com/NpoolPlatform/service-template/pkg/db/ent"
 
-	"ariga.io/atlas/sql/migrate"
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
-	"entgo.io/ent/dialect/sql/schema"
-	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/go-service-framework/pkg/mysql"
-	crudermigrate "github.com/NpoolPlatform/libent-cruder/pkg/migrate"
 
 	// ent policy runtime
 	_ "github.com/NpoolPlatform/service-template/pkg/db/ent/runtime"
@@ -29,34 +25,12 @@ func client() (*ent.Client, error) {
 	return ent.NewClient(ent.Driver(drv)), nil
 }
 
-func autoIncrementAutoID(next schema.Applier) schema.Applier {
-	return schema.ApplyFunc(func(ctx context.Context, conn dialect.ExecQuerier, plan *migrate.Plan) error {
-		if err := next.Apply(ctx, conn, plan); err != nil {
-			return err
-		}
-		return crudermigrate.AlterColumn(
-			ctx,
-			conn,
-			"service_template",
-			"auto_id",
-			nil,
-			field.TypeInt.String(),
-			true,
-			false,
-			true,
-		)
-	})
-}
-
 func Init() error {
 	cli, err := client()
 	if err != nil {
 		return err
 	}
-	return cli.Schema.Create(
-		context.Background(),
-		schema.WithApplyHook(autoIncrementAutoID),
-	)
+	return cli.Schema.Create(context.Background())
 }
 
 func Client() (*ent.Client, error) {

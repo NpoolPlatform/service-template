@@ -15,7 +15,7 @@ import (
 func (s *Server) ExistDetail(ctx context.Context, in *npool.ExistDetailRequest) (*npool.ExistDetailResponse, error) {
 	handler, err := detail1.NewHandler(
 		ctx,
-		detail1.WithID(ctx, &in.ID),
+		detail1.WithEntID(ctx, &in.EntID),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

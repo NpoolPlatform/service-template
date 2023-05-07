@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/predicate"
+	"github.com/google/uuid"
 )
 
 // DetailUpdate is the builder for updating Detail entities.
@@ -83,16 +84,17 @@ func (du *DetailUpdate) AddDeletedAt(u int32) *DetailUpdate {
 	return du
 }
 
-// SetAutoID sets the "auto_id" field.
-func (du *DetailUpdate) SetAutoID(u uint32) *DetailUpdate {
-	du.mutation.ResetAutoID()
-	du.mutation.SetAutoID(u)
+// SetEntID sets the "ent_id" field.
+func (du *DetailUpdate) SetEntID(u uuid.UUID) *DetailUpdate {
+	du.mutation.SetEntID(u)
 	return du
 }
 
-// AddAutoID adds u to the "auto_id" field.
-func (du *DetailUpdate) AddAutoID(u int32) *DetailUpdate {
-	du.mutation.AddAutoID(u)
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (du *DetailUpdate) SetNillableEntID(u *uuid.UUID) *DetailUpdate {
+	if u != nil {
+		du.SetEntID(*u)
+	}
 	return du
 }
 
@@ -202,7 +204,7 @@ func (du *DetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   detail.Table,
 			Columns: detail.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: detail.FieldID,
 			},
 		},
@@ -256,18 +258,11 @@ func (du *DetailUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: detail.FieldDeletedAt,
 		})
 	}
-	if value, ok := du.mutation.AutoID(); ok {
+	if value, ok := du.mutation.EntID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: detail.FieldAutoID,
-		})
-	}
-	if value, ok := du.mutation.AddedAutoID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: detail.FieldAutoID,
+			Column: detail.FieldEntID,
 		})
 	}
 	if value, ok := du.mutation.SampleCol(); ok {
@@ -359,16 +354,17 @@ func (duo *DetailUpdateOne) AddDeletedAt(u int32) *DetailUpdateOne {
 	return duo
 }
 
-// SetAutoID sets the "auto_id" field.
-func (duo *DetailUpdateOne) SetAutoID(u uint32) *DetailUpdateOne {
-	duo.mutation.ResetAutoID()
-	duo.mutation.SetAutoID(u)
+// SetEntID sets the "ent_id" field.
+func (duo *DetailUpdateOne) SetEntID(u uuid.UUID) *DetailUpdateOne {
+	duo.mutation.SetEntID(u)
 	return duo
 }
 
-// AddAutoID adds u to the "auto_id" field.
-func (duo *DetailUpdateOne) AddAutoID(u int32) *DetailUpdateOne {
-	duo.mutation.AddAutoID(u)
+// SetNillableEntID sets the "ent_id" field if the given value is not nil.
+func (duo *DetailUpdateOne) SetNillableEntID(u *uuid.UUID) *DetailUpdateOne {
+	if u != nil {
+		duo.SetEntID(*u)
+	}
 	return duo
 }
 
@@ -491,7 +487,7 @@ func (duo *DetailUpdateOne) sqlSave(ctx context.Context) (_node *Detail, err err
 			Table:   detail.Table,
 			Columns: detail.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: detail.FieldID,
 			},
 		},
@@ -562,18 +558,11 @@ func (duo *DetailUpdateOne) sqlSave(ctx context.Context) (_node *Detail, err err
 			Column: detail.FieldDeletedAt,
 		})
 	}
-	if value, ok := duo.mutation.AutoID(); ok {
+	if value, ok := duo.mutation.EntID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
+			Type:   field.TypeUUID,
 			Value:  value,
-			Column: detail.FieldAutoID,
-		})
-	}
-	if value, ok := duo.mutation.AddedAutoID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeUint32,
-			Value:  value,
-			Column: detail.FieldAutoID,
+			Column: detail.FieldEntID,
 		})
 	}
 	if value, ok := duo.mutation.SampleCol(); ok {

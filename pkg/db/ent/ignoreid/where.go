@@ -9,28 +9,28 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id uuid.UUID) predicate.IgnoreID {
+func ID(id uint32) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id uuid.UUID) predicate.IgnoreID {
+func IDEQ(id uint32) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id uuid.UUID) predicate.IgnoreID {
+func IDNEQ(id uint32) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldID), id))
 	})
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...uuid.UUID) predicate.IgnoreID {
+func IDIn(ids ...uint32) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
 		v := make([]interface{}, len(ids))
 		for i := range v {
@@ -41,7 +41,7 @@ func IDIn(ids ...uuid.UUID) predicate.IgnoreID {
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...uuid.UUID) predicate.IgnoreID {
+func IDNotIn(ids ...uint32) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
 		v := make([]interface{}, len(ids))
 		for i := range v {
@@ -52,28 +52,28 @@ func IDNotIn(ids ...uuid.UUID) predicate.IgnoreID {
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id uuid.UUID) predicate.IgnoreID {
+func IDGT(id uint32) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldID), id))
 	})
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id uuid.UUID) predicate.IgnoreID {
+func IDGTE(id uint32) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldID), id))
 	})
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id uuid.UUID) predicate.IgnoreID {
+func IDLT(id uint32) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldID), id))
 	})
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id uuid.UUID) predicate.IgnoreID {
+func IDLTE(id uint32) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
 	})
@@ -100,10 +100,10 @@ func DeletedAt(v uint32) predicate.IgnoreID {
 	})
 }
 
-// AutoID applies equality check predicate on the "auto_id" field. It's identical to AutoIDEQ.
-func AutoID(v uint32) predicate.IgnoreID {
+// EntID applies equality check predicate on the "ent_id" field. It's identical to EntIDEQ.
+func EntID(v uuid.UUID) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAutoID), v))
+		s.Where(sql.EQ(s.C(FieldEntID), v))
 	})
 }
 
@@ -306,67 +306,67 @@ func DeletedAtLTE(v uint32) predicate.IgnoreID {
 	})
 }
 
-// AutoIDEQ applies the EQ predicate on the "auto_id" field.
-func AutoIDEQ(v uint32) predicate.IgnoreID {
+// EntIDEQ applies the EQ predicate on the "ent_id" field.
+func EntIDEQ(v uuid.UUID) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAutoID), v))
+		s.Where(sql.EQ(s.C(FieldEntID), v))
 	})
 }
 
-// AutoIDNEQ applies the NEQ predicate on the "auto_id" field.
-func AutoIDNEQ(v uint32) predicate.IgnoreID {
+// EntIDNEQ applies the NEQ predicate on the "ent_id" field.
+func EntIDNEQ(v uuid.UUID) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAutoID), v))
+		s.Where(sql.NEQ(s.C(FieldEntID), v))
 	})
 }
 
-// AutoIDIn applies the In predicate on the "auto_id" field.
-func AutoIDIn(vs ...uint32) predicate.IgnoreID {
+// EntIDIn applies the In predicate on the "ent_id" field.
+func EntIDIn(vs ...uuid.UUID) predicate.IgnoreID {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.IgnoreID(func(s *sql.Selector) {
-		s.Where(sql.In(s.C(FieldAutoID), v...))
+		s.Where(sql.In(s.C(FieldEntID), v...))
 	})
 }
 
-// AutoIDNotIn applies the NotIn predicate on the "auto_id" field.
-func AutoIDNotIn(vs ...uint32) predicate.IgnoreID {
+// EntIDNotIn applies the NotIn predicate on the "ent_id" field.
+func EntIDNotIn(vs ...uuid.UUID) predicate.IgnoreID {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.IgnoreID(func(s *sql.Selector) {
-		s.Where(sql.NotIn(s.C(FieldAutoID), v...))
+		s.Where(sql.NotIn(s.C(FieldEntID), v...))
 	})
 }
 
-// AutoIDGT applies the GT predicate on the "auto_id" field.
-func AutoIDGT(v uint32) predicate.IgnoreID {
+// EntIDGT applies the GT predicate on the "ent_id" field.
+func EntIDGT(v uuid.UUID) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAutoID), v))
+		s.Where(sql.GT(s.C(FieldEntID), v))
 	})
 }
 
-// AutoIDGTE applies the GTE predicate on the "auto_id" field.
-func AutoIDGTE(v uint32) predicate.IgnoreID {
+// EntIDGTE applies the GTE predicate on the "ent_id" field.
+func EntIDGTE(v uuid.UUID) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAutoID), v))
+		s.Where(sql.GTE(s.C(FieldEntID), v))
 	})
 }
 
-// AutoIDLT applies the LT predicate on the "auto_id" field.
-func AutoIDLT(v uint32) predicate.IgnoreID {
+// EntIDLT applies the LT predicate on the "ent_id" field.
+func EntIDLT(v uuid.UUID) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAutoID), v))
+		s.Where(sql.LT(s.C(FieldEntID), v))
 	})
 }
 
-// AutoIDLTE applies the LTE predicate on the "auto_id" field.
-func AutoIDLTE(v uint32) predicate.IgnoreID {
+// EntIDLTE applies the LTE predicate on the "ent_id" field.
+func EntIDLTE(v uuid.UUID) predicate.IgnoreID {
 	return predicate.IgnoreID(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAutoID), v))
+		s.Where(sql.LTE(s.C(FieldEntID), v))
 	})
 }
 

@@ -14,7 +14,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/detail"
 	"github.com/NpoolPlatform/service-template/pkg/db/ent/predicate"
-	"github.com/google/uuid"
 )
 
 // DetailQuery is the builder for querying Detail entities.
@@ -87,8 +86,8 @@ func (dq *DetailQuery) FirstX(ctx context.Context) *Detail {
 
 // FirstID returns the first Detail ID from the query.
 // Returns a *NotFoundError when no Detail ID was found.
-func (dq *DetailQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (dq *DetailQuery) FirstID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = dq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -100,7 +99,7 @@ func (dq *DetailQuery) FirstID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (dq *DetailQuery) FirstIDX(ctx context.Context) uuid.UUID {
+func (dq *DetailQuery) FirstIDX(ctx context.Context) uint32 {
 	id, err := dq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -138,8 +137,8 @@ func (dq *DetailQuery) OnlyX(ctx context.Context) *Detail {
 // OnlyID is like Only, but returns the only Detail ID in the query.
 // Returns a *NotSingularError when more than one Detail ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (dq *DetailQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
-	var ids []uuid.UUID
+func (dq *DetailQuery) OnlyID(ctx context.Context) (id uint32, err error) {
+	var ids []uint32
 	if ids, err = dq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -155,7 +154,7 @@ func (dq *DetailQuery) OnlyID(ctx context.Context) (id uuid.UUID, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (dq *DetailQuery) OnlyIDX(ctx context.Context) uuid.UUID {
+func (dq *DetailQuery) OnlyIDX(ctx context.Context) uint32 {
 	id, err := dq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -181,8 +180,8 @@ func (dq *DetailQuery) AllX(ctx context.Context) []*Detail {
 }
 
 // IDs executes the query and returns a list of Detail IDs.
-func (dq *DetailQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
-	var ids []uuid.UUID
+func (dq *DetailQuery) IDs(ctx context.Context) ([]uint32, error) {
+	var ids []uint32
 	if err := dq.Select(detail.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -190,7 +189,7 @@ func (dq *DetailQuery) IDs(ctx context.Context) ([]uuid.UUID, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (dq *DetailQuery) IDsX(ctx context.Context) []uuid.UUID {
+func (dq *DetailQuery) IDsX(ctx context.Context) []uint32 {
 	ids, err := dq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -377,7 +376,7 @@ func (dq *DetailQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   detail.Table,
 			Columns: detail.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: detail.FieldID,
 			},
 		},

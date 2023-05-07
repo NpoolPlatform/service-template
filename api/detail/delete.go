@@ -15,7 +15,7 @@ func (s *Server) DeleteDetail(ctx context.Context, in *npool.DeleteDetailRequest
 	req := in.GetInfo()
 	handler, err := detail1.NewHandler(
 		ctx,
-		detail1.WithID(ctx, req.ID),
+		detail1.WithEntID(ctx, req.EntID),
 	)
 	if err != nil {
 		logger.Sugar().Errorw(

@@ -21,7 +21,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   detail.Table,
 			Columns: detail.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: detail.FieldID,
 			},
 		},
@@ -30,7 +30,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			detail.FieldCreatedAt: {Type: field.TypeUint32, Column: detail.FieldCreatedAt},
 			detail.FieldUpdatedAt: {Type: field.TypeUint32, Column: detail.FieldUpdatedAt},
 			detail.FieldDeletedAt: {Type: field.TypeUint32, Column: detail.FieldDeletedAt},
-			detail.FieldAutoID:    {Type: field.TypeUint32, Column: detail.FieldAutoID},
+			detail.FieldEntID:     {Type: field.TypeUUID, Column: detail.FieldEntID},
 			detail.FieldSampleCol: {Type: field.TypeString, Column: detail.FieldSampleCol},
 		},
 	}
@@ -39,7 +39,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   ignoreid.Table,
 			Columns: ignoreid.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: ignoreid.FieldID,
 			},
 		},
@@ -48,7 +48,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			ignoreid.FieldCreatedAt: {Type: field.TypeUint32, Column: ignoreid.FieldCreatedAt},
 			ignoreid.FieldUpdatedAt: {Type: field.TypeUint32, Column: ignoreid.FieldUpdatedAt},
 			ignoreid.FieldDeletedAt: {Type: field.TypeUint32, Column: ignoreid.FieldDeletedAt},
-			ignoreid.FieldAutoID:    {Type: field.TypeUint32, Column: ignoreid.FieldAutoID},
+			ignoreid.FieldEntID:     {Type: field.TypeUUID, Column: ignoreid.FieldEntID},
 			ignoreid.FieldSampleCol: {Type: field.TypeString, Column: ignoreid.FieldSampleCol},
 		},
 	}
@@ -57,7 +57,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			Table:   pubsubmessage.Table,
 			Columns: pubsubmessage.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeUUID,
+				Type:   field.TypeUint32,
 				Column: pubsubmessage.FieldID,
 			},
 		},
@@ -66,7 +66,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			pubsubmessage.FieldCreatedAt: {Type: field.TypeUint32, Column: pubsubmessage.FieldCreatedAt},
 			pubsubmessage.FieldUpdatedAt: {Type: field.TypeUint32, Column: pubsubmessage.FieldUpdatedAt},
 			pubsubmessage.FieldDeletedAt: {Type: field.TypeUint32, Column: pubsubmessage.FieldDeletedAt},
-			pubsubmessage.FieldAutoID:    {Type: field.TypeUint32, Column: pubsubmessage.FieldAutoID},
+			pubsubmessage.FieldEntID:     {Type: field.TypeUUID, Column: pubsubmessage.FieldEntID},
 			pubsubmessage.FieldMessageID: {Type: field.TypeString, Column: pubsubmessage.FieldMessageID},
 			pubsubmessage.FieldState:     {Type: field.TypeString, Column: pubsubmessage.FieldState},
 			pubsubmessage.FieldRespToID:  {Type: field.TypeUUID, Column: pubsubmessage.FieldRespToID},
@@ -118,8 +118,8 @@ func (f *DetailFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *DetailFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *DetailFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(detail.FieldID))
 }
 
@@ -138,9 +138,9 @@ func (f *DetailFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(detail.FieldDeletedAt))
 }
 
-// WhereAutoID applies the entql uint32 predicate on the auto_id field.
-func (f *DetailFilter) WhereAutoID(p entql.Uint32P) {
-	f.Where(p.Field(detail.FieldAutoID))
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *DetailFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(detail.FieldEntID))
 }
 
 // WhereSampleCol applies the entql string predicate on the sample_col field.
@@ -183,8 +183,8 @@ func (f *IgnoreIDFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *IgnoreIDFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *IgnoreIDFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(ignoreid.FieldID))
 }
 
@@ -203,9 +203,9 @@ func (f *IgnoreIDFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(ignoreid.FieldDeletedAt))
 }
 
-// WhereAutoID applies the entql uint32 predicate on the auto_id field.
-func (f *IgnoreIDFilter) WhereAutoID(p entql.Uint32P) {
-	f.Where(p.Field(ignoreid.FieldAutoID))
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *IgnoreIDFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(ignoreid.FieldEntID))
 }
 
 // WhereSampleCol applies the entql string predicate on the sample_col field.
@@ -248,8 +248,8 @@ func (f *PubsubMessageFilter) Where(p entql.P) {
 	})
 }
 
-// WhereID applies the entql [16]byte predicate on the id field.
-func (f *PubsubMessageFilter) WhereID(p entql.ValueP) {
+// WhereID applies the entql uint32 predicate on the id field.
+func (f *PubsubMessageFilter) WhereID(p entql.Uint32P) {
 	f.Where(p.Field(pubsubmessage.FieldID))
 }
 
@@ -268,9 +268,9 @@ func (f *PubsubMessageFilter) WhereDeletedAt(p entql.Uint32P) {
 	f.Where(p.Field(pubsubmessage.FieldDeletedAt))
 }
 
-// WhereAutoID applies the entql uint32 predicate on the auto_id field.
-func (f *PubsubMessageFilter) WhereAutoID(p entql.Uint32P) {
-	f.Where(p.Field(pubsubmessage.FieldAutoID))
+// WhereEntID applies the entql [16]byte predicate on the ent_id field.
+func (f *PubsubMessageFilter) WhereEntID(p entql.ValueP) {
+	f.Where(p.Field(pubsubmessage.FieldEntID))
 }
 
 // WhereMessageID applies the entql string predicate on the message_id field.
