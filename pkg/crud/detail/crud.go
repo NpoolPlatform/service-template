@@ -65,7 +65,7 @@ func SetQueryConds(q *ent.DetailQuery, conds *Conds) (*ent.DetailQuery, error) {
 	if conds.SampleCol != nil {
 		switch conds.SampleCol.Op {
 		case cruder.LIKE:
-			sampleCol, ok := conds.ID.Val.(string)
+			sampleCol, ok := conds.SampleCol.Val.(string)
 			if !ok {
 				return nil, fmt.Errorf("invalid sample col")
 			}
