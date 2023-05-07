@@ -1,9 +1,12 @@
+USE service_template;
+
 DELIMITER $$
-BEGIN
+CREATE PROCEDURE id_to_ent_id()
+MAIN:BEGIN
   DECLARE _count INT;
 
   SELECT
-    count(column_type)
+    COUNT(column_type)
   INTO
     _count
   FROM
@@ -20,7 +23,7 @@ BEGIN
   END IF;
 
   SELECT
-    count(column_type)
+    COUNT(column_type)
   INTO
     _count
   FROM
@@ -37,5 +40,6 @@ BEGIN
     ALTER TABLE details DROP PRIMARY KEY;
     ALTER TABLE details ADD PRIMARY KEY (id);
   END IF;
-
 END$$
+
+CALL id_to_ent_id();
