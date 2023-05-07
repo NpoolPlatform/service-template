@@ -2,7 +2,7 @@ USE service_template;
 
 DELIMITER $$
 CREATE PROCEDURE id_to_ent_id()
-MAIN:BEGIN
+BEGIN
   DECLARE _count INT;
 
   SELECT
