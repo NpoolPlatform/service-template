@@ -98,7 +98,7 @@ func GetDetailOnly(ctx context.Context, conds *npool.Conds) (*npool.Detail, erro
 	return info.(*npool.Detail), nil
 }
 
-func GetDetails(ctx context.Context, conds *npool.Conds, limit, offset int32) ([]*npool.Detail, uint32, error) {
+func GetDetails(ctx context.Context, conds *npool.Conds, offset, limit int32) ([]*npool.Detail, uint32, error) {
 	var total uint32
 	infos, err := withCRUD(ctx, func(_ctx context.Context, cli npool.MiddlewareClient) (cruder.Any, error) {
 		resp, err := cli.GetDetails(ctx, &npool.GetDetailsRequest{
