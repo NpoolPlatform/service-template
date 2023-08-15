@@ -27,6 +27,8 @@ service_name=$1
 ## For development environment, pass the second variable
 if [ "xdevelopment" == "x$2" ]; then
   version=latest
+elif [ "xother" != "x$2" ]; then
+  version=$2
 fi
 
 registry=uhub.service.ucloud.cn
