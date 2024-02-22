@@ -16,17 +16,25 @@ if git_status=$(git status --porcelain --untracked=no 2>/dev/null) && [[ -z "${g
     git_tree_state=clean
 fi
 
-version=latest
-
+set +e
 ## For testing or production environment, pass the second variable
-if [ "x" != "x$2" ]; then
-  version=$2
+version=`git describe --exact-match --tags $(git log -n1 --pretty='%h')`
+if [ ! $? -eq 0 ]; then
+  branch=`git rev-parse --abbrev-ref HEAD | grep -v ^HEAD$ || git rev-parse HEAD`
+  if [ "x$branch" == "xmaster" ]; then
+    version=latest
+  else
+    version=`echo $branch | awk -F '/' '{print $2}'`
+  fi
+  ## Do we need commit ?
+  # commit=`git rev-parse HEAD`
+  # version=$version-$commit
 fi
+set -e
 
 registry=uhub.service.ucloud.cn
-
-if [ "x" != $3 ]; then
-  registry=$3
+if [ "x" != $2 ]; then
+  registry=$2
 fi
 
 service_name=$1
